@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Setiausaha - Sistem Surat Majlis Daerah Gerik</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #28a745;
+            --primary-admin: #1a4b8c;
+            --primary-setiausaha: #28a745;
+            --primary-jabatan: #ff9e00;
+            --primary-latihan: #6f42c1;
+            --secondary: #34c759;
+            --accent: #ff9e00;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 10px;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary);
+            color: white;
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            margin-right: 12px;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-subtext {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex-grow: 1;
+            margin-bottom: 20px;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+            margin-right: 15px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Role Badge in Sidebar */
+        .role-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 5px;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            border-left: 3px solid white;
+        }
+
+        .user-info {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            color: var(--primary);
+        }
+
+        .user-avatar.setiausaha {
+            background-color: white;
+            color: var(--primary-setiausaha);
+        }
+
+        .user-avatar.jabatan {
+            background-color: var(--primary-jabatan);
+            color: white;
+        }
+
+        .user-avatar.latihan {
+            background-color: var(--primary-latihan);
+            color: white;
+        }
+
+        .user-details h4 {
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+        .user-details p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title h1 .role-indicator {
+            font-size: 1rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .page-title p {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        .back-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: var(--secondary);
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+        /* Welcome Section - Setiausaha Theme */
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 30px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .welcome-section.setiausaha {
+            background: linear-gradient(135deg, var(--primary-setiausaha), #34c759);
+        }
+
+        .welcome-section.jabatan {
+            background: linear-gradient(135deg, var(--primary-jabatan), #ffb142);
+        }
+
+        .welcome-section.latihan {
+            background: linear-gradient(135deg, var(--primary-latihan), #8e44ad);
+        }
+
+        .welcome-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .welcome-section h2 i {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .welcome-section p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 800px;
+        }
+
+        .department-title {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: bold;
+            border-left: 4px solid white;
+        }
+
+        /* Stats Section - Setiausaha Focus */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat-box {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            border-top: 5px solid var(--primary);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-box.belum-diminit {
+            border-top-color: var(--warning);
+        }
+
+        .stat-box.dalam-proses {
+            border-top-color: var(--info);
+        }
+
+        .stat-box.telah-diminit {
+            border-top-color: var(--success);
+        }
+
+        .stat-box.selesai {
+            border-top-color: var(--primary);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-title {
+            font-size: 1.1rem;
+            color: var(--gray);
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-desc {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Quick Actions for Setiausaha */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .action-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.15);
+        }
+
+        .action-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .action-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .action-card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Urgent Tasks Section */
+        .urgent-tasks {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border-left: 4px solid var(--danger);
+        }
+
+        .urgent-tasks h3 {
+            color: var(--danger);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .urgent-tasks h3 i {
+            color: var(--danger);
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--light-gray);
+            transition: background-color 0.3s ease;
+        }
+
+        .task-item:hover {
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-priority {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .task-priority.high {
+            background-color: var(--danger);
+        }
+
+        .task-priority.medium {
+            background-color: var(--warning);
+        }
+
+        .task-priority.low {
+            background-color: var(--success);
+        }
+
+        .task-details {
+            flex: 1;
+        }
+
+        .task-details h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .task-details p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .task-deadline {
+            color: var(--danger);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Recent Minit Section */
+        .recent-minit {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .recent-minit h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recent-minit h3 i {
+            color: var(--primary);
+        }
+
+        .minit-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .minit-table th {
+            padding: 15px;
+            text-align: left;
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+            border-bottom: 2px solid rgba(40, 167, 69, 0.2);
+        }
+
+        .minit-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--light-gray);
+            vertical-align: middle;
+        }
+
+        .minit-table tr:hover {
+            background-color: rgba(40, 167, 69, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-new {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+
+        .status-progress {
+            background-color: rgba(23, 162, 184, 0.1);
+            color: var(--info);
+        }
+
+        .status-completed {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: var(--gray);
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn.view {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .action-btn.view:hover {
+            background-color: var(--secondary);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--light-gray);
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .minit-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .logo {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+            
+            .nav-menu {
+                display: flex;
+                flex-grow: 0;
+                margin-bottom: 0;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+                margin-left: 5px;
+            }
+            
+            .nav-link span {
+                display: none;
+            }
+            
+            .user-info {
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+                display: none;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .back-button {
+                margin-top: 0;
+                align-self: flex-start;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .nav-link i {
+                margin-right: 0;
+            }
+            
+            .user-details {
+                display: none;
+            }
+            
+            .page-title h1 {
+                font-size: 1.5rem;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+        }
+
+        /* Role Indicator */
+        .role-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .role-tag {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-tag.setiausaha {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--primary-setiausaha);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        /* Time Display */
+        .time-display {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: 3px;
+            text-align: center;
+            line-height: 1;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .time-label {
+            font-size: 1.2rem;
+            color: var(--gray);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <div>
+                <div class="logo-text">Setiausaha</div>
+                <div class="logo-subtext">Majlis Daerah Gerik</div>
+                <div class="role-badge" id="roleBadge">Setiausaha</div>
+            </div>
+        </div>
+        
+        <!-- Navigation Menu will be populated by JavaScript -->
+        <ul class="nav-menu" id="navMenu">
+            <!-- Menu items will be added here based on role -->
+        </ul>
+        
+        <div class="user-info">
+            <div class="user-avatar setiausaha" id="userAvatar">S</div>
+            <div class="user-details">
+                <h4 id="userName">Setiausaha</h4>
+                <p id="userRole">Setiausaha Pentadbiran</p>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <div class="page-title">
+                <div class="role-header">
+                    <h1>Dashboard Setiausaha</h1>
+                    <span class="role-tag setiausaha" id="pageRoleTag">Setiausaha</span>
+                </div>
+                <p>Sistem Pengurusan Minit Surat - Jabatan Khidmat Pengurusan</p>
+            </div>
+            <button class="back-button" id="backButton">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </button>
+        </div>
+        
+        <!-- Welcome Section -->
+        <section class="welcome-section setiausaha" id="welcomeSection">
+            <h2><i class="fas fa-user-tie"></i> Selamat Datang, <span id="welcomeName">Setiausaha</span></h2>
+            <p>Anda log masuk sebagai Setiausaha dengan tugas utama mengurus minit surat masuk untuk tindakan keluar</p>
+            <div class="department-title">JABATAN KHIDMAT PENGURUSAN - UNIT SETIAUSAHA</div>
+        </section>
+        
+        <!-- Statistics Section for Setiausaha -->
+        <section class="stats-container">
+            <div class="stat-box belum-diminit">
+                <div class="stat-header">
+                    <div class="stat-title">Belum Diminit</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="statBelumDiminit">0</div>
+                <div class="stat-desc">Surat menunggu minit</div>
+            </div>
+            
+            <div class="stat-box dalam-proses">
+                <div class="stat-header">
+                    <div class="stat-title">Dalam Proses</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-spinner"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="statDalamProses">0</div>
+                <div class="stat-desc">Sedang diproses</div>
+            </div>
+            
+            <div class="stat-box telah-diminit">
+                <div class="stat-header">
+                    <div class="stat-title">Telah Diminit</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="statTelahDiminit">0</div>
+                <div class="stat-desc">Minit selesai</div>
+            </div>
+            
+            <div class="stat-box selesai">
+                <div class="stat-header">
+                    <div class="stat-title">Selesai</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-flag-checkered"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="statSelesai">0</div>
+                <div class="stat-desc">Surat lengkap diproses</div>
+            </div>
+        </section>
+        
+        <!-- Quick Actions for Setiausaha -->
+        <section class="quick-actions" id="quickActions">
+            <!-- Quick action buttons will be populated by JavaScript -->
+        </section>
+        
+        <!-- Urgent Tasks Section -->
+        <section class="urgent-tasks" id="urgentTasks">
+            <h3><i class="fas fa-exclamation-circle"></i> Tugas Segera</h3>
+            <ul class="task-list" id="taskList">
+                <!-- Urgent tasks will be populated by JavaScript -->
+            </ul>
+            <div class="empty-state" id="emptyTasks" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <p>Tiada tugas segera untuk hari ini</p>
+                <p style="font-size: 0.9rem; margin-top: 10px;">Semua tugas terkini telah selesai</p>
+            </div>
+        </section>
+        
+        <!-- Recent Minit Section -->
+        <section class="recent-minit">
+            <h3><i class="fas fa-history"></i> Minit Terkini</h3>
+            <div class="table-container">
+                <table class="minit-table">
+                    <thead>
+                        <tr>
+                            <th>No. Rujukan</th>
+                            <th>Perkara</th>
+                            <th>Tarikh</th>
+                            <th>Status</th>
+                            <th>Tindakan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="minitTableBody">
+                        <!-- Recent minit will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty-state" id="emptyMinit" style="display: none;">
+                <i class="fas fa-file-alt"></i>
+                <p>Tiada minit terkini</p>
+                <p style="font-size: 0.9rem; margin-top: 10px;">Mulakan dengan menulis minit pertama anda</p>
+            </div>
+        </section>
+        
+        <!-- Time and Date Section -->
+        <section class="stats-container">
+            <div class="stat-box" style="grid-column: span 3;">
+                <div class="stat-header">
+                    <div class="stat-title">Tarikh & Masa Semasa</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+                <div class="time-display" id="currentDateTime">00:00:00</div>
+                <div class="stat-desc" id="currentDate">Isnin, 1 Januari 2024</div>
+            </div>
+            
+            <div class="stat-box" style="border-top-color: var(--info);">
+                <div class="stat-header">
+                    <div class="stat-title">Masa Bekerja</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="workTime">0j 0m</div>
+                <div class="stat-desc">Hari ini</div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Sistem Pengurusan Minit Surat - Majlis Daerah Gerik. Hak Cipta Terpelihara.</p>
+            <p style="font-size: 0.8rem; margin-top: 5px;">Versi 2.1.0 | User: <span id="footerUser">Setiausaha</span> | <span id="loginTime">Log masuk: --:--</span></p>
+        </footer>
+    </main>
+    
+    <script>
+        // ============================================
+        // AUTHENTICATION CHECK
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!currentUser) {
+                // Redirect to login if not logged in
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Check if user has permission to access this page
+            if (currentUser.role !== 'setiausaha') {
+                alert('Anda tidak mempunyai akses ke halaman Setiausaha.');
+                
+                // Redirect to appropriate dashboard
+                switch(currentUser.role) {
+                    case 'admin': window.location.href = 'dashboard.html'; break;
+                    case 'jabatan': window.location.href = 'jabatan.html'; break;
+                    case 'latihan': window.location.href = 'latihan.html'; break;
+                    default: window.location.href = 'index.html';
+                }
+                return;
+            }
+            
+            // Initialize dashboard for Setiausaha
+            initializeSetiausahaDashboard(currentUser);
+        });
+        
+        // ============================================
+        // SETIAUSAHA DASHBOARD INITIALIZATION
+        // ============================================
+        function initializeSetiausahaDashboard(user) {
+            // Update UI based on user
+            updateUIForSetiausaha(user);
+            
+            // Load navigation menu for Setiausaha
+            loadSetiausahaNavigation();
+            
+            // Load dashboard data
+            loadSetiausahaData();
+            
+            // Setup event listeners
+            setupSetiausahaEventListeners();
+            
+            // Start live clock and date
+            startLiveClock();
+            updateCurrentDate();
+            
+            // Record login time
+            recordLoginTime(user);
+        }
+        
+        // ============================================
+        // UPDATE UI FOR SETIAUSAHA
+        // ============================================
+        function updateUIForSetiausaha(user) {
+            // Update user info in sidebar
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+            const userRole = document.getElementById('userRole');
+            const welcomeName = document.getElementById('welcomeName');
+            const footerUser = document.getElementById('footerUser');
+            const roleBadge = document.getElementById('roleBadge');
+            const pageRoleTag = document.getElementById('pageRoleTag');
+            
+            // Set user info
+            const displayName = user.name || user.username || 'Setiausaha';
+            const roleDisplayName = 'Setiausaha Pentadbiran';
+            
+            if (userName) userName.textContent = displayName;
+            if (userRole) userRole.textContent = roleDisplayName;
+            if (welcomeName) welcomeName.textContent = displayName;
+            if (footerUser) footerUser.textContent = displayName;
+            if (roleBadge) roleBadge.textContent = 'Setiausaha';
+            if (pageRoleTag) pageRoleTag.textContent = 'Setiausaha';
+            
+            // Update avatar
+            if (userAvatar) {
+                userAvatar.textContent = displayName.charAt(0).toUpperCase();
+                userAvatar.className = 'user-avatar setiausaha';
+                userAvatar.style.backgroundColor = 'white';
+                userAvatar.style.color = '#28a745';
+            }
+        }
+        
+        // ============================================
+        // SETIAUSAHA NAVIGATION MENU
+        // ============================================
+        function loadSetiausahaNavigation() {
+            const navMenu = document.getElementById('navMenu');
+            
+            // Setiausaha-specific menu items
+            const menuItems = [
+                { icon: 'fa-tachometer-alt', text: 'Dashboard', href: 'setiausaha.html' },
+                { icon: 'fa-edit', text: 'Minit Surat', href: 'minit-surat.html' },
+                { icon: 'fa-list', text: 'Senarai Diminit', href: 'senarai-minit.html' },
+                { icon: 'fa-file-alt', text: 'Laporan', href: 'laporan-setiausaha.html' },
+                { icon: 'fa-envelope', text: 'Surat Masuk', href: 'surat-masuk.html' },
+                { icon: 'fa-paper-plane', text: 'Surat Keluar', href: 'surat-keluar.html' }
+            ];
+            
+            // Clear existing menu items
+            navMenu.innerHTML = '';
+            
+            // Add menu items
+            menuItems.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'nav-item';
+                
+                const isActive = window.location.pathname.includes(item.href) || 
+                               (window.location.pathname.includes('setiausaha.html') && item.href === 'setiausaha.html');
+                
+                li.innerHTML = `
+                    <a href="${item.href}" class="nav-link ${isActive ? 'active' : ''}">
+                        <i class="fas ${item.icon}"></i>
+                        <span>${item.text}</span>
+                    </a>
+                `;
+                
+                navMenu.appendChild(li);
+            });
+            
+            // Add logout link
+            const logoutLi = document.createElement('li');
+            logoutLi.className = 'nav-item';
+            logoutLi.innerHTML = `
+                <a href="#" class="nav-link" id="logoutLink">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Keluar</span>
+                </a>
+            `;
+            navMenu.appendChild(logoutLi);
+        }
+        
+        // ============================================
+        // QUICK ACTIONS FOR SETIAUSAHA
+        // ============================================
+        function loadQuickActions() {
+            const quickActions = document.getElementById('quickActions');
+            
+            const actions = [
+                {
+                    icon: 'fa-edit',
+                    title: 'Tulis Minit Baru',
+                    description: 'Tulis minit untuk surat masuk yang belum diproses',
+                    onclick: "window.location.href='minit-surat.html'"
+                },
+                {
+                    icon: 'fa-list-check',
+                    title: 'Semak Tindakan',
+                    description: 'Semak status surat yang telah diminit',
+                    onclick: "window.location.href='senarai-minit.html'"
+                },
+                {
+                    icon: 'fa-paper-plane',
+                    title: 'Hantar untuk Tindakan',
+                    description: 'Hantar minit untuk tindakan keluar',
+                    onclick: "processSuratKeluar()"
+                }
+            ];
+            
+            quickActions.innerHTML = actions.map(action => `
+                <div class="action-card" onclick="${action.onclick}">
+                    <i class="fas ${action.icon}"></i>
+                    <h4>${action.title}</h4>
+                    <p>${action.description}</p>
+                </div>
+            `).join('');
+        }
+        
+        function processSuratKeluar() {
+            alert('Fungsi menghantar untuk tindakan akan dipaparkan di sini.');
+            // In real implementation: window.location.href = 'surat-keluar.html';
+        }
+        
+        // ============================================
+        // LOAD SETIAUSAHA DATA
+        // ============================================
+        function loadSetiausahaData() {
+            // Load statistics
+            loadSetiausahaStatistics();
+            
+            // Load urgent tasks
+            loadUrgentTasks();
+            
+            // Load recent minit
+            loadRecentMinit();
+            
+            // Load quick actions
+            loadQuickActions();
+        }
+        
+        function loadSetiausahaStatistics() {
+            // Get data from localStorage
+            const suratMasukData = JSON.parse(localStorage.getItem('suratMasukData')) || [];
+            const minitData = JSON.parse(localStorage.getItem('minitData')) || [];
+            const suratKeluarData = JSON.parse(localStorage.getItem('suratUntukTindakan')) || [];
+            
+            // Calculate statistics
+            const belumDiminit = suratMasukData.filter(surat => {
+                const hasMinit = minitData.some(minit => minit.suratId === surat.id);
+                return !hasMinit && !isSuratLocked(surat.timestamp);
+            }).length;
+            
+            const dalamProses = suratKeluarData.filter(surat => 
+                surat.status === 'masak' || surat.status === 'pengarah'
+            ).length;
+            
+            const telahDiminit = minitData.length;
+            
+            const selesai = suratKeluarData.filter(surat => 
+                surat.status === 'selesai'
+            ).length;
+            
+            // Update stats display
+            document.getElementById('statBelumDiminit').textContent = belumDiminit;
+            document.getElementById('statDalamProses').textContent = dalamProses;
+            document.getElementById('statTelahDiminit').textContent = telahDiminit;
+            document.getElementById('statSelesai').textContent = selesai;
+            
+            // Update work time (example calculation)
+            const workMinutes = 240; // 4 hours in minutes
+            const hours = Math.floor(workMinutes / 60);
+            const minutes = workMinutes % 60;
+            document.getElementById('workTime').textContent = `${hours}j ${minutes}m`;
+        }
+        
+        function isSuratLocked(timestamp) {
+            const now = Date.now();
+            const fiveMinutes = 5 * 60 * 1000;
+            return (now - timestamp) > fiveMinutes;
+        }
+        
+        function loadUrgentTasks() {
+            const taskList = document.getElementById('taskList');
+            const emptyTasks = document.getElementById('emptyTasks');
+            
+            // Get urgent tasks from localStorage or generate sample
+            let urgentTasks = JSON.parse(localStorage.getItem('urgentTasksSetiausaha')) || [];
+            
+            if (urgentTasks.length === 0) {
+                // Generate sample urgent tasks
+                urgentTasks = [
+                    {
+                        id: 1,
+                        title: 'Minit Surat MDG/2024/015',
+                        description: 'Surat dari Jabatan Kerja Raya - Perlu disiapkan sebelum 5 petang',
+                        priority: 'high',
+                        deadline: 'Hari ini, 5:00 PM'
+                    },
+                    {
+                        id: 2,
+                        title: 'Semak Minit Surat MDG/2024/014',
+                        description: 'Minit dari semalam perlu disemak semula',
+                        priority: 'medium',
+                        deadline: 'Hari ini, 3:00 PM'
+                    },
+                    {
+                        id: 3,
+                        title: 'Hantar Laporan Mingguan',
+                        description: 'Laporan aktiviti minggu ini kepada Pengarah',
+                        priority: 'low',
+                        deadline: 'Esok, 10:00 AM'
+                    }
+                ];
+                
+                localStorage.setItem('urgentTasksSetiausaha', JSON.stringify(urgentTasks));
+            }
+            
+            if (urgentTasks.length === 0) {
+                emptyTasks.style.display = 'block';
+                taskList.innerHTML = '';
+                return;
+            }
+            
+            emptyTasks.style.display = 'none';
+            taskList.innerHTML = urgentTasks.map(task => `
+                <li class="task-item" onclick="viewTask(${task.id})">
+                    <div class="task-priority ${task.priority}"></div>
+                    <div class="task-details">
+                        <h4>${task.title}</h4>
+                        <p>${task.description}</p>
+                    </div>
+                    <div class="task-deadline">${task.deadline}</div>
+                </li>
+            `).join('');
+        }
+        
+        function loadRecentMinit() {
+            const minitTableBody = document.getElementById('minitTableBody');
+            const emptyMinit = document.getElementById('emptyMinit');
+            
+            // Get minit data from localStorage
+            const minitData = JSON.parse(localStorage.getItem('minitData')) || [];
+            
+            if (minitData.length === 0) {
+                emptyMinit.style.display = 'block';
+                minitTableBody.innerHTML = '';
+                return;
+            }
+            
+            emptyMinit.style.display = 'none';
+            
+            // Display recent minit (latest 5)
+            const recentMinit = minitData.slice(0, 5);
+            
+            minitTableBody.innerHTML = recentMinit.map(minit => {
+                // Format date
+                const minitDate = new Date(minit.timestamp);
+                const formattedDate = minitDate.toLocaleDateString('ms-MY', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+                
+                // Determine status
+                let statusText = 'Baru';
+                let statusClass = 'status-new';
+                
+                // Check if minit has been processed
+                const suratKeluarData = JSON.parse(localStorage.getItem('suratUntukTindakan')) || [];
+                const suratKeluar = suratKeluarData.find(s => s.suratId === minit.id);
+                
+                if (suratKeluar) {
+                    if (suratKeluar.status === 'selesai') {
+                        statusText = 'Selesai';
+                        statusClass = 'status-completed';
+                    } else {
+                        statusText = 'Dalam Proses';
+                        statusClass = 'status-progress';
+                    }
+                }
+                
+                return `
+                    <tr>
+                        <td><strong>${minit.noRujukan}</strong></td>
+                        <td>
+                            <div>${minit.perkara}</div>
+                            <small style="color: var(--gray);">${minit.dari}</small>
+                        </td>
+                        <td>${formattedDate}</td>
+                        <td>
+                            <span class="status-badge ${statusClass}">
+                                ${statusText}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="action-btn view" onclick="viewMinit('${minit.id}')">
+                                Lihat
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // ============================================
+        // EVENT LISTENERS FOR SETIAUSAHA
+        // ============================================
+        function setupSetiausahaEventListeners() {
+            // Back button
+            document.getElementById('backButton').addEventListener('click', function() {
+                window.history.back();
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (confirm('Adakah anda pasti ingin log keluar?')) {
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'index.html';
+                }
+            });
+            
+            // Navigation click handlers
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.nav-link') && !e.target.closest('#logoutLink')) {
+                    const link = e.target.closest('.nav-link');
+                    const href = link.getAttribute('href');
+                    
+                    // Update active state
+                    document.querySelectorAll('.nav-link').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    link.classList.add('active');
+                    
+                    // Navigate to page
+                    if (href && href !== '#') {
+                        window.location.href = href;
+                    }
+                }
+            });
+        }
+        
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function startLiveClock() {
+            function updateClock() {
+                const now = new Date();
+                let hours = now.getHours().toString().padStart(2, '0');
+                let minutes = now.getMinutes().toString().padStart(2, '0');
+                let seconds = now.getSeconds().toString().padStart(2, '0');
+                
+                document.getElementById('currentDateTime').textContent = `${hours}:${minutes}:${seconds}`;
+            }
+            
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+        
+        function updateCurrentDate() {
+            const monthNames = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", 
+                               "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
+            const dayNames = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
+            
+            const today = new Date();
+            const dayName = dayNames[today.getDay()];
+            const day = today.getDate();
+            const month = monthNames[today.getMonth()];
+            const year = today.getFullYear();
+            
+            document.getElementById('currentDate').textContent = `${dayName}, ${day} ${month} ${year}`;
+        }
+        
+        function recordLoginTime(user) {
+            const loginTime = new Date().toLocaleTimeString('ms-MY', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            document.getElementById('loginTime').textContent = `Log masuk: ${loginTime}`;
+            
+            // Store login time for session tracking
+            if (user) {
+                user.loginTime = new Date().toISOString();
+                localStorage.setItem('currentUser', JSON.stringify(user));
+            }
+        }
+        
+        // ============================================
+        // SETIAUSAHA-SPECIFIC FUNCTIONS
+        // ============================================
+        window.viewTask = function(taskId) {
+            const urgentTasks = JSON.parse(localStorage.getItem('urgentTasksSetiausaha')) || [];
+            const task = urgentTasks.find(t => t.id === taskId);
+            
+            if (task) {
+                alert(`TUGAS SEGERA\n\nTajuk: ${task.title}\n\nDeskripsi: ${task.description}\n\nKeutamaan: ${task.priority.toUpperCase()}\n\nTarikh Akhir: ${task.deadline}`);
+            }
+        };
+        
+        window.viewMinit = function(minitId) {
+            const minitData = JSON.parse(localStorage.getItem('minitData')) || [];
+            const minit = minitData.find(m => m.id == minitId);
+            
+            if (minit) {
+                alert(`MAKLUMAT MINIT\n\nNo. Rujukan: ${minit.noRujukan}\n\nPerkara: ${minit.perkara}\n\nDari: ${minit.dari}\n\nTarikh Surat: ${minit.tarikhSurat}\n\nJabatan Tindakan: ${minit.tindakanTerpilih.join(', ')}\n\nUlasan/Minut: ${minit.ulasan}\n\nDiminit pada: ${new Date(minit.timestamp).toLocaleString('ms-MY')}`);
+            } else {
+                alert('Minit tidak ditemui.');
+            }
+        };
+        
+        // ============================================
+        // REFRESH FUNCTIONALITY
+        // ============================================
+        window.refreshSetiausahaDashboard = function() {
+            loadSetiausahaData();
+        };
+        
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser && currentUser.role === 'setiausaha') {
+                loadSetiausahaStatistics();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
