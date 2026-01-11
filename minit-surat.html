@@ -329,6 +329,7 @@
       border-radius: var(--border-radius);
       transition: all 0.3s ease;
       cursor: pointer;
+      position: relative;
     }
 
     .checkbox-item:hover {
@@ -362,6 +363,7 @@
       color: var(--warning);
       font-style: italic;
       margin-top: 3px;
+      display: block;
     }
 
     /* Ulasan Section */
@@ -587,6 +589,19 @@
         align-self: flex-start;
       }
     }
+
+    /* Badge for Display Surat */
+    .display-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: var(--info);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -678,7 +693,7 @@
       <textarea id="ulasanText" placeholder="Tulis minit, ulasan, atau arahan untuk jabatan yang dipilih..."></textarea>
       <div class="form-note">
         <i class="fas fa-info-circle"></i> 
-        Minit ini akan dihantar ke semua jabatan yang dipilih dan akan muncul dalam senarai surat keluar.
+        Minit ini akan dihantar ke semua jabatan yang dipilih dan akan muncul dalam dashboard Surat Keluar.
       </div>
     </section>
     
@@ -688,7 +703,7 @@
         <i class="fas fa-redo"></i> Set Semula
       </button>
       <button class="btn btn-primary" id="submitBtn">
-        <i class="fas fa-paper-plane"></i> Hantar Minit
+        <i class="fas fa-paper-plane"></i> Hantar Tindakan
       </button>
     </section>
     
@@ -697,9 +712,9 @@
       <p>&copy; 2025 Sistem Pengurusan Minit Surat - Majlis Daerah Gerik. Hak Cipta Terpelihara.</p>
     </footer>
   </main>
-  
+
   <script>
-    // Data dari localStorage
+    // Data storage
     let suratMasukData = JSON.parse(localStorage.getItem('suratMasukData')) || [];
     let minitData = JSON.parse(localStorage.getItem('minitData')) || [];
     let suratKeluarData = JSON.parse(localStorage.getItem('suratUntukTindakan')) || [];
@@ -711,22 +726,20 @@
     // Current surat
     let currentSurat = null;
     
-    // Jabatan list dengan tambahan PAMERKAN dan SIMPAN FAIL
+    // Jabatan list berdasarkan permintaan
     const jabatanList = [
-      { id: 'setiausaha', name: 'Setiausaha', icon: 'fa-user-tie', desc: 'Untuk tindakan setiausaha' },
-      { id: 'jkp', name: 'JKP', icon: 'fa-users', desc: 'Jabatan Khidmat Pengurusan' },
-      { id: 'jab-perbendaharaan', name: 'JAB. PERBENDAHARAAN', icon: 'fa-money-bill-wave', desc: 'Jabatan Perbendaharaan' },
-      { id: 'unit-bangunan', name: 'UNIT BANGUNAN', icon: 'fa-building', desc: 'Unit Bangunan' },
-      { id: 'jab-perancangan', name: 'JAB. PERANCANGAN BANDAR DAN LANDSKAP', icon: 'fa-city', desc: 'Jabatan Perancangan Bandar dan Landskap' },
-      { id: 'peskem', name: 'PESKEM', icon: 'fa-landmark', desc: 'Pejabat Setiausaha Kerajaan Negeri' },
-      { id: 'jab-alam-sekitar', name: 'JABATAN ALAM SEKITAR DAN PERLESENAN', icon: 'fa-leaf', desc: 'Jabatan Alam Sekitar dan Perlesenan' },
-      { id: 'jab-penilaian', name: 'JAB. PENILAIAN DAN HARTA', icon: 'fa-chart-line', desc: 'Jabatan Penilaian dan Harta' },
-      { id: 'unit-osc', name: 'UNIT OSC', icon: 'fa-stopwatch', desc: 'Unit One Stop Centre' },
-      { id: 'jab-kejuruteraan', name: 'JAB. KEJURUTERAAN', icon: 'fa-cogs', desc: 'Jabatan Kejuruteraan' },
-      { id: 'unit-landskap', name: 'UNIT LANDSKAP DAN PELANCONGAN', icon: 'fa-tree', desc: 'Unit Landskap dan Pelancongan' },
-      { id: 'unit-penguatkuasa', name: 'UNIT PENGUATKUASA', icon: 'fa-gavel', desc: 'Unit Penguatkuasa' },
-      { id: 'pamerkan', name: 'PAMERKAN', icon: 'fa-eye', desc: 'Untuk paparan/pameran sahaja', note: 'Hanya untuk paparan, tidak perlu tindakan' },
-      { id: 'simpan-fail', name: 'SIMPAN FAIL', icon: 'fa-folder', desc: 'Untuk simpan fail sahaja', note: 'Simpan fail, tidak perlu tindakan' }
+      { id: 'jab-khidmat-pengurusan', name: 'Jab. Khidmat Pengurusan', icon: 'fa-users', desc: 'Untuk tindakan jabatan khidmat pengurusan' },
+      { id: 'jab-perbendaharaan', name: 'Jab. Perbendaharaan', icon: 'fa-money-bill-wave', desc: 'Untuk tindakan jabatan perbendaharaan' },
+      { id: 'jab-perancangan-bandar', name: 'Jab. Perancangan Bandar', icon: 'fa-city', desc: 'Untuk tindakan jabatan perancangan bandar' },
+      { id: 'unit-undang-undang', name: 'Unit Undang-Undang', icon: 'fa-gavel', desc: 'Untuk tindakan unit undang-undang' },
+      { id: 'unit-peskem', name: 'Unit Peskem', icon: 'fa-landmark', desc: 'Untuk tindakan unit peskem' },
+      { id: 'jab-alam-sekitar', name: 'Jab. Alam Sekitar dan Perlesenan', icon: 'fa-leaf', desc: 'Untuk tindakan jabatan alam sekitar dan perlesenan' },
+      { id: 'jab-penilaian-harta', name: 'Jab. Penilaian dan Harta', icon: 'fa-chart-line', desc: 'Untuk tindakan jabatan penilaian dan harta' },
+      { id: 'unit-osc', name: 'Unit OSC', icon: 'fa-stopwatch', desc: 'Untuk tindakan unit OSC' },
+      { id: 'jab-kejuruteraan', name: 'Jab Kejuruteraan', icon: 'fa-cogs', desc: 'Untuk tindakan jabatan kejuruteraan' },
+      { id: 'unit-penguatkuasa', name: 'Unit Penguatkuasa', icon: 'fa-shield-alt', desc: 'Untuk tindakan unit penguatkuasa' },
+      { id: 'unit-landskap-pelancongan', name: 'Unit Landskap dan Pelancongan', icon: 'fa-tree', desc: 'Untuk tindakan unit landskap dan pelancongan' },
+      { id: 'pamerkan-simpan-fail', name: 'Pamerkan/Simpan Fail', icon: 'fa-folder', desc: 'Untuk paparan/simpanan fail sahaja', note: 'Tidak perlu tindakan' }
     ];
     
     // Initialize
@@ -774,35 +787,35 @@
             <div class="info-label">
               <i class="fas fa-hashtag"></i> No. Rujukan
             </div>
-            <div class="info-value">${surat.noRujukan}</div>
+            <div class="info-value">${surat.noRujukan || 'Tiada'}</div>
           </div>
           
           <div class="info-item">
             <div class="info-label">
               <i class="fas fa-user"></i> Dari (Pengirim)
             </div>
-            <div class="info-value">${surat.dari}</div>
+            <div class="info-value">${surat.dari || 'Tiada'}</div>
           </div>
           
           <div class="info-item">
             <div class="info-label">
               <i class="fas fa-file-alt"></i> Perkara
             </div>
-            <div class="info-value">${surat.perkara}</div>
+            <div class="info-value">${surat.perkara || 'Tiada'}</div>
           </div>
           
           <div class="info-item">
             <div class="info-label">
               <i class="fas fa-calendar"></i> Tarikh Surat
             </div>
-            <div class="info-value">${surat.tarikh}</div>
+            <div class="info-value">${surat.tarikh || 'Tiada'}</div>
           </div>
           
           <div class="info-item">
             <div class="info-label">
               <i class="fas fa-paperclip"></i> Lampiran
             </div>
-            <div class="info-value">${surat.fail || 'Tiada fail'}</div>
+            <div class="info-value">${surat.fail || 'Tiada'}</div>
           </div>
           
           <div class="info-item">
@@ -812,6 +825,15 @@
             <div class="info-value">${new Date(surat.timestamp).toLocaleString('ms-MY')}</div>
           </div>
         </div>
+        
+        ${surat.kandungan ? `
+        <div class="info-item" style="grid-column: 1 / -1;">
+          <div class="info-label">
+            <i class="fas fa-align-left"></i> Kandungan Surat
+          </div>
+          <div class="info-value" style="white-space: pre-wrap; font-weight: normal;">${surat.kandungan}</div>
+        </div>
+        ` : ''}
       `;
       
       // Disable form if surat is locked
@@ -853,7 +875,8 @@
       
       container.innerHTML = jabatanList.map(jabatan => `
         <div class="checkbox-item">
-          <input type="checkbox" id="${jabatan.id}" value="${jabatan.name}">
+          ${jabatan.id === 'pamerkan-simpan-fail' ? '<div class="display-badge">DISPLAY</div>' : ''}
+          <input type="checkbox" id="${jabatan.id}" value="${jabatan.name}" data-id="${jabatan.id}">
           <label for="${jabatan.id}">
             ${jabatan.name}
             <span class="checkbox-desc">${jabatan.desc}</span>
@@ -929,8 +952,10 @@
       
       // Get selected jabatan
       const selectedJabatan = [];
+      const selectedJabatanIds = [];
       document.querySelectorAll('#jabatanCheckboxes input[type="checkbox"]:checked').forEach(cb => {
         selectedJabatan.push(cb.value);
+        selectedJabatanIds.push(cb.getAttribute('data-id'));
       });
       
       if (selectedJabatan.length === 0) {
@@ -954,6 +979,7 @@
         perkara: currentSurat.perkara,
         tarikhSurat: currentSurat.tarikh,
         tindakanTerpilih: selectedJabatan,
+        tindakanTerpilihIds: selectedJabatanIds,
         ulasan: ulasan,
         timestamp: Date.now(),
         createdBy: 'Setiausaha',
@@ -970,14 +996,15 @@
         suratMasukData[suratIndex].diminit = true;
         suratMasukData[suratIndex].diminitPada = new Date().toISOString();
         suratMasukData[suratIndex].diminitOleh = 'Setiausaha';
+        suratMasukData[suratIndex].tindakanKe = selectedJabatan;
         localStorage.setItem('suratMasukData', JSON.stringify(suratMasukData));
       }
       
-      // Auto add to surat keluar for admin
-      autoAddToSuratKeluar(newMinit);
+      // Create surat keluar for each selected jabatan
+      createSuratKeluar(newMinit);
       
       // Show success message
-      alert(`Minit untuk ${newMinit.noRujukan} berjaya dihantar!\n\nJabatan terpilih: ${selectedJabatan.join(', ')}`);
+      alert(`Tindakan untuk ${newMinit.noRujukan} berjaya dihantar!\n\nDihantar ke: ${selectedJabatan.join(', ')}`);
       
       // Redirect back to setiausaha dashboard
       setTimeout(() => {
@@ -985,52 +1012,48 @@
       }, 1500);
     }
     
-    // Auto add to surat keluar for admin
-    function autoAddToSuratKeluar(minit) {
-      // Check if already exists
-      const existingIndex = suratKeluarData.findIndex(s => s.suratId === minit.suratId);
+    // Create surat keluar for each selected jabatan
+    function createSuratKeluar(minit) {
+      // Check if surat keluar already exists for this surat
+      const existingSuratKeluar = suratKeluarData.filter(s => s.suratId === minit.suratId);
       
-      const tindakanInfo = {
-        oleh: 'Setiausaha',
-        tindakan: `Minit: ${minit.tindakanTerpilih.join(', ')}`,
-        ulasan: minit.ulasan,
-        masa: new Date().toLocaleTimeString('ms-MY', { 
-          hour: '2-digit', 
-          minute: '2-digit',
-          hour12: false 
-        }),
-        tarikh: new Date().toLocaleDateString('ms-MY'),
-        status: 'completed'
-      };
-      
-      if (existingIndex !== -1) {
-        // Update existing - add new tindakan
-        if (!suratKeluarData[existingIndex].tindakan) {
-          suratKeluarData[existingIndex].tindakan = [];
-        }
-        suratKeluarData[existingIndex].tindakan.push(tindakanInfo);
-        suratKeluarData[existingIndex].status = 'masak';
-        suratKeluarData[existingIndex].updatedAt = Date.now();
-      } else {
-        // Create new surat untuk tindakan
-        const newSuratKeluar = {
-          id: minit.suratId,
-          suratId: minit.suratId,
-          noRujukan: minit.noRujukan,
-          dari: minit.dari,
-          perkara: minit.perkara,
-          tarikh: minit.tarikhSurat,
-          timestamp: Date.now(),
-          status: 'masak',
-          tindakan: [tindakanInfo],
-          ulasan: minit.ulasan,
-          jabatanTindakan: minit.tindakanTerpilih,
-          createdDate: new Date().toLocaleDateString('ms-MY'),
-          createdBy: 'Setiausaha'
-        };
+      // Create surat keluar for each jabatan
+      minit.tindakanTerpilih.forEach((jabatan, index) => {
+        const jabatanId = minit.tindakanTerpilihIds[index];
+        const isDisplayOnly = jabatanId === 'pamerkan-simpan-fail';
         
-        suratKeluarData.unshift(newSuratKeluar);
-      }
+        // Check if this jabatan already has a surat keluar entry
+        const existingForJabatan = existingSuratKeluar.find(s => 
+          s.jabatanTujuan === jabatan && s.suratId === minit.suratId
+        );
+        
+        if (!existingForJabatan) {
+          const newSuratKeluar = {
+            id: `${minit.suratId}_${jabatanId}_${Date.now()}`,
+            suratId: minit.suratId,
+            noRujukan: minit.noRujukan,
+            dari: minit.dari,
+            perkara: minit.perkara,
+            tarikhSurat: minit.tarikhSurat,
+            jabatanTujuan: jabatan,
+            jabatanTujuanId: jabatanId,
+            ulasan: minit.ulasan,
+            timestamp: Date.now(),
+            status: isDisplayOnly ? 'display' : 'baru',
+            createdDate: new Date().toLocaleDateString('ms-MY'),
+            createdTime: new Date().toLocaleTimeString('ms-MY', { 
+              hour: '2-digit', 
+              minute: '2-digit',
+              hour12: false 
+            }),
+            createdBy: 'Setiausaha',
+            minitId: minit.id,
+            isDisplay: isDisplayOnly
+          };
+          
+          suratKeluarData.unshift(newSuratKeluar);
+        }
+      });
       
       localStorage.setItem('suratUntukTindakan', JSON.stringify(suratKeluarData));
     }
