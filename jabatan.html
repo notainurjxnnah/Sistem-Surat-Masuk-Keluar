@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Jabatan - Majlis Daerah Gerik</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1a4b8c;
+            --secondary: #2c5aa0;
+            --accent: #ff9e00;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 10px;
+            --pending: #6f42c1;
+            --processing: #17a2b8;
+            --review: #fd7e14;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary);
+            color: white;
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            margin-right: 12px;
+            color: var(--accent);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-subtext {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+            margin-right: 15px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .user-info {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+
+        .user-details h4 {
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+        .user-details p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .btn-secondary {
+            background-color: var(--light-gray);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: #dde1e7;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 30px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .welcome-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .welcome-section p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 800px;
+        }
+
+        .department-title {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: bold;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Stats Section - Updated for Department */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat-box {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            border-top: 5px solid var(--primary);
+        }
+
+        .stat-box.total-tindakan {
+            border-top-color: var(--primary);
+        }
+
+        .stat-box.dalam-proses {
+            border-top-color: var(--processing);
+        }
+
+        .stat-box.selesai {
+            border-top-color: var(--success);
+        }
+
+        .stat-box.tertunggak {
+            border-top-color: var(--danger);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-title {
+            font-size: 1.1rem;
+            color: var(--gray);
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Controls Section */
+        .controls-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 20px;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            background-color: white;
+            font-size: 1rem;
+            color: var(--dark);
+        }
+
+        /* Tindakan Table */
+        .tindakan-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-header h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .tindakan-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tindakan-table th {
+            background-color: var(--light);
+            color: var(--dark);
+            font-weight: 600;
+            text-align: left;
+            padding: 15px;
+            border-bottom: 2px solid var(--light-gray);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .tindakan-table th:hover {
+            background-color: var(--light-gray);
+        }
+
+        .tindakan-table th i {
+            margin-left: 8px;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .tindakan-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--light-gray);
+            vertical-align: middle;
+        }
+
+        .tindakan-table tr:hover {
+            background-color: var(--light);
+        }
+
+        .tindakan-id {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .tindakan-name {
+            font-weight: 500;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .status-pending {
+            background-color: rgba(111, 66, 193, 0.1);
+            color: var(--pending);
+            border: 1px solid rgba(111, 66, 193, 0.3);
+        }
+
+        .status-processing {
+            background-color: rgba(23, 162, 184, 0.1);
+            color: var(--processing);
+            border: 1px solid rgba(23, 162, 184, 0.3);
+        }
+
+        .status-review {
+            background-color: rgba(253, 126, 20, 0.1);
+            color: var(--review);
+            border: 1px solid rgba(253, 126, 20, 0.3);
+        }
+
+        .status-completed {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .status-archived {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: var(--gray);
+            border: 1px solid rgba(108, 117, 125, 0.3);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn.view {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        .action-btn.view:hover {
+            background-color: #e2e6ea;
+        }
+
+        .action-btn.process {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .action-btn.process:hover {
+            background-color: var(--secondary);
+        }
+
+        .action-btn.archive {
+            background-color: var(--gray);
+            color: white;
+        }
+
+        .action-btn.archive:hover {
+            background-color: #5a6268;
+        }
+
+        .action-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Workflow Progress */
+        .workflow-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .progress-step {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            position: relative;
+        }
+
+        .progress-step.completed {
+            background-color: var(--success);
+        }
+
+        .progress-step.active {
+            background-color: var(--primary);
+            animation: pulse 1.5s infinite;
+        }
+
+        .progress-step-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--gray);
+            white-space: nowrap;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .pagination-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--light-gray);
+            background-color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background-color: var(--light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-number:hover,
+        .pagination-number.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .controls-section {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .logo {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+            
+            .nav-menu {
+                display: flex;
+                flex-grow: 0;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+                margin-left: 10px;
+            }
+            
+            .nav-link span {
+                display: none;
+            }
+            
+            .user-info {
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .tindakan-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                min-width: 120px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .nav-link i {
+                margin-right: 0;
+            }
+            
+            .user-details {
+                display: none;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .filter-options {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-building"></i>
+            </div>
+            <div>
+                <div class="logo-text">Jabatan</div>
+                <div class="logo-subtext">Majlis Daerah Gerik</div>
+            </div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="jabatan.html" class="nav-link active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="surat-masuk.html" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Surat Masuk</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="surat-keluar.html" class="nav-link">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Surat Keluar</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="ramalan-cukai.html" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Ramalan Cukai</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="settings.html" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Keluar</span>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="user-info">
+            <div class="user-avatar">P</div>
+            <div class="user-details">
+                <h4>Pn. Siti Aminah</h4>
+                <p>Ketua Jabatan</p>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <div class="page-title">
+                <h1>Dashboard Jabatan</h1>
+                <p>Jabatan Khidmat Pengurusan - Pengurusan Tindakan</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i> Segar Semula
+                </button>
+                <button class="btn btn-secondary" id="printBtn">
+                    <i class="fas fa-print"></i> Cetak
+                </button>
+            </div>
+        </div>
+        
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h2>Selamat Datang ke Dashboard Jabatan</h2>
+            <p>Sistem Pengurusan Tindakan dan Surat Rasmi</p>
+            <div class="department-title">JABATAN KHIDMAT PENGURUSAN - BAHAGIAN PENTADBIRAN</div>
+        </section>
+        
+        <!-- Statistics Section -->
+        <section class="stats-container">
+            <div class="stat-box total-tindakan">
+                <div class="stat-header">
+                    <div class="stat-title">Jumlah Tindakan</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="totalTindakan">48</div>
+                <div style="color: var(--gray); font-size: 0.9rem;">Semua tindakan aktif</div>
+            </div>
+            
+            <div class="stat-box dalam-proses">
+                <div class="stat-header">
+                    <div class="stat-title">Dalam Proses</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-spinner"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="dalamProses">22</div>
+                <div style="color: var(--gray); font-size: 0.9rem;">Sedang diproses</div>
+            </div>
+            
+            <div class="stat-box selesai">
+                <div class="stat-header">
+                    <div class="stat-title">Selesai</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="selesai">15</div>
+                <div style="color: var(--gray); font-size: 0.9rem;">Telah diselesaikan</div>
+            </div>
+            
+            <div class="stat-box tertunggak">
+                <div class="stat-header">
+                    <div class="stat-title">Tertunggak</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="tertunggak">11</div>
+                <div style="color: var(--gray); font-size: 0.9rem;">Perlu perhatian</div>
+            </div>
+        </section>
+        
+        <!-- Controls Section -->
+        <section class="controls-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Cari tindakan...">
+                <i class="fas fa-search"></i>
+            </div>
+            
+            <div class="filter-options">
+                <select class="filter-select" id="statusFilter">
+                    <option value="">Semua Status</option>
+                    <option value="pending">Dalam Proses</option>
+                    <option value="review">Semakan</option>
+                    <option value="completed">Selesai</option>
+                    <option value="archived">Simpan Fail</option>
+                </select>
+                
+                <select class="filter-select" id="sortFilter">
+                    <option value="name">Susun mengikut Nama</option>
+                    <option value="date">Susun mengikut Tarikh</option>
+                    <option value="priority">Susun mengikut Keutamaan</option>
+                    <option value="status">Susun mengikut Status</option>
+                </select>
+            </div>
+        </section>
+        
+        <!-- Tindakan Section -->
+        <section class="tindakan-section">
+            <div class="section-header">
+                <h3>Senarai Tindakan</h3>
+                <div style="color: var(--gray); font-size: 0.9rem;">
+                    <i class="fas fa-info-circle"></i> Klik pada tajuk untuk menyusun
+                </div>
+            </div>
+            
+            <table class="tindakan-table" id="tindakanTable">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable('id')">ID Tindakan <i class="fas fa-sort"></i></th>
+                        <th onclick="sortTable('name')">Nama Tindakan <i class="fas fa-sort"></i></th>
+                        <th onclick="sortTable('date')">Tarikh Mula <i class="fas fa-sort"></i></th>
+                        <th onclick="sortTable('deadline')">Tarikh Akhir <i class="fas fa-sort"></i></th>
+                        <th onclick="sortTable('status')">Status <i class="fas fa-sort"></i></th>
+                        <th>Aliran Kerja</th>
+                        <th>Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody id="tindakanBody">
+                    <!-- Data will be populated by JavaScript -->
+                </tbody>
+            </table>
+            
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <!-- Pagination will be generated by JavaScript -->
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Sistem Pengurusan Tindakan - Jabatan Khidmat Pengurusan, Majlis Daerah Gerik. Hak Cipta Terpelihara.</p>
+        </footer>
+    </main>
+    
+    <script>
+        // Sample data for Tindakan
+        const tindakanData = [
+            { id: "JKP-2025-001", name: "Semakan Surat Permohonan Lesen", date: "2025-01-10", deadline: "2025-01-20", status: "completed", priority: "high" },
+            { id: "JKP-2025-002", name: "Penyediaan Laporan Bulanan", date: "2025-01-12", deadline: "2025-01-25", status: "processing", priority: "medium" },
+            { id: "JKP-2025-003", name: "Urusan Bayaran Pembekal", date: "2025-01-15", deadline: "2025-01-30", status: "review", priority: "high" },
+            { id: "JKP-2025-004", name: "Pengemaskinian Fail Kakitangan", date: "2025-01-05", deadline: "2025-01-15", status: "completed", priority: "low" },
+            { id: "JKP-2025-005", name: "Persediaan Mesyuarat Jawatankuasa", date: "2025-01-18", deadline: "2025-02-01", status: "pending", priority: "high" },
+            { id: "JKP-2025-006", name: "Audit Dalaman Dokumen", date: "2025-01-08", deadline: "2025-01-22", status: "processing", priority: "medium" },
+            { id: "JKP-2025-007", name: "Pembelian Aset Pejabat", date: "2025-01-20", deadline: "2025-02-05", status: "review", priority: "medium" },
+            { id: "JKP-2025-008", name: "Latihan Kakitangan Baharu", date: "2025-01-03", deadline: "2025-01-10", status: "completed", priority: "low" },
+            { id: "JKP-2025-009", name: "Penyelenggaraan Sistem IT", date: "2025-01-22", deadline: "2025-02-10", status: "pending", priority: "medium" },
+            { id: "JKP-2025-010", name: "Perancangan Bajet 2026", date: "2025-01-25", deadline: "2025-02-15", status: "processing", priority: "high" },
+            { id: "JKP-2025-011", name: "Pameran Arkib", date: "2024-12-15", deadline: "2024-12-31", status: "archived", priority: "low" },
+            { id: "JKP-2025-012", name: "Simpan Fail Tahunan", date: "2024-12-20", deadline: "2025-01-05", status: "archived", priority: "low" }
+        ];
+
+        // Workflow steps
+        const workflowSteps = [
+            "Terima", 
+            "Proses", 
+            "Semak", 
+            "Sahkan", 
+            "Simpan Fail"
+        ];
+
+        let currentSort = { column: 'id', direction: 'asc' };
+        let currentPage = 1;
+        const itemsPerPage = 8;
+
+        // Initialize the dashboard
+        function initializeDashboard() {
+            updateStatistics();
+            renderTindakanTable();
+            updateClock();
+            setInterval(updateClock, 1000);
+            updateDate();
+            setupEventListeners();
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            const total = tindakanData.length;
+            const processing = tindakanData.filter(item => item.status === 'processing').length;
+            const completed = tindakanData.filter(item => item.status === 'completed').length;
+            const pending = tindakanData.filter(item => item.status === 'pending').length + 
+                           tindakanData.filter(item => item.status === 'review').length;
+
+            document.getElementById('totalTindakan').textContent = total;
+            document.getElementById('dalamProses').textContent = processing;
+            document.getElementById('selesai').textContent = completed;
+            document.getElementById('tertunggak').textContent = pending;
+        }
+
+        // Render tindakan table
+        function renderTindakanTable(filteredData = tindakanData) {
+            const tableBody = document.getElementById('tindakanBody');
+            tableBody.innerHTML = '';
+
+            // Apply sorting
+            const sortedData = sortData(filteredData);
+
+            // Apply pagination
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = sortedData.slice(startIndex, endIndex);
+
+            pageData.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Format dates
+                const startDate = formatDate(item.date);
+                const endDate = formatDate(item.deadline);
+                
+                // Get status display
+                const statusInfo = getStatusInfo(item.status);
+                
+                // Get workflow progress
+                const workflowProgress = getWorkflowProgress(item.status);
+                
+                row.innerHTML = `
+                    <td class="tindakan-id">${item.id}</td>
+                    <td class="tindakan-name">${item.name}</td>
+                    <td>${startDate}</td>
+                    <td>${endDate}</td>
+                    <td><span class="status-badge ${statusInfo.class}">${statusInfo.text}</span></td>
+                    <td>
+                        <div class="workflow-progress">
+                            ${workflowProgress}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn view" onclick="viewTindakan('${item.id}')">
+                                <i class="fas fa-eye"></i> Lihat
+                            </button>
+                            <button class="action-btn process" onclick="processTindakan('${item.id}')">
+                                <i class="fas fa-cogs"></i> Proses
+                            </button>
+                            <button class="action-btn archive ${item.status === 'completed' ? '' : 'disabled'}" 
+                                    onclick="${item.status === 'completed' ? `archiveTindakan('${item.id}')` : 'return false'}">
+                                <i class="fas fa-archive"></i> Simpan
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+
+            // Update pagination
+            updatePagination(filteredData.length);
+        }
+
+        // Get status information
+        function getStatusInfo(status) {
+            const statusMap = {
+                'pending': { text: 'Dalam Proses', class: 'status-pending' },
+                'processing': { text: 'Diproses', class: 'status-processing' },
+                'review': { text: 'Semakan', class: 'status-review' },
+                'completed': { text: 'Selesai', class: 'status-completed' },
+                'archived': { text: 'Simpan Fail', class: 'status-archived' }
+            };
+            return statusMap[status] || { text: 'Unknown', class: 'status-pending' };
+        }
+
+        // Get workflow progress HTML
+        function getWorkflowProgress(status) {
+            let activeStep = 0;
+            
+            switch(status) {
+                case 'pending': activeStep = 0; break;
+                case 'processing': activeStep = 1; break;
+                case 'review': activeStep = 2; break;
+                case 'completed': activeStep = 3; break;
+                case 'archived': activeStep = 4; break;
+                default: activeStep = 0;
+            }
+
+            let html = '';
+            workflowSteps.forEach((step, index) => {
+                const stepClass = index < activeStep ? 'completed' : 
+                                index === activeStep ? 'active' : '';
+                html += `
+                    <div class="progress-step ${stepClass}">
+                        <span class="progress-step-label">${step}</span>
+                    </div>
+                    ${index < workflowSteps.length - 1 ? '<div style="width: 20px; height: 2px; background-color: var(--light-gray);"></div>' : ''}
+                `;
+            });
+            return html;
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ms-MY', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+
+        // Sort data
+        function sortData(data) {
+            return [...data].sort((a, b) => {
+                let aValue = a[currentSort.column];
+                let bValue = b[currentSort.column];
+
+                if (currentSort.column === 'date' || currentSort.column === 'deadline') {
+                    aValue = new Date(aValue);
+                    bValue = new Date(bValue);
+                }
+
+                if (currentSort.direction === 'asc') {
+                    return aValue > bValue ? 1 : -1;
+                } else {
+                    return aValue < bValue ? 1 : -1;
+                }
+            });
+        }
+
+        // Sort table function
+        function sortTable(column) {
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+            
+            // Update sort icons
+            document.querySelectorAll('.tindakan-table th i').forEach(icon => {
+                icon.className = 'fas fa-sort';
+            });
+            
+            const currentIcon = document.querySelector(`.tindakan-table th[onclick="sortTable('${column}')"] i`);
+            if (currentIcon) {
+                currentIcon.className = currentSort.direction === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            }
+            
+            renderTindakanTable(getFilteredData());
+        }
+
+        // Get filtered data based on search and filter
+        function getFilteredData() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const sortFilter = document.getElementById('sortFilter').value;
+
+            let filtered = tindakanData.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm) || 
+                                    item.id.toLowerCase().includes(searchTerm);
+                const matchesStatus = !statusFilter || item.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
+
+            // Apply custom sorting based on sort filter
+            if (sortFilter === 'priority') {
+                const priorityOrder = { high: 3, medium: 2, low: 1 };
+                filtered.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);
+            } else if (sortFilter === 'date') {
+                filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else if (sortFilter === 'name') {
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (sortFilter === 'status') {
+                const statusOrder = { processing: 4, review: 3, pending: 2, completed: 1, archived: 0 };
+                filtered.sort((a, b) => statusOrder[b.status] - statusOrder[a.status]);
+            }
+
+            return filtered;
+        }
+
+        // Update pagination
+        function updatePagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const pagination = document.getElementById('pagination');
+            
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let html = `
+                <button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            `;
+
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `
+                        <button class="pagination-number ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">
+                            ${i}
+                        </button>
+                    `;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += `<span>...</span>`;
+                }
+            }
+
+            html += `
+                <button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+
+            pagination.innerHTML = html;
+        }
+
+        // Change page
+        function changePage(page) {
+            currentPage = page;
+            renderTindakanTable(getFilteredData());
+        }
+
+        // Update clock
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ms-MY', { 
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.title = `Dashboard Jabatan (${timeString}) - Majlis Daerah Gerik`;
+        }
+
+        // Update date
+        function updateDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const dateString = now.toLocaleDateString('ms-MY', options);
+            
+            // You can display this somewhere if needed
+            // document.getElementById('currentDate').textContent = dateString;
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', () => {
+                currentPage = 1;
+                renderTindakanTable(getFilteredData());
+            });
+
+            document.getElementById('statusFilter').addEventListener('change', () => {
+                currentPage = 1;
+                renderTindakanTable(getFilteredData());
+            });
+
+            document.getElementById('sortFilter').addEventListener('change', () => {
+                currentPage = 1;
+                renderTindakanTable(getFilteredData());
+            });
+
+            document.getElementById('refreshBtn').addEventListener('click', () => {
+                // Simulate refreshing data
+                const refreshBtn = document.getElementById('refreshBtn');
+                refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyegar...';
+                
+                setTimeout(() => {
+                    updateStatistics();
+                    renderTindakanTable(getFilteredData());
+                    refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Segar Semula';
+                    
+                    // Show notification
+                    showNotification('Data telah disegarkan semula', 'success');
+                }, 1000);
+            });
+
+            document.getElementById('printBtn').addEventListener('click', () => {
+                window.print();
+            });
+        }
+
+        // Action functions
+        function viewTindakan(id) {
+            showNotification(`Membuka butiran tindakan: ${id}`, 'info');
+            // In real implementation, you would navigate to a detail page or show a modal
+        }
+
+        function processTindakan(id) {
+            showNotification(`Memproses tindakan: ${id}`, 'info');
+            // In real implementation, you would show a processing form/modal
+        }
+
+        function archiveTindakan(id) {
+            const confirmArchive = confirm(`Adakah anda pasti ingin menyimpan fail tindakan ${id}?`);
+            if (confirmArchive) {
+                // Update status to archived
+                const itemIndex = tindakanData.findIndex(item => item.id === id);
+                if (itemIndex !== -1) {
+                    tindakanData[itemIndex].status = 'archived';
+                    updateStatistics();
+                    renderTindakanTable(getFilteredData());
+                    showNotification(`Tindakan ${id} telah disimpan ke fail`, 'success');
+                }
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            
+            // Set background color based on type
+            if (type === 'success') {
+                notification.style.backgroundColor = 'var(--success)';
+            } else if (type === 'error') {
+                notification.style.backgroundColor = 'var(--danger)';
+            } else {
+                notification.style.backgroundColor = 'var(--primary)';
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+            
+            // Add CSS for animations
+            if (!document.getElementById('notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializeDashboard);
+    </script>
+</body>
+</html>
