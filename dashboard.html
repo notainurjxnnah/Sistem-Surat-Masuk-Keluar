@@ -3,9 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Sistem Surat Keluar Masuk - Majlis Daerah Gerik</title>
+    <title>Dashboard - Sistem Surat Majlis Daerah Gerik</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-admin: #1a4b8c;
+            --secondary-admin: #2c5aa0;
+            --light-bg: #f8f9fa;
+            --dark-bg: #343a40;
+            --sidebar-bg: #1e3f7a;
+            --sidebar-hover: #2c5aa0;
+            --text-light: #f8f9fa;
+            --text-dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --border-radius: 10px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,899 +32,884 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        :root {
-            --primary: #1a4b8c;
-            --primary-admin: #1a4b8c;
-            --primary-setiausaha: #28a745;
-            --primary-jabatan: #ff9e00;
-            --primary-latihan: #6f42c1;
-            --secondary: #2c5aa0;
-            --accent: #ff9e00;
-            --light: #f8f9fa;
-            --dark: #343a40;
-            --success: #28a745;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --info: #17a2b8;
-            --gray: #6c757d;
-            --light-gray: #e9ecef;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --border-radius: 10px;
-        }
-
         body {
-            background-color: #f5f7fb;
-            color: var(--dark);
-            min-height: 100vh;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
             display: flex;
+            min-height: 100vh;
         }
 
         /* Sidebar Styles */
         .sidebar {
             width: 250px;
-            background-color: var(--primary);
-            color: white;
-            padding: 25px 15px;
+            background-color: var(--sidebar-bg);
+            color: var(--text-light);
             display: flex;
             flex-direction: column;
-            box-shadow: var(--shadow);
-            z-index: 100;
+            transition: var(--transition);
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .logo-icon {
-            font-size: 28px;
-            margin-right: 12px;
-            color: var(--accent);
-        }
-
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .logo-subtext {
-            font-size: 0.85rem;
-            opacity: 0.8;
-            margin-top: 3px;
-        }
-
-        .nav-menu {
-            list-style: none;
-            flex-grow: 1;
-            margin-bottom: 20px;
-        }
-
-        .nav-item {
-            margin-bottom: 8px;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 14px 18px;
-            color: white;
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            transition: all 0.3s ease;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .nav-link i {
-            font-size: 1.2rem;
-            margin-right: 15px;
-            width: 24px;
+        .sidebar-header {
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.2);
             text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Role Badge in Sidebar */
-        .role-badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-light);
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            background-color: var(--sidebar-hover);
+            border-left-color: var(--text-light);
+        }
+
+        .menu-item.active {
+            background-color: var(--sidebar-hover);
+            border-left-color: var(--text-light);
             font-weight: 600;
-            margin-top: 5px;
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
         }
 
-        .role-badge.admin {
-            background-color: rgba(255, 255, 255, 0.3);
-            border-left: 3px solid var(--accent);
-        }
-
-        .user-info {
-            margin-top: auto;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-        }
-
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background-color: var(--primary-admin);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
+        .menu-item i {
+            width: 25px;
             margin-right: 15px;
-            color: white;
+            font-size: 1.2rem;
         }
 
-        .user-avatar.setiausaha {
-            background-color: var(--primary-setiausaha);
-        }
-
-        .user-avatar.jabatan {
-            background-color: var(--primary-jabatan);
-        }
-
-        .user-avatar.latihan {
-            background-color: var(--primary-latihan);
-        }
-
-        .user-details h4 {
+        .menu-item span {
             font-size: 1rem;
-            margin-bottom: 3px;
         }
 
-        .user-details p {
-            font-size: 0.85rem;
-            opacity: 0.9;
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
         /* Main Content Styles */
         .main-content {
             flex: 1;
-            padding: 25px;
-            overflow-y: auto;
+            margin-left: 250px;
+            padding: 20px;
+            transition: var(--transition);
         }
 
-        .header {
+        /* Top Navigation */
+        .top-nav {
+            background-color: white;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .page-title h1 {
-            color: var(--primary);
-            font-size: 2rem;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .page-title h1 .role-indicator {
-            font-size: 1rem;
-            padding: 5px 12px;
-            border-radius: 20px;
-            background-color: var(--primary);
-            color: white;
+            color: var(--primary-admin);
+            font-size: 1.8rem;
         }
 
         .page-title p {
-            color: var(--gray);
-            font-size: 1rem;
+            color: #6c757d;
+            font-size: 0.9rem;
         }
 
-        .back-button {
-            background-color: var(--primary);
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .user-role {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-admin);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background-color: var(--danger);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 20px;
             border-radius: var(--border-radius);
             cursor: pointer;
             display: flex;
             align-items: center;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
+            gap: 8px;
+            transition: var(--transition);
         }
 
-        .back-button:hover {
-            background-color: var(--secondary);
+        .logout-btn:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
         }
 
-        .back-button i {
-            margin-right: 8px;
+        /* Dashboard Content */
+        .dashboard-content {
+            display: none;
         }
 
-        /* Welcome Section - Updated based on role */
-        .welcome-section {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 25px 30px;
-            border-radius: var(--border-radius);
-            margin-bottom: 30px;
-            box-shadow: var(--shadow);
+        .dashboard-content.active {
+            display: block;
         }
 
-        .welcome-section.setiausaha {
-            background: linear-gradient(135deg, var(--primary-setiausaha), #34c759);
-        }
-
-        .welcome-section.jabatan {
-            background: linear-gradient(135deg, var(--primary-jabatan), #ffb142);
-        }
-
-        .welcome-section.latihan {
-            background: linear-gradient(135deg, var(--primary-latihan), #8e44ad);
-        }
-
-        .welcome-section h2 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .welcome-section h2 i {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .welcome-section p {
-            font-size: 1rem;
-            opacity: 0.9;
-            max-width: 800px;
-        }
-
-        .department-title {
-            background-color: rgba(255, 255, 255, 0.15);
-            padding: 12px 20px;
-            border-radius: var(--border-radius);
-            display: inline-block;
-            margin-top: 15px;
-            font-weight: bold;
-            border-left: 4px solid var(--accent);
-        }
-
-        /* Stats Section */
-        .stats-container {
+        /* Statistics Cards */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
             margin-bottom: 30px;
         }
 
-        @media (max-width: 1200px) {
-            .stats-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .stats-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .stat-box {
+        .stat-card {
             background-color: white;
             padding: 25px;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             display: flex;
-            flex-direction: column;
-            border-top: 5px solid var(--primary);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .stat-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .stat-box.surat-masuk {
-            border-top-color: var(--success);
-        }
-
-        .stat-box.surat-keluar {
-            border-top-color: var(--warning);
-        }
-
-        .stat-box.ramalan-cukai {
-            border-top-color: var(--danger);
-        }
-
-        .stat-box.pengguna {
-            border-top-color: var(--info);
-        }
-
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            transition: var(--transition);
         }
 
-        .stat-title {
-            font-size: 1.1rem;
-            color: var(--gray);
-            font-weight: 600;
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
 
         .stat-icon {
-            font-size: 1.8rem;
-            color: var(--primary);
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 10px;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-        }
-
-        .stat-value.empty {
-            color: var(--light-gray);
-            font-size: 1.8rem;
-            font-weight: normal;
-        }
-
-        /* Quick Actions - REMOVED */
-        
-        /* Time Section */
-        .time-section {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
-        .today-info {
-            background-color: white;
-            padding: 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-
-        .today-info h3 {
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-
-        .date-display {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 10px;
-        }
-
-        .day-display {
-            font-size: 1.2rem;
-            color: var(--gray);
-            margin-bottom: 5px;
-        }
-
-        /* Time Box */
-        .time-box {
-            background-color: white;
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid var(--primary);
-        }
-
-        .time-box h3 {
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .time-display {
-            font-size: 4.5rem;
-            font-weight: 800;
-            color: var(--dark);
-            letter-spacing: 3px;
-            text-align: center;
-            line-height: 1;
-            margin-bottom: 15px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .time-label {
-            font-size: 1.2rem;
-            color: var(--gray);
-            text-align: center;
-        }
-
-        /* Recent Activity */
-        .recent-activity {
-            background-color: white;
-            padding: 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-
-        .recent-activity h3 {
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
-
-        .activity-list {
-            list-style: none;
-        }
-
-        .activity-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--light-gray);
-        }
-
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-
-        .activity-icon {
-            width: 45px;
-            height: 45px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 15px;
-            font-size: 1.2rem;
+            margin-right: 20px;
+            font-size: 1.5rem;
             color: white;
         }
 
-        .activity-icon.masuk {
-            background-color: var(--success);
-        }
-
-        .activity-icon.keluar {
-            background-color: var(--warning);
-        }
-
-        .activity-icon.user {
-            background-color: var(--info);
-        }
-
-        .activity-details h4 {
-            font-size: 1.1rem;
+        .stat-content h3 {
+            font-size: 2rem;
+            color: var(--text-dark);
             margin-bottom: 5px;
         }
 
-        .activity-details p {
-            color: var(--gray);
+        .stat-content p {
+            color: #6c757d;
             font-size: 0.9rem;
         }
 
-        .activity-time {
-            margin-left: auto;
-            color: var(--gray);
-            font-size: 0.9rem;
+        .stat-icon.surat-masuk { background: linear-gradient(135deg, #28a745, #20c997); }
+        .stat-icon.surat-keluar { background: linear-gradient(135deg, #17a2b8, #20c997); }
+        .stat-icon.pending { background: linear-gradient(135deg, #ffc107, #fd7e14); }
+        .stat-icon.selesai { background: linear-gradient(135deg, #6f42c1, #6610f2); }
+
+        /* Tabs for Ramalan Cukai */
+        .tax-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--gray);
+        .tax-tab {
+            padding: 10px 20px;
+            background-color: white;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6c757d;
+            transition: var(--transition);
         }
 
-        .empty-state i {
-            font-size: 3rem;
+        .tax-tab:hover {
+            background-color: #f8f9fa;
+        }
+
+        .tax-tab.active {
+            border-color: var(--primary-admin);
+            border-bottom-color: white;
+            color: var(--primary-admin);
+            background-color: white;
+            margin-bottom: -2px;
+        }
+
+        .tax-content {
+            display: none;
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .tax-content.active {
+            display: block;
+        }
+
+        /* Charts for Ramalan Cukai */
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .chart-title {
+            color: var(--primary-admin);
             margin-bottom: 15px;
-            color: var(--light-gray);
-        }
-
-        .empty-state p {
-            font-size: 1.1rem;
-        }
-
-        /* Footer */
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            color: var(--gray);
-            font-size: 0.9rem;
-            padding-top: 20px;
-            border-top: 1px solid var(--light-gray);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .time-section {
-                grid-template-columns: 1fr;
-            }
-            
-            .time-display {
-                font-size: 4rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                padding: 15px;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-            
-            .logo {
-                margin-bottom: 0;
-                padding-bottom: 0;
-                border-bottom: none;
-            }
-            
-            .nav-menu {
-                display: flex;
-                flex-grow: 0;
-                margin-bottom: 0;
-            }
-            
-            .nav-item {
-                margin-bottom: 0;
-                margin-left: 5px;
-            }
-            
-            .nav-link span {
-                display: none;
-            }
-            
-            .user-info {
-                margin-top: 0;
-                padding-top: 0;
-                border-top: none;
-                display: none;
-            }
-            
-            .main-content {
-                padding: 20px;
-            }
-            
-            .time-display {
-                font-size: 3.5rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .time-display {
-                font-size: 3rem;
-            }
-            
-            .nav-link i {
-                margin-right: 0;
-            }
-            
-            .user-details {
-                display: none;
-            }
-            
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .back-button {
-                margin-top: 0;
-                align-self: flex-start;
-            }
-            
-            .page-title h1 {
-                font-size: 1.5rem;
-            }
-        }
-
-        /* Role Indicator */
-        .role-header {
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 5px;
         }
 
-        .role-tag {
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        select, button {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: white;
+            font-size: 0.9rem;
+        }
+
+        button {
+            background-color: var(--primary-admin);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        button:hover {
+            background-color: var(--secondary-admin);
+        }
+
+        .prediction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .prediction-table th {
+            background-color: var(--primary-admin);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .prediction-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .prediction-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .prediction-table tr:hover {
+            background-color: #f0f5ff;
+        }
+
+        .conclusion {
+            background-color: #e8f4f8;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-top: 40px;
+            border-left: 4px solid var(--primary-admin);
+        }
+
+        .category-tag {
+            display: inline-block;
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .residential { background-color: #e3f2fd; color: #1565c0; }
+        .commercial { background-color: #e8f5e9; color: #2e7d32; }
+        .corporate { background-color: #f3e5f5; color: #7b1fa2; }
+
+        /* Table for Surat */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .data-table th {
+            background-color: var(--primary-admin);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .data-table tr:hover {
+            background-color: #f0f5ff;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        .role-tag.admin {
-            background-color: rgba(26, 75, 140, 0.1);
-            color: var(--primary-admin);
-            border: 1px solid rgba(26, 75, 140, 0.3);
+        .status-pending { background-color: #fff3cd; color: #856404; }
+        .status-process { background-color: #cce5ff; color: #004085; }
+        .status-completed { background-color: #d4edda; color: #155724; }
+        .status-rejected { background-color: #f8d7da; color: #721c24; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .sidebar:hover {
+                width: 250px;
+            }
+
+            .sidebar-header h2,
+            .sidebar-header p,
+            .menu-item span,
+            .sidebar-footer {
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            .sidebar:hover .sidebar-header h2,
+            .sidebar:hover .sidebar-header p,
+            .sidebar:hover .menu-item span,
+            .sidebar:hover .sidebar-footer {
+                opacity: 1;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .sidebar:hover + .main-content {
+                margin-left: 250px;
+            }
+
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+
+            .top-nav {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .user-info {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .user-details {
+                text-align: center;
+            }
         }
 
-        .role-tag.setiausaha {
-            background-color: rgba(40, 167, 69, 0.1);
-            color: var(--primary-setiausaha);
-            border: 1px solid rgba(40, 167, 69, 0.3);
-        }
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 15px;
+            }
 
-        .role-tag.jabatan {
-            background-color: rgba(255, 158, 0, 0.1);
-            color: var(--primary-jabatan);
-            border: 1px solid rgba(255, 158, 0, 0.3);
-        }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
 
-        .role-tag.latihan {
-            background-color: rgba(111, 66, 193, 0.1);
-            color: var(--primary-latihan);
-            border: 1px solid rgba(111, 66, 193, 0.3);
+            .tax-tabs {
+                flex-direction: column;
+            }
+
+            .tax-tab {
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="logo">
-            <div class="logo-icon">
-                <i class="fas fa-envelope-open-text"></i>
-            </div>
-            <div>
-                <div class="logo-text">Sistem Surat</div>
-                <div class="logo-subtext">Majlis Daerah Gerik</div>
-                <div class="role-badge admin" id="roleBadge">Pentadbir</div>
-            </div>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-envelope-open-text"></i> MDG</h2>
+            <p>Sistem Surat</p>
         </div>
-        
-        <!-- Navigation Menu will be populated by JavaScript -->
-        <ul class="nav-menu" id="navMenu">
-            <!-- Menu items will be added here based on role -->
-        </ul>
-        
-        <div class="user-info">
-            <div class="user-avatar admin" id="userAvatar">A</div>
-            <div class="user-details">
-                <h4 id="userName">Admin Ahmad</h4>
-                <p id="userRole">Pentadbir Sistem</p>
-            </div>
+
+        <div class="sidebar-menu">
+            <a href="#dashboard" class="menu-item active" data-tab="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#surat-masuk" class="menu-item" data-tab="surat-masuk">
+                <i class="fas fa-inbox"></i>
+                <span>Surat Masuk</span>
+            </a>
+            <a href="#surat-keluar" class="menu-item" data-tab="surat-keluar">
+                <i class="fas fa-paper-plane"></i>
+                <span>Surat Keluar</span>
+            </a>
+            <a href="#ramalan-cukai" class="menu-item" data-tab="ramalan-cukai">
+                <i class="fas fa-chart-line"></i>
+                <span>Ramalan Cukai</span>
+            </a>
+            <a href="#laporan" class="menu-item" data-tab="laporan">
+                <i class="fas fa-file-alt"></i>
+                <span>Laporan</span>
+            </a>
+            <a href="#pengguna" class="menu-item" data-tab="pengguna">
+                <i class="fas fa-users"></i>
+                <span>Pengguna</span>
+            </a>
+            <a href="#tetapan" class="menu-item" data-tab="tetapan">
+                <i class="fas fa-cog"></i>
+                <span>Tetapan Sistem</span>
+            </a>
         </div>
-    </aside>
-    
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="header">
+
+        <div class="sidebar-footer">
+            <p>Versi 2.1.0</p>
+            <p>© 2025 MD Gerik</p>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Top Navigation -->
+        <div class="top-nav">
             <div class="page-title">
-                <div class="role-header">
-                    <h1>Dashboard</h1>
-                    <span class="role-tag admin" id="pageRoleTag">Admin</span>
-                </div>
-                <p>Sistem Pengurusan Surat Rasmi Majlis Daerah Gerik</p>
+                <h1 id="pageTitle">Dashboard Utama</h1>
+                <p id="pageSubtitle">Selamat datang ke Sistem Pengurusan Surat</p>
             </div>
-            <button class="back-button" id="backButton">
-                <i class="fas fa-arrow-left"></i> Kembali
-            </button>
+
+            <div class="user-info">
+                <div class="user-details">
+                    <div class="user-name" id="userName">Pentadbir Sistem</div>
+                    <div class="user-role" id="userRole">Admin</div>
+                </div>
+                <div class="user-avatar" id="userAvatar">A</div>
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Log Keluar
+                </button>
+            </div>
         </div>
-        
-        <!-- Welcome Section -->
-        <section class="welcome-section admin" id="welcomeSection">
-            <h2><i class="fas fa-user-cog"></i> Selamat Datang, <span id="welcomeName">Admin Ahmad</span></h2>
-            <p>Anda log masuk sebagai Pentadbir Sistem dengan akses penuh kepada semua modul</p>
-            <div class="department-title">JABATAN KHIDMAT PENGURUSAN BHG. PENTADBIRAN</div>
-        </section>
-        
-        <!-- Statistics Section -->
-        <section class="stats-container">
-            <div class="stat-box surat-masuk">
-                <div class="stat-header">
-                    <div class="stat-title">Surat Masuk</div>
-                    <div class="stat-icon">
-                        <i class="fas fa-envelope"></i>
+
+        <!-- Dashboard Content -->
+        <div id="dashboard" class="dashboard-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon surat-masuk">
+                        <i class="fas fa-inbox"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="suratMasukCount">0</h3>
+                        <p>Surat Masuk</p>
                     </div>
                 </div>
-                <div class="stat-value" id="statSuratMasuk">0</div>
-                <div class="stat-desc">Surat masuk bulan ini</div>
-            </div>
-            
-            <div class="stat-box surat-keluar">
-                <div class="stat-header">
-                    <div class="stat-title">Surat Keluar</div>
-                    <div class="stat-icon">
+
+                <div class="stat-card">
+                    <div class="stat-icon surat-keluar">
                         <i class="fas fa-paper-plane"></i>
                     </div>
-                </div>
-                <div class="stat-value" id="statSuratKeluar">0</div>
-                <div class="stat-desc">Surat keluar bulan ini</div>
-            </div>
-            
-            <div class="stat-box ramalan-cukai">
-                <div class="stat-header">
-                    <div class="stat-title">Ramalan Cukai</div>
-                    <div class="stat-icon">
-                        <i class="fas fa-chart-line"></i>
+                    <div class="stat-content">
+                        <h3 id="suratKeluarCount">0</h3>
+                        <p>Surat Keluar</p>
                     </div>
                 </div>
-                <div class="stat-value" id="statRamalan">RM 0</div>
-                <div class="stat-desc">Anggaran bulan semasa</div>
-            </div>
-            
-            <div class="stat-box pengguna">
-                <div class="stat-header">
-                    <div class="stat-title">Pengguna Aktif</div>
-                    <div class="stat-icon">
-                        <i class="fas fa-users"></i>
+
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="suratPendingCount">0</h3>
+                        <p>Dalam Proses</p>
                     </div>
                 </div>
-                <div class="stat-value" id="statPengguna">0</div>
-                <div class="stat-desc">Pengguna online</div>
-            </div>
-        </section>
-        
-        <!-- Time and Date Section -->
-        <section class="time-section">
-            <div class="today-info">
-                <h3>Statistik Surat</h3>
-                <div class="date-display">Hari ini</div>
-                <div class="day-display" id="current-date">Isnin, 1 Januari 2024</div>
-                <div style="margin-top: 15px; color: var(--gray);">
-                    <p>Statistik terkini akan dipaparkan di sini</p>
+
+                <div class="stat-card">
+                    <div class="stat-icon selesai">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="suratSelesaiCount">0</h3>
+                        <p>Selesai</p>
+                    </div>
                 </div>
             </div>
-            
-            <div class="time-box">
-                <h3>Masa Sistem</h3>
-                <div class="time-display" id="live-clock">00:00:00</div>
-                <div class="time-label">Waktu Semasa (Waktu Malaysia)</div>
+
+            <div style="background-color: white; padding: 25px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-top: 30px;">
+                <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Aktiviti Terkini</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>No. Rujukan</th>
+                            <th>Jenis Surat</th>
+                            <th>Tarikh</th>
+                            <th>Status</th>
+                            <th>Tindakan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentActivities">
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
             </div>
-        </section>
-        
-        <!-- Recent Activity -->
-        <section class="recent-activity">
-            <h3>Aktiviti Terkini</h3>
-            <div class="activity-list" id="activityList">
-                <!-- Activity items will be populated by JavaScript -->
+        </div>
+
+        <!-- Surat Masuk Content -->
+        <div id="surat-masuk" class="dashboard-content">
+            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Senarai Surat Masuk</h2>
+            <div style="margin-bottom: 20px;">
+                <button style="background-color: var(--primary-admin); color: white; padding: 10px 20px; border: none; border-radius: var(--border-radius); cursor: pointer; margin-right: 10px;">
+                    <i class="fas fa-plus"></i> Tambah Surat Masuk
+                </button>
+                <button style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: var(--border-radius); cursor: pointer;">
+                    <i class="fas fa-filter"></i> Tapisan
+                </button>
             </div>
-            <div class="empty-state" id="emptyActivity">
-                <i class="fas fa-clipboard-list"></i>
-                <p>Tiada aktiviti terkini untuk dipaparkan</p>
-                <p style="font-size: 0.9rem; margin-top: 10px;">Data akan dipaparkan selepas dimasukkan</p>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>No. Rujukan</th>
+                        <th>Pengirim</th>
+                        <th>Perkara</th>
+                        <th>Tarikh Terima</th>
+                        <th>Status</th>
+                        <th>Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SM/2025/001</td>
+                        <td>Jabatan Kerja Raya</td>
+                        <td>Permohonan Kelulusan Pelan</td>
+                        <td>15 Jan 2025</td>
+                        <td><span class="status-badge status-pending">Dalam Proses</span></td>
+                        <td>
+                            <button style="background-color: var(--primary-admin); color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; margin-right: 5px;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button style="background-color: var(--success); color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <!-- More rows can be added here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Surat Keluar Content -->
+        <div id="surat-keluar" class="dashboard-content">
+            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Senarai Surat Keluar</h2>
+            <!-- Similar structure to surat-masuk -->
+        </div>
+
+        <!-- RAMALAN CUKAI Content -->
+        <div id="ramalan-cukai" class="dashboard-content">
+            <div style="background-color: #e8f4f8; padding: 20px; border-radius: var(--border-radius); margin-bottom: 30px; border-left: 4px solid var(--primary-admin);">
+                <h2 style="color: var(--primary-admin); margin-bottom: 10px;">Ramalan Aras Cukai Taksiran</h2>
+                <p>Sejak <strong>39 tahun lepas</strong> (1985-2024), kadar cukai taksiran bagi negeri Perak kekal stabil tanpa kenaikan. Namun, selari dengan pertumbuhan pembangunan dan keperluan fiskal, kerajaan negeri Perak telah meluluskan <strong>kenaikan cukai taksiran berkuat kuasa tahun 2026</strong>.</p>
+                <div style="background-color: white; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <h4 style="color: var(--primary-admin); margin-bottom: 10px;">Kadar Baru 2026:</h4>
+                    <p><span class="category-tag residential">Perumahan</span>: 6.0% (dari 5.20%)</p>
+                    <p><span class="category-tag commercial">Kedai/Perniagaan</span>: 6.0% (dari 5.60%)</p>
+                    <p><span class="category-tag corporate">Syarikat/Industri</span>: 6.0% (dari 6.50%)</p>
+                    <p><em>Nota: Semua kategori diselaraskan kepada kadar 6% mulai 2026</em></p>
+                </div>
             </div>
-        </section>
-        
-        <!-- Footer -->
-        <footer class="footer">
-            <p>&copy; 2025 Sistem Surat Keluar Masuk - Majlis Daerah Gerik. Hak Cipta Terpelihara.</p>
-            <p style="font-size: 0.8rem; margin-top: 5px;">Versi 2.1.0 | User: <span id="footerUser">Admin</span></p>
-        </footer>
-    </main>
-    
+
+            <!-- Tabs for different views -->
+            <div class="tax-tabs">
+                <div class="tax-tab active" data-tax-view="charts">Graf Ramalan</div>
+                <div class="tax-tab" data-tax-view="table">Jadual Ramalan</div>
+                <div class="tax-tab" data-tax-view="analysis">Analisis</div>
+            </div>
+
+            <!-- Charts View -->
+            <div id="tax-charts" class="tax-content active">
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3 class="chart-title">
+                            <span class="category-tag residential">●</span>
+                            Ramalan Cukai Taksiran - Perumahan
+                        </h3>
+                        <div class="chart-wrapper">
+                            <canvas id="residentialChart"></canvas>
+                        </div>
+                        <div class="controls">
+                            <div class="control-group">
+                                <label>Tahun Mula:</label>
+                                <select id="residentialStartYear">
+                                    <option value="1985">1985</option>
+                                    <option value="2000">2000</option>
+                                    <option value="2010">2010</option>
+                                    <option value="2020" selected>2020</option>
+                                </select>
+                            </div>
+                            <button onclick="downloadTaxData('perumahan')">Muat Turun Data</button>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <h3 class="chart-title">
+                            <span class="category-tag commercial">●</span>
+                            Ramalan Cukai Taksiran - Kedai/Perniagaan
+                        </h3>
+                        <div class="chart-wrapper">
+                            <canvas id="commercialChart"></canvas>
+                        </div>
+                        <div class="controls">
+                            <div class="control-group">
+                                <label>Tahun Mula:</label>
+                                <select id="commercialStartYear">
+                                    <option value="1985">1985</option>
+                                    <option value="2000">2000</option>
+                                    <option value="2010">2010</option>
+                                    <option value="2020" selected>2020</option>
+                                </select>
+                            </div>
+                            <button onclick="downloadTaxData('kedai')">Muat Turun Data</button>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <h3 class="chart-title">
+                            <span class="category-tag corporate">●</span>
+                            Ramalan Cukai Taksiran - Syarikat/Industri
+                        </h3>
+                        <div class="chart-wrapper">
+                            <canvas id="corporateChart"></canvas>
+                        </div>
+                        <div class="controls">
+                            <div class="control-group">
+                                <label>Tahun Mula:</label>
+                                <select id="corporateStartYear">
+                                    <option value="1985">1985</option>
+                                    <option value="2000">2000</option>
+                                    <option value="2010">2010</option>
+                                    <option value="2020" selected>2020</option>
+                                </select>
+                            </div>
+                            <button onclick="downloadTaxData('syarikat')">Muat Turun Data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table View -->
+            <div id="tax-table" class="tax-content">
+                <h3 style="color: var(--primary-admin); margin-bottom: 20px;">Ramalan 5-Tahunan (2026-2050)</h3>
+                <table class="prediction-table">
+                    <thead>
+                        <tr>
+                            <th>Tahun</th>
+                            <th>Perumahan (%)</th>
+                            <th>Kedai/Perniagaan (%)</th>
+                            <th>Syarikat/Industri (%)</th>
+                            <th>Fasa Pembangunan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="predictionTableBody">
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Analysis View -->
+            <div id="tax-analysis" class="tax-content">
+                <div class="conclusion">
+                    <h3 style="color: var(--primary-admin); margin-bottom: 15px;">Analisis Ramalan Cukai</h3>
+                    <p>Berdasarkan analisis matematik dan model ramalan, kenaikan cukai taksiran mulai 2026 adalah langkah kerajaan negeri Perak untuk <strong>membiayai pembangunan</strong> sambil mengekalkan daya saing negeri.</p>
+                    
+                    <p><strong>Kesan utama berdasarkan model matematik:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px; margin-bottom: 15px;">
+                        <li>Untuk perumahan: Peningkatan ±RM50 setahun untuk harta bernilai RM62,400</li>
+                        <li>Kadar diselaraskan kepada 6% untuk semua kategori mulai 2026</li>
+                        <li>Ramalan menunjukkan kenaikan sederhana setiap 5 tahun selepas 2026</li>
+                    </ul>
+                    
+                    <p><strong>Fasa Ramalan 5-Tahunan:</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>2026–2030:</strong> Fasa pelarasan – kesan inflasi dan penyesuaian pasaran</li>
+                        <li><strong>2031–2035:</strong> Kadar stabil dengan insentif untuk hartanah hijau</li>
+                        <li><strong>2036–2040:</strong> Kemungkinan kenaikan tambahan untuk pembiayaan infrastruktur mega</li>
+                        <li><strong>2041–2050:</strong> Kadar dijangka stabil pada 7–8% (bergantung kepada ekonomi makro)</li>
+                    </ol>
+                    
+                    <p style="margin-top: 15px;">Pemantauan berkala terhadap ramalan ini disyorkan untuk perancangan hartanah dan pelaburan jangka panjang di Negeri Perak.</p>
+                </div>
+                
+                <div style="background-color: white; padding: 20px; border-radius: var(--border-radius); margin-top: 20px; box-shadow: var(--shadow);">
+                    <h4 style="color: var(--primary-admin); margin-bottom: 15px;">Data Matematik Model</h4>
+                    <p><strong>Pemboleh Ubah Model:</strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 15px;">
+                        <li>A (Luas Harta): 1,000 kaki²</li>
+                        <li>k (Kadar Anggaran): RM5.20 / kaki² / bulan</li>
+                        <li>r (Kadar Cukai): 6% (0.06)</li>
+                    </ul>
+                    
+                    <p><strong>Formula Pengiraan:</strong></p>
+                    <p>Nilai Taksiran = k × A × 12 = RM5.20 × 1,000 × 12 = RM62,400/tahun</p>
+                    <p>Cukai Taksiran (2026) = Nilai Taksiran × r = RM62,400 × 0.06 = RM3,744/tahun</p>
+                    <p>Kenaikan tahunan ≈ RM50 (berdasarkan model ramalan)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Other dashboard sections (laporan, pengguna, tetapan) -->
+        <div id="laporan" class="dashboard-content">
+            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Laporan Sistem</h2>
+            <!-- Laporan content -->
+        </div>
+
+        <div id="pengguna" class="dashboard-content">
+            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Pengurusan Pengguna</h2>
+            <!-- Pengguna content -->
+        </div>
+
+        <div id="tetapan" class="dashboard-content">
+            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Tetapan Sistem</h2>
+            <!-- Tetapan content -->
+        </div>
+    </div>
+
     <script>
-        // ============================================
-        // AUTHENTICATION CHECK
-        // ============================================
+        // Check if user is logged in
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is logged in
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             
             if (!currentUser) {
-                // Redirect to login if not logged in
+                // Redirect to login page if not logged in
                 window.location.href = 'index.html';
                 return;
             }
             
-            // Check if user has permission to access this page
-            if (currentUser.role !== 'admin') {
-                alert('Anda tidak mempunyai akses ke halaman ini.');
-                
-                // Redirect to appropriate dashboard
-                switch(currentUser.role) {
-                    case 'setiausaha': window.location.href = 'setiausaha.html'; break;
-                    case 'jabatan': window.location.href = 'jabatan.html'; break;
-                    case 'latihan': window.location.href = 'latihan.html'; break;
-                    default: window.location.href = 'index.html';
-                }
-                return;
-            }
+            // Update user info
+            document.getElementById('userName').textContent = currentUser.name || 'Pengguna';
+            document.getElementById('userRole').textContent = getRoleDisplayName(currentUser.role);
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
             
-            // Initialize dashboard for the user
-            initializeDashboard(currentUser);
-        });
-        
-        // ============================================
-        // DASHBOARD INITIALIZATION
-        // ============================================
-        function initializeDashboard(user) {
-            // Update UI based on user role
-            updateUIForUser(user);
+            // Update page title based on role
+            const roleName = getRoleDisplayName(currentUser.role);
+            document.getElementById('pageTitle').textContent = `Dashboard ${roleName}`;
             
-            // Load navigation menu based on role
-            loadNavigationMenu(user.role);
+            // Load dashboard stats
+            loadDashboardStats();
+            loadRecentActivities();
             
-            // Load dashboard data
-            loadDashboardData(user.role);
+            // Initialize tax prediction charts
+            initializeTaxCharts();
+            populatePredictionTable();
             
             // Setup event listeners
             setupEventListeners();
-            
-            // Start live clock
-            startLiveClock();
-            
-            // Update date
-            updateCurrentDate();
-        }
+        });
         
-        // ============================================
-        // UPDATE UI BASED ON USER ROLE
-        // ============================================
-        function updateUIForUser(user) {
-            // Update user info in sidebar
-            const userAvatar = document.getElementById('userAvatar');
-            const userName = document.getElementById('userName');
-            const userRole = document.getElementById('userRole');
-            const welcomeName = document.getElementById('welcomeName');
-            const footerUser = document.getElementById('footerUser');
-            const roleBadge = document.getElementById('roleBadge');
-            const pageRoleTag = document.getElementById('pageRoleTag');
-            const welcomeSection = document.getElementById('welcomeSection');
-            
-            // Set user info
-            const displayName = user.name || user.username || 'Pengguna';
-            const roleDisplayName = getRoleDisplayName(user.role);
-            
-            if (userName) userName.textContent = displayName;
-            if (userRole) userRole.textContent = roleDisplayName;
-            if (welcomeName) welcomeName.textContent = displayName;
-            if (footerUser) footerUser.textContent = displayName;
-            if (roleBadge) roleBadge.textContent = roleDisplayName;
-            if (pageRoleTag) pageRoleTag.textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
-            
-            // Update avatar
-            if (userAvatar) {
-                userAvatar.textContent = displayName.charAt(0).toUpperCase();
-                userAvatar.className = 'user-avatar ' + user.role;
-                
-                // Set color based on role
-                switch(user.role) {
-                    case 'admin':
-                        userAvatar.style.backgroundColor = '#1a4b8c';
-                        break;
-                    case 'setiausaha':
-                        userAvatar.style.backgroundColor = '#28a745';
-                        break;
-                    case 'jabatan':
-                        userAvatar.style.backgroundColor = '#ff9e00';
-                        break;
-                    case 'latihan':
-                        userAvatar.style.backgroundColor = '#6f42c1';
-                        break;
-                }
-            }
-            
-            // Update welcome section color
-            if (welcomeSection) {
-                welcomeSection.className = 'welcome-section ' + user.role;
-            }
-        }
-        
+        // Role display names
         function getRoleDisplayName(role) {
             switch(role) {
                 case 'admin': return 'Pentadbir Sistem';
@@ -916,299 +920,384 @@
             }
         }
         
-        // ============================================
-        // ROLE-BASED NAVIGATION MENU
-        // ============================================
-        function loadNavigationMenu(role) {
-            const navMenu = document.getElementById('navMenu');
+        // Dashboard statistics
+        function loadDashboardStats() {
+            // Simulate API call
+            setTimeout(() => {
+                document.getElementById('suratMasukCount').textContent = '24';
+                document.getElementById('suratKeluarCount').textContent = '18';
+                document.getElementById('suratPendingCount').textContent = '7';
+                document.getElementById('suratSelesaiCount').textContent = '35';
+            }, 500);
+        }
+        
+        // Recent activities
+        function loadRecentActivities() {
+            const activities = [
+                { ref: 'SK/2025/015', type: 'Keluar', date: '20 Jan 2025', status: 'completed' },
+                { ref: 'SM/2025/014', type: 'Masuk', date: '19 Jan 2025', status: 'pending' },
+                { ref: 'SK/2025/013', type: 'Keluar', date: '18 Jan 2025', status: 'process' },
+                { ref: 'SM/2025/012', type: 'Masuk', date: '17 Jan 2025', status: 'completed' },
+                { ref: 'SK/2025/011', type: 'Keluar', date: '16 Jan 2025', status: 'completed' }
+            ];
             
-            // Define menu items for each role
-            const menuItems = getMenuItemsForRole(role);
+            const tbody = document.getElementById('recentActivities');
+            tbody.innerHTML = '';
             
-            // Clear existing menu items
-            navMenu.innerHTML = '';
-            
-            // Add menu items
-            menuItems.forEach(item => {
-                const li = document.createElement('li');
-                li.className = 'nav-item';
+            activities.forEach(activity => {
+                const row = document.createElement('tr');
+                let statusBadge;
                 
-                const isActive = window.location.pathname.includes(item.href) || 
-                               (window.location.pathname.includes('dashboard.html') && item.href === 'dashboard.html');
+                switch(activity.status) {
+                    case 'pending': 
+                        statusBadge = '<span class="status-badge status-pending">Dalam Proses</span>';
+                        break;
+                    case 'process': 
+                        statusBadge = '<span class="status-badge status-process">Sedang Diproses</span>';
+                        break;
+                    case 'completed': 
+                        statusBadge = '<span class="status-badge status-completed">Selesai</span>';
+                        break;
+                }
                 
-                li.innerHTML = `
-                    <a href="${item.href}" class="nav-link ${isActive ? 'active' : ''}">
-                        <i class="fas ${item.icon}"></i>
-                        <span>${item.text}</span>
-                    </a>
+                row.innerHTML = `
+                    <td>${activity.ref}</td>
+                    <td>Surat ${activity.type}</td>
+                    <td>${activity.date}</td>
+                    <td>${statusBadge}</td>
+                    <td>
+                        <button style="background-color: var(--primary-admin); color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">
+                            <i class="fas fa-eye"></i> Lihat
+                        </button>
+                    </td>
                 `;
-                
-                navMenu.appendChild(li);
+                tbody.appendChild(row);
             });
-            
-            // Add logout link
-            const logoutLi = document.createElement('li');
-            logoutLi.className = 'nav-item';
-            logoutLi.innerHTML = `
-                <a href="#" class="nav-link" id="logoutLink">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Log Keluar</span>
-                </a>
-            `;
-            navMenu.appendChild(logoutLi);
         }
         
-        function getMenuItemsForRole(role) {
-            // Common items for all roles
-            const baseItems = [];
-            
-            // Role-specific items
-            switch(role) {
-                case 'admin':
-                    return [
-                        { icon: 'fa-tachometer-alt', text: 'Dashboard', href: 'dashboard.html' },
-                        { icon: 'fa-envelope', text: 'Surat Masuk', href: 'surat-masuk.html' },
-                        { icon: 'fa-paper-plane', text: 'Surat Keluar', href: 'surat-keluar.html' },
-                        { icon: 'fa-chart-line', text: 'Ramalan Cukai', href: 'ramalan-cukai.html' },
-                        { icon: 'fa-users', text: 'Pengguna', href: 'pengguna.html' },
-                        { icon: 'fa-cog', text: 'Settings', href: 'settings.html' }
-                    ];
-                    
-                case 'setiausaha':
-                    return [
-                        { icon: 'fa-tachometer-alt', text: 'Dashboard', href: 'setiausaha.html' },
-                        { icon: 'fa-edit', text: 'Minit Surat', href: 'minit-surat.html' },
-                        { icon: 'fa-list', text: 'Senarai Diminit', href: 'senarai-minit.html' },
-                        { icon: 'fa-file-alt', text: 'Laporan', href: 'laporan-setiausaha.html' }
-                    ];
-                    
-                case 'jabatan':
-                    return [
-                        { icon: 'fa-tachometer-alt', text: 'Dashboard', href: 'jabatan.html' },
-                        { icon: 'fa-envelope', text: 'Surat Saya', href: 'surat-jabatan.html' },
-                        { icon: 'fa-tasks', text: 'Tugasan', href: 'tugasan-jabatan.html' },
-                        { icon: 'fa-file-alt', text: 'Laporan', href: 'laporan-jabatan.html' }
-                    ];
-                    
-                case 'latihan':
-                    return [
-                        { icon: 'fa-tachometer-alt', text: 'Dashboard', href: 'latihan.html' },
-                        { icon: 'fa-book', text: 'Modul', href: 'modul-latihan.html' },
-                        { icon: 'fa-file-alt', text: 'Laporan', href: 'laporan-latihan.html' },
-                        { icon: 'fa-chart-bar', text: 'Statistik', href: 'statistik-latihan.html' }
-                    ];
-                    
-                default:
-                    return baseItems;
-            }
-        }
-        
-        // ============================================
-        // LOAD DASHBOARD DATA
-        // ============================================
-        function loadDashboardData(role) {
-            // Load statistics
-            loadStatistics();
-            
-            // Load recent activity
-            loadRecentActivity(role);
-        }
-        
-        function loadStatistics() {
-            // In real app, fetch from API/localStorage
-            const suratMasukData = JSON.parse(localStorage.getItem('suratMasukData')) || [];
-            const suratKeluarData = JSON.parse(localStorage.getItem('suratKeluarData')) || [];
-            const suratTindakan = JSON.parse(localStorage.getItem('suratUntukTindakan')) || [];
-            const usersData = JSON.parse(localStorage.getItem('systemUsers')) || [];
-            
-            // Update stats
-            document.getElementById('statSuratMasuk').textContent = suratMasukData.length;
-            document.getElementById('statSuratKeluar').textContent = suratKeluarData.length;
-            document.getElementById('statPengguna').textContent = usersData.length;
-            
-            // Calculate estimated tax (example)
-            const ramalan = suratMasukData.length * 150; // Example calculation
-            document.getElementById('statRamalan').textContent = `RM ${ramalan.toLocaleString()}`;
-        }
-        
-        function loadRecentActivity(role) {
-            const activityList = document.getElementById('activityList');
-            const emptyActivity = document.getElementById('emptyActivity');
-            
-            // Get activities from localStorage or generate sample
-            let activities = JSON.parse(localStorage.getItem('recentActivities')) || [];
-            
-            if (activities.length === 0) {
-                // Generate sample activities based on role
-                activities = generateSampleActivities(role);
-            }
-            
-            if (activities.length === 0) {
-                emptyActivity.style.display = 'block';
-                activityList.innerHTML = '';
-                return;
-            }
-            
-            emptyActivity.style.display = 'none';
-            
-            activityList.innerHTML = activities.slice(0, 5).map(activity => `
-                <li class="activity-item">
-                    <div class="activity-icon ${activity.type}">
-                        <i class="fas ${activity.icon}"></i>
-                    </div>
-                    <div class="activity-details">
-                        <h4>${activity.title}</h4>
-                        <p>${activity.description}</p>
-                    </div>
-                    <div class="activity-time">${activity.time}</div>
-                </li>
-            `).join('');
-        }
-        
-        function generateSampleActivities(role) {
-            const now = new Date();
-            const sampleActivities = [];
-            
-            switch(role) {
-                case 'admin':
-                    sampleActivities.push(
-                        {
-                            type: 'masuk',
-                            icon: 'fa-envelope',
-                            title: 'Surat Masuk Baru',
-                            description: 'No. Rujukan: MDG/2024/001',
-                            time: '10:30'
-                        },
-                        {
-                            type: 'keluar',
-                            icon: 'fa-paper-plane',
-                            title: 'Surat Dihantar',
-                            description: 'Kepada: Jabatan Kerja Raya',
-                            time: '09:45'
-                        },
-                        {
-                            type: 'user',
-                            icon: 'fa-user-plus',
-                            title: 'Pengguna Baru',
-                            description: 'Setiausaha Siti didaftarkan',
-                            time: 'Hari ini'
-                        }
-                    );
-                    break;
-                    
-                case 'setiausaha':
-                    sampleActivities.push(
-                        {
-                            type: 'masuk',
-                            icon: 'fa-edit',
-                            title: 'Minit Ditulis',
-                            description: 'Untuk surat MDG/2024/001',
-                            time: '11:20'
-                        },
-                        {
-                            type: 'keluar',
-                            icon: 'fa-check-circle',
-                            title: 'Surat Diluluskan',
-                            description: 'Oleh Pengarah',
-                            time: '10:15'
-                        }
-                    );
-                    break;
-            }
-            
-            // Save to localStorage for future use
-            localStorage.setItem('recentActivities', JSON.stringify(sampleActivities));
-            
-            return sampleActivities;
-        }
-        
-        // ============================================
-        // EVENT LISTENERS
-        // ============================================
+        // Setup event listeners
         function setupEventListeners() {
-            // Back button
-            document.getElementById('backButton').addEventListener('click', function() {
-                window.history.back();
+            // Sidebar navigation
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all items
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Get tab ID
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Hide all content
+                    document.querySelectorAll('.dashboard-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show selected content
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // Update page title
+                    updatePageTitle(tabId);
+                });
             });
             
-            // Logout functionality
-            document.getElementById('logoutLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                
+            // Tax tabs
+            document.querySelectorAll('.tax-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    document.querySelectorAll('.tax-tab').forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Get view type
+                    const viewType = this.getAttribute('data-tax-view');
+                    
+                    // Hide all tax content
+                    document.querySelectorAll('.tax-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show selected content
+                    document.getElementById(`tax-${viewType}`).classList.add('active');
+                });
+            });
+            
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', function() {
                 if (confirm('Adakah anda pasti ingin log keluar?')) {
                     localStorage.removeItem('currentUser');
                     window.location.href = 'index.html';
                 }
             });
-            
-            // Navigation click handlers
-            document.addEventListener('click', function(e) {
-                if (e.target.closest('.nav-link') && !e.target.closest('#logoutLink')) {
-                    const link = e.target.closest('.nav-link');
-                    const href = link.getAttribute('href');
-                    
-                    // Update active state
-                    document.querySelectorAll('.nav-link').forEach(item => {
-                        item.classList.remove('active');
-                    });
-                    link.classList.add('active');
-                    
-                    // Navigate to page
-                    if (href && href !== '#') {
-                        window.location.href = href;
-                    }
-                }
-            });
         }
         
-        // ============================================
-        // UTILITY FUNCTIONS
-        // ============================================
-        function startLiveClock() {
-            function updateClock() {
-                const now = new Date();
-                let hours = now.getHours().toString().padStart(2, '0');
-                let minutes = now.getMinutes().toString().padStart(2, '0');
-                let seconds = now.getSeconds().toString().padStart(2, '0');
-                
-                document.getElementById('live-clock').textContent = `${hours}:${minutes}:${seconds}`;
-            }
+        // Update page title based on active tab
+        function updatePageTitle(tabId) {
+            const titles = {
+                'dashboard': 'Dashboard Utama',
+                'surat-masuk': 'Surat Masuk',
+                'surat-keluar': 'Surat Keluar',
+                'ramalan-cukai': 'Ramalan Cukai Taksiran',
+                'laporan': 'Laporan Sistem',
+                'pengguna': 'Pengurusan Pengguna',
+                'tetapan': 'Tetapan Sistem'
+            };
             
-            updateClock();
-            setInterval(updateClock, 1000);
+            const subtitles = {
+                'dashboard': 'Selamat datang ke Sistem Pengurusan Surat',
+                'surat-masuk': 'Senarai dan pengurusan surat masuk',
+                'surat-keluar': 'Senarai dan pengurusan surat keluar',
+                'ramalan-cukai': 'Ramalan kadar cukai taksiran 2026-2050',
+                'laporan': 'Laporan dan statistik sistem',
+                'pengguna': 'Pengurusan pengguna dan akses',
+                'tetapan': 'Tetapan dan konfigurasi sistem'
+            };
+            
+            document.getElementById('pageTitle').textContent = titles[tabId] || 'Dashboard';
+            document.getElementById('pageSubtitle').textContent = subtitles[tabId] || '';
         }
         
-        function updateCurrentDate() {
-            const monthNames = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", 
-                               "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
-            const dayNames = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
-            
-            const today = new Date();
-            const dayName = dayNames[today.getDay()];
-            const day = today.getDate();
-            const month = monthNames[today.getMonth()];
-            const year = today.getFullYear();
-            
-            document.getElementById('current-date').textContent = `${dayName}, ${day} ${month} ${year}`;
-        }
+        // ========== RAMALAN CUKAI FUNCTIONS ==========
         
-        // ============================================
-        // REFRESH DATA FUNCTION
-        // ============================================
-        window.refreshDashboard = function() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            if (currentUser) {
-                loadDashboardData(currentUser.role);
+        // Data untuk ramalan cukai
+        const historicalYears = Array.from({length: 40}, (_, i) => 1985 + i); // 1985-2024
+        const predictionYears = [2026, 2030, 2035, 2040, 2045, 2050];
+        
+        // Data sejarah: Kadar stabil selama 39 tahun
+        const historicalRates = {
+            residential: Array(40).fill(5.20), // 1985-2024: 5.20%
+            commercial: Array(40).fill(5.60),  // 1985-2024: 5.60%
+            corporate: Array(40).fill(6.50)    // 1985-2024: 6.50%
+        };
+        
+        // Data ramalan 2026-2050 (setiap 5 tahun)
+        const predictionRates = {
+            residential: [6.0, 6.2, 6.5, 6.8, 7.0, 7.2],   // 2026, 2030, 2035, 2040, 2045, 2050
+            commercial: [6.0, 6.3, 6.6, 6.9, 7.1, 7.3],    // 2026, 2030, 2035, 2040, 2045, 2050
+            corporate: [6.0, 6.4, 6.8, 7.2, 7.5, 7.8]      // 2026, 2030, 2035, 2040, 2045, 2050
+        };
+        
+        // Fasa pembangunan untuk jadual
+        const developmentPhases = {
+            2026: "Fasa Pelarasan - Kenaikan pertama selepas 39 tahun",
+            2030: "Fasa Stabilisasi - Penyesuaian pasaran",
+            2035: "Fasa Pertumbuhan - Pembiayaan infrastruktur",
+            2040: "Fasa Kematangan - Pembangunan mampan",
+            2045: "Fasa Penstabilan - Kadar optimum",
+            2050: "Fasa Jangka Panjang - Visi 2050"
+        };
+        
+        // Warna untuk graf
+        const chartColors = {
+            residential: {
+                line: 'rgba(33, 150, 243, 1)',
+                fill: 'rgba(33, 150, 243, 0.1)',
+                point: 'rgba(33, 150, 243, 1)'
+            },
+            commercial: {
+                line: 'rgba(76, 175, 80, 1)',
+                fill: 'rgba(76, 175, 80, 0.1)',
+                point: 'rgba(76, 175, 80, 1)'
+            },
+            corporate: {
+                line: 'rgba(156, 39, 176, 1)',
+                fill: 'rgba(156, 39, 176, 0.1)',
+                point: 'rgba(156, 39, 176, 1)'
             }
         };
         
-        // Auto-refresh every 30 seconds
-        setInterval(() => {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            if (currentUser) {
-                loadStatistics();
+        // Fungsi untuk mendapatkan semua tahun (sejarah + ramalan)
+        function getAllYears(startYear = 1985) {
+            const allHistorical = historicalYears.filter(year => year >= startYear);
+            return [...allHistorical, ...predictionYears];
+        }
+        
+        // Fungsi untuk mendapatkan semua kadar (sejarah + ramalan)
+        function getAllRates(category, startYear = 1985) {
+            const startIndex = historicalYears.findIndex(year => year === startYear);
+            const historical = historicalRates[category].slice(startIndex);
+            return [...historical, ...predictionRates[category]];
+        }
+        
+        // Fungsi untuk membuat graf cukai
+        function createTaxChart(canvasId, category, label) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const startYearSelect = document.getElementById(canvasId.replace('Chart', 'StartYear'));
+            
+            function updateChart() {
+                const startYear = parseInt(startYearSelect.value);
+                const years = getAllYears(startYear);
+                const rates = getAllRates(category, startYear);
+                
+                if (window[canvasId + 'ChartInstance']) {
+                    window[canvasId + 'ChartInstance'].destroy();
+                }
+                
+                window[canvasId + 'ChartInstance'] = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: years,
+                        datasets: [{
+                            label: `Kadar Cukai ${label}`,
+                            data: rates,
+                            borderColor: chartColors[category].line,
+                            backgroundColor: chartColors[category].fill,
+                            pointBackgroundColor: years.map(year => 
+                                year >= 2026 ? chartColors[category].point : 'rgba(100, 100, 100, 0.7)'
+                            ),
+                            pointBorderColor: years.map(year => 
+                                year >= 2026 ? chartColors[category].point : 'rgba(100, 100, 100, 0.7)'
+                            ),
+                            pointRadius: years.map(year => year === 2025 || year === 2026 || year % 10 === 0 ? 6 : 3),
+                            pointHoverRadius: 8,
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                title: {
+                                    display: true,
+                                    text: 'Kadar Cukai (%)'
+                                },
+                                min: 4,
+                                max: 9
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Tahun'
+                                },
+                                ticks: {
+                                    maxTicksLimit: 10
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const year = context.label;
+                                        const value = context.parsed.y;
+                                        let status = "Sejarah";
+                                        
+                                        if (year >= 2026) {
+                                            status = "Ramalan";
+                                        }
+                                        
+                                        if (year === 2026) {
+                                            return `${label}: ${value}% (KENAIKAN ${status})`;
+                                        }
+                                        
+                                        return `${label}: ${value}% (${status})`;
+                                    }
+                                }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        }
+                    }
+                });
             }
-        }, 30000);
+            
+            // Update graf apabila tahun mula berubah
+            startYearSelect.addEventListener('change', updateChart);
+            
+            // Buat graf pertama
+            updateChart();
+        }
+        
+        // Fungsi untuk mengisi jadual ramalan
+        function populatePredictionTable() {
+            const tableBody = document.getElementById('predictionTableBody');
+            tableBody.innerHTML = '';
+            
+            // Tambah baris untuk tahun 2025 (sebelum kenaikan)
+            const row2025 = document.createElement('tr');
+            row2025.innerHTML = `
+                <td><strong>2025</strong> (Sebelum)</td>
+                <td>5.20%</td>
+                <td>5.60%</td>
+                <td>6.50%</td>
+                <td>Kadar stabil selama 39 tahun</td>
+            `;
+            tableBody.appendChild(row2025);
+            
+            // Tambah baris untuk tahun ramalan
+            predictionYears.forEach(year => {
+                const row = document.createElement('tr');
+                const residentialRate = predictionRates.residential[predictionYears.indexOf(year)];
+                const commercialRate = predictionRates.commercial[predictionYears.indexOf(year)];
+                const corporateRate = predictionRates.corporate[predictionYears.indexOf(year)];
+                
+                row.innerHTML = `
+                    <td><strong>${year}</strong>${year === 2026 ? ' (KENAIKAN)' : ''}</td>
+                    <td>${residentialRate}%</td>
+                    <td>${commercialRate}%</td>
+                    <td>${corporateRate}%</td>
+                    <td>${developmentPhases[year]}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Fungsi untuk memuat turun data cukai
+        function downloadTaxData(category) {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            let headers = "Tahun,Kadar(%)";
+            let dataRows = [];
+            
+            // Data sejarah
+            historicalYears.forEach((year, index) => {
+                let rate;
+                if (category === 'perumahan') rate = historicalRates.residential[index];
+                else if (category === 'kedai') rate = historicalRates.commercial[index];
+                else if (category === 'syarikat') rate = historicalRates.corporate[index];
+                
+                dataRows.push(`${year},${rate}`);
+            });
+            
+            // Data ramalan
+            predictionYears.forEach((year, index) => {
+                let rate;
+                if (category === 'perumahan') rate = predictionRates.residential[index];
+                else if (category === 'kedai') rate = predictionRates.commercial[index];
+                else if (category === 'syarikat') rate = predictionRates.corporate[index];
+                
+                dataRows.push(`${year},${rate}`);
+            });
+            
+            csvContent += headers + "\n" + dataRows.join("\n");
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `ramalan_cukai_${category}_perak.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Inisialisasi graf cukai
+        function initializeTaxCharts() {
+            createTaxChart('residentialChart', 'residential', 'Perumahan');
+            createTaxChart('commercialChart', 'commercial', 'Kedai/Perniagaan');
+            createTaxChart('corporateChart', 'corporate', 'Syarikat/Industri');
+        }
     </script>
 </body>
 </html>
