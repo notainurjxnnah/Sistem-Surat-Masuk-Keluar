@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minit Surat - Setiausaha MDG</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+      --primary: #1a4b8c;
+      --secondary: #2c5aa0;
+      --accent: #ff9e00;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --success: #28a745;
+      --warning: #ffc107;
+      --danger: #dc3545;
+      --info: #17a2b8;
+      --gray: #6c757d;
+      --light-gray: #e9ecef;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --border-radius: 10px;
+    }
+
+    body {
+      background-color: #f5f7fb;
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      width: 250px;
+      background-color: var(--primary);
+      color: white;
+      padding: 25px 15px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .logo-icon {
+      font-size: 28px;
+      margin-right: 12px;
+      color: var(--accent);
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .logo-subtext {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-top: 3px;
+    }
+
+    .nav-menu {
+      list-style: none;
+      flex-grow: 1;
+    }
+
+    .nav-item {
+      margin-bottom: 8px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 14px 18px;
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .nav-link i {
+      font-size: 1.2rem;
+      margin-right: 15px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .user-info {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+    }
+
+    .user-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-right: 15px;
+    }
+
+    .user-details h4 {
+      font-size: 1rem;
+      margin-bottom: 3px;
+    }
+
+    .user-details p {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 25px;
+      overflow-y: auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .page-title h1 {
+      color: var(--primary);
+      font-size: 2rem;
+      margin-bottom: 5px;
+    }
+
+    .page-title p {
+      color: var(--gray);
+      font-size: 1rem;
+    }
+
+    .back-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: var(--secondary);
+    }
+
+    .back-button i {
+      margin-right: 8px;
+    }
+
+    /* Welcome Section */
+    .welcome-section {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 25px 30px;
+      border-radius: var(--border-radius);
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .welcome-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .welcome-section p {
+      font-size: 1rem;
+      opacity: 0.9;
+      max-width: 800px;
+    }
+
+    .department-title {
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 12px 20px;
+      border-radius: var(--border-radius);
+      display: inline-block;
+      margin-top: 15px;
+      font-weight: bold;
+      border-left: 4px solid var(--accent);
+    }
+
+    /* Surat Details Section */
+    .surat-details-section {
+      background-color: white;
+      padding: 25px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-header h3 {
+      color: var(--primary);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .section-header h3 i {
+      margin-right: 10px;
+      color: var(--accent);
+    }
+
+    .surat-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    @media (max-width: 768px) {
+      .surat-info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      background-color: var(--light);
+      border-radius: var(--border-radius);
+      border-left: 4px solid var(--primary);
+    }
+
+    .info-label {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+    }
+
+    .info-label i {
+      margin-right: 8px;
+      color: var(--primary);
+    }
+
+    .info-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    /* Jabatan Checkboxes Section */
+    .jabatan-section {
+      background-color: white;
+      padding: 25px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+    }
+
+    .jabatan-section h3 {
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .jabatan-section h3 i {
+      margin-right: 10px;
+      color: var(--accent);
+    }
+
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    @media (max-width: 1200px) {
+      .checkbox-group {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .checkbox-group {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background-color: var(--light);
+      border-radius: var(--border-radius);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .checkbox-item:hover {
+      background-color: rgba(26, 75, 140, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-right: 15px;
+      cursor: pointer;
+    }
+
+    .checkbox-item label {
+      font-weight: 600;
+      color: var(--dark);
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .checkbox-desc {
+      font-size: 0.85rem;
+      color: var(--gray);
+      margin-top: 5px;
+      display: block;
+    }
+
+    .checkbox-note {
+      font-size: 0.8rem;
+      color: var(--warning);
+      font-style: italic;
+      margin-top: 3px;
+    }
+
+    /* Ulasan Section */
+    .ulasan-section {
+      background-color: white;
+      padding: 25px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+    }
+
+    .ulasan-section h3 {
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .ulasan-section h3 i {
+      margin-right: 10px;
+      color: var(--accent);
+    }
+
+    textarea {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      min-height: 150px;
+      resize: vertical;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26, 75, 140, 0.1);
+    }
+
+    .form-note {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      padding: 25px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--secondary);
+    }
+
+    .btn-secondary {
+      background-color: var(--gray);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .btn i {
+      margin-right: 8px;
+    }
+
+    /* Status Indicator */
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      background-color: rgba(255, 158, 0, 0.1);
+      border-radius: var(--border-radius);
+      margin-bottom: 20px;
+      border-left: 4px solid var(--accent);
+    }
+
+    .status-indicator i {
+      color: var(--accent);
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    .status-text {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gray);
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color: var(--light-gray);
+    }
+
+    .empty-state h4 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      font-size: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      color: var(--gray);
+      font-size: 0.9rem;
+      padding-top: 20px;
+      border-top: 1px solid var(--light-gray);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        padding: 15px;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      
+      .logo {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+      
+      .nav-menu {
+        display: flex;
+        flex-grow: 0;
+      }
+      
+      .nav-item {
+        margin-bottom: 0;
+        margin-left: 10px;
+      }
+      
+      .nav-link span {
+        display: none;
+      }
+      
+      .user-info {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+      }
+      
+      .main-content {
+        padding: 20px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .nav-link i {
+        margin-right: 0;
+      }
+      
+      .user-details {
+        display: none;
+      }
+      
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .back-button {
+        margin-top: 15px;
+        align-self: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">
+        <i class="fas fa-user-tie"></i>
+      </div>
+      <div>
+        <div class="logo-text">Setiausaha</div>
+        <div class="logo-subtext">Majlis Daerah Gerik</div>
+      </div>
+    </div>
+    
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="setiausaha.html" class="nav-link">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="minit-surat.html" class="nav-link active">
+          <i class="fas fa-edit"></i>
+          <span>Minit Surat</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="senarai-minit.html" class="nav-link">
+          <i class="fas fa-list"></i>
+          <span>Senarai Diminit</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="index.html" class="nav-link">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Log Keluar</span>
+        </a>
+      </li>
+    </ul>
+    
+    <div class="user-info">
+      <div class="user-avatar">S</div>
+      <div class="user-details">
+        <h4>Setiausaha</h4>
+        <p>Jabatan Khidmat Pengurusan</p>
+      </div>
+    </div>
+  </aside>
+  
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="header">
+      <div class="page-title">
+        <h1>Minit Surat</h1>
+        <p>Tulis minit untuk surat masuk yang dipilih</p>
+      </div>
+      <button class="back-button" id="backButton">
+        <i class="fas fa-arrow-left"></i> Kembali
+      </button>
+    </div>
+    
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+      <h2>Tulis Minit Surat</h2>
+      <p>Pilih jabatan untuk tindakan dan tulis minit/ulasan untuk surat yang dipilih</p>
+      <div class="department-title">JABATAN KHIDMAT PENGURUSAN</div>
+    </section>
+    
+    <!-- Surat Details Section -->
+    <section class="surat-details-section" id="suratDetails">
+      <!-- Surat details akan diisi oleh JavaScript -->
+    </section>
+    
+    <!-- Jabatan Checkboxes Section -->
+    <section class="jabatan-section">
+      <h3><i class="fas fa-check-circle"></i> Tindakan untuk Jabatan</h3>
+      <p>Sila pilih jabatan yang perlu mengambil tindakan:</p>
+      
+      <div class="checkbox-group" id="jabatanCheckboxes">
+        <!-- Checkboxes akan diisi oleh JavaScript -->
+      </div>
+    </section>
+    
+    <!-- Ulasan Section -->
+    <section class="ulasan-section">
+      <h3><i class="fas fa-comment"></i> Ulasan / Minit</h3>
+      <textarea id="ulasanText" placeholder="Tulis minit, ulasan, atau arahan untuk jabatan yang dipilih..."></textarea>
+      <div class="form-note">
+        <i class="fas fa-info-circle"></i> 
+        Minit ini akan dihantar ke semua jabatan yang dipilih dan akan muncul dalam senarai surat keluar.
+      </div>
+    </section>
+    
+    <!-- Action Buttons -->
+    <section class="action-buttons">
+      <button class="btn btn-secondary" id="resetBtn">
+        <i class="fas fa-redo"></i> Set Semula
+      </button>
+      <button class="btn btn-primary" id="submitBtn">
+        <i class="fas fa-paper-plane"></i> Hantar Minit
+      </button>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2025 Sistem Pengurusan Minit Surat - Majlis Daerah Gerik. Hak Cipta Terpelihara.</p>
+    </footer>
+  </main>
+  
+  <script>
+    // Data dari localStorage
+    let suratMasukData = JSON.parse(localStorage.getItem('suratMasukData')) || [];
+    let minitData = JSON.parse(localStorage.getItem('minitData')) || [];
+    let suratKeluarData = JSON.parse(localStorage.getItem('suratUntukTindakan')) || [];
+    
+    // Get surat ID from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const suratId = urlParams.get('id');
+    
+    // Current surat
+    let currentSurat = null;
+    
+    // Jabatan list dengan tambahan PAMERKAN dan SIMPAN FAIL
+    const jabatanList = [
+      { id: 'setiausaha', name: 'Setiausaha', icon: 'fa-user-tie', desc: 'Untuk tindakan setiausaha' },
+      { id: 'jkp', name: 'JKP', icon: 'fa-users', desc: 'Jabatan Khidmat Pengurusan' },
+      { id: 'jab-perbendaharaan', name: 'JAB. PERBENDAHARAAN', icon: 'fa-money-bill-wave', desc: 'Jabatan Perbendaharaan' },
+      { id: 'unit-bangunan', name: 'UNIT BANGUNAN', icon: 'fa-building', desc: 'Unit Bangunan' },
+      { id: 'jab-perancangan', name: 'JAB. PERANCANGAN BANDAR DAN LANDSKAP', icon: 'fa-city', desc: 'Jabatan Perancangan Bandar dan Landskap' },
+      { id: 'peskem', name: 'PESKEM', icon: 'fa-landmark', desc: 'Pejabat Setiausaha Kerajaan Negeri' },
+      { id: 'jab-alam-sekitar', name: 'JABATAN ALAM SEKITAR DAN PERLESENAN', icon: 'fa-leaf', desc: 'Jabatan Alam Sekitar dan Perlesenan' },
+      { id: 'jab-penilaian', name: 'JAB. PENILAIAN DAN HARTA', icon: 'fa-chart-line', desc: 'Jabatan Penilaian dan Harta' },
+      { id: 'unit-osc', name: 'UNIT OSC', icon: 'fa-stopwatch', desc: 'Unit One Stop Centre' },
+      { id: 'jab-kejuruteraan', name: 'JAB. KEJURUTERAAN', icon: 'fa-cogs', desc: 'Jabatan Kejuruteraan' },
+      { id: 'unit-landskap', name: 'UNIT LANDSKAP DAN PELANCONGAN', icon: 'fa-tree', desc: 'Unit Landskap dan Pelancongan' },
+      { id: 'unit-penguatkuasa', name: 'UNIT PENGUATKUASA', icon: 'fa-gavel', desc: 'Unit Penguatkuasa' },
+      { id: 'pamerkan', name: 'PAMERKAN', icon: 'fa-eye', desc: 'Untuk paparan/pameran sahaja', note: 'Hanya untuk paparan, tidak perlu tindakan' },
+      { id: 'simpan-fail', name: 'SIMPAN FAIL', icon: 'fa-folder', desc: 'Untuk simpan fail sahaja', note: 'Simpan fail, tidak perlu tindakan' }
+    ];
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      if (!suratId) {
+        showEmptyState();
+        return;
+      }
+      
+      loadSuratDetails();
+      loadJabatanCheckboxes();
+      setupEventListeners();
+    });
+    
+    // Load surat details
+    function loadSuratDetails() {
+      const surat = suratMasukData.find(s => s.id == suratId);
+      
+      if (!surat) {
+        showEmptyState();
+        return;
+      }
+      
+      currentSurat = surat;
+      
+      // Check if surat is locked
+      const isLocked = isSuratLocked(surat.timestamp);
+      const timeRemaining = getTimeRemaining(surat.timestamp);
+      
+      const suratDetails = document.getElementById('suratDetails');
+      
+      suratDetails.innerHTML = `
+        <div class="section-header">
+          <h3><i class="fas fa-file-alt"></i> Maklumat Surat</h3>
+          <div class="status-indicator">
+            <i class="fas ${isLocked ? 'fa-lock' : 'fa-clock'}"></i>
+            <div class="status-text">
+              ${isLocked ? 'Surat telah dikunci' : `Boleh edit (${timeRemaining})`}
+            </div>
+          </div>
+        </div>
+        
+        <div class="surat-info-grid">
+          <div class="info-item">
+            <div class="info-label">
+              <i class="fas fa-hashtag"></i> No. Rujukan
+            </div>
+            <div class="info-value">${surat.noRujukan}</div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-label">
+              <i class="fas fa-user"></i> Dari (Pengirim)
+            </div>
+            <div class="info-value">${surat.dari}</div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-label">
+              <i class="fas fa-file-alt"></i> Perkara
+            </div>
+            <div class="info-value">${surat.perkara}</div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-label">
+              <i class="fas fa-calendar"></i> Tarikh Surat
+            </div>
+            <div class="info-value">${surat.tarikh}</div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-label">
+              <i class="fas fa-paperclip"></i> Lampiran
+            </div>
+            <div class="info-value">${surat.fail || 'Tiada fail'}</div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-label">
+              <i class="fas fa-clock"></i> Masa Diterima
+            </div>
+            <div class="info-value">${new Date(surat.timestamp).toLocaleString('ms-MY')}</div>
+          </div>
+        </div>
+      `;
+      
+      // Disable form if surat is locked
+      if (isLocked) {
+        document.querySelectorAll('#jabatanCheckboxes input[type="checkbox"]').forEach(cb => {
+          cb.disabled = true;
+        });
+        document.getElementById('ulasanText').disabled = true;
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('submitBtn').innerHTML = '<i class="fas fa-lock"></i> Surat Dikunci';
+        document.getElementById('submitBtn').style.backgroundColor = 'var(--gray)';
+      }
+    }
+    
+    // Check if surat is locked (5 minutes)
+    function isSuratLocked(timestamp) {
+      const now = Date.now();
+      const fiveMinutes = 5 * 60 * 1000; // 5 minutes in milliseconds
+      return (now - timestamp) > fiveMinutes;
+    }
+    
+    // Get time remaining before lock
+    function getTimeRemaining(timestamp) {
+      const now = Date.now();
+      const fiveMinutes = 5 * 60 * 1000;
+      const timeLeft = fiveMinutes - (now - timestamp);
+      
+      if (timeLeft <= 0) return '0:00';
+      
+      const minutes = Math.floor(timeLeft / 60000);
+      const seconds = Math.floor((timeLeft % 60000) / 1000);
+      
+      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    // Load jabatan checkboxes
+    function loadJabatanCheckboxes() {
+      const container = document.getElementById('jabatanCheckboxes');
+      
+      container.innerHTML = jabatanList.map(jabatan => `
+        <div class="checkbox-item">
+          <input type="checkbox" id="${jabatan.id}" value="${jabatan.name}">
+          <label for="${jabatan.id}">
+            ${jabatan.name}
+            <span class="checkbox-desc">${jabatan.desc}</span>
+            ${jabatan.note ? `<span class="checkbox-note">${jabatan.note}</span>` : ''}
+          </label>
+        </div>
+      `).join('');
+    }
+    
+    // Show empty state
+    function showEmptyState() {
+      const mainContent = document.querySelector('.main-content');
+      mainContent.innerHTML = `
+        <div class="header">
+          <div class="page-title">
+            <h1>Minit Surat</h1>
+            <p>Tulis minit untuk surat masuk yang dipilih</p>
+          </div>
+          <button class="back-button" onclick="window.location.href='setiausaha.html'">
+            <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+          </button>
+        </div>
+        
+        <div class="empty-state">
+          <i class="fas fa-exclamation-circle"></i>
+          <h4>Surat Tidak Ditemui</h4>
+          <p>Surat yang dimaksudkan tidak ditemui atau ID surat tidak sah.</p>
+          <button class="btn btn-primary" style="margin-top: 20px;" onclick="window.location.href='setiausaha.html'">
+            <i class="fas fa-tachometer-alt"></i> Kembali ke Dashboard
+          </button>
+        </div>
+      `;
+    }
+    
+    // Setup event listeners
+    function setupEventListeners() {
+      // Back button
+      document.getElementById('backButton').addEventListener('click', function() {
+        window.history.back();
+      });
+      
+      // Reset button
+      document.getElementById('resetBtn').addEventListener('click', function() {
+        if (confirm('Adakah anda pasti ingin set semula semua pilihan?')) {
+          resetForm();
+        }
+      });
+      
+      // Submit button
+      document.getElementById('submitBtn').addEventListener('click', submitMinit);
+    }
+    
+    // Reset form
+    function resetForm() {
+      document.querySelectorAll('#jabatanCheckboxes input[type="checkbox"]').forEach(cb => {
+        cb.checked = false;
+      });
+      document.getElementById('ulasanText').value = '';
+    }
+    
+    // Submit minit
+    function submitMinit() {
+      if (!currentSurat) {
+        alert('Tiada surat dipilih');
+        return;
+      }
+      
+      // Check if surat is locked
+      if (isSuratLocked(currentSurat.timestamp)) {
+        alert('Surat ini telah dikunci dan tidak boleh diminit selepas 5 minit.');
+        return;
+      }
+      
+      // Get selected jabatan
+      const selectedJabatan = [];
+      document.querySelectorAll('#jabatanCheckboxes input[type="checkbox"]:checked').forEach(cb => {
+        selectedJabatan.push(cb.value);
+      });
+      
+      if (selectedJabatan.length === 0) {
+        alert('Sila pilih sekurang-kurangnya satu jabatan untuk tindakan');
+        return;
+      }
+      
+      const ulasan = document.getElementById('ulasanText').value.trim();
+      
+      if (!ulasan) {
+        alert('Sila tulis minit/ulasan sebelum menghantar');
+        return;
+      }
+      
+      // Create minit object
+      const newMinit = {
+        id: Date.now(),
+        suratId: currentSurat.id,
+        noRujukan: currentSurat.noRujukan,
+        dari: currentSurat.dari,
+        perkara: currentSurat.perkara,
+        tarikhSurat: currentSurat.tarikh,
+        tindakanTerpilih: selectedJabatan,
+        ulasan: ulasan,
+        timestamp: Date.now(),
+        createdBy: 'Setiausaha',
+        status: 'dihantar'
+      };
+      
+      // Save minit
+      minitData.push(newMinit);
+      localStorage.setItem('minitData', JSON.stringify(minitData));
+      
+      // Update surat masuk with diminit flag
+      const suratIndex = suratMasukData.findIndex(s => s.id === currentSurat.id);
+      if (suratIndex !== -1) {
+        suratMasukData[suratIndex].diminit = true;
+        suratMasukData[suratIndex].diminitPada = new Date().toISOString();
+        suratMasukData[suratIndex].diminitOleh = 'Setiausaha';
+        localStorage.setItem('suratMasukData', JSON.stringify(suratMasukData));
+      }
+      
+      // Auto add to surat keluar for admin
+      autoAddToSuratKeluar(newMinit);
+      
+      // Show success message
+      alert(`Minit untuk ${newMinit.noRujukan} berjaya dihantar!\n\nJabatan terpilih: ${selectedJabatan.join(', ')}`);
+      
+      // Redirect back to setiausaha dashboard
+      setTimeout(() => {
+        window.location.href = 'setiausaha.html';
+      }, 1500);
+    }
+    
+    // Auto add to surat keluar for admin
+    function autoAddToSuratKeluar(minit) {
+      // Check if already exists
+      const existingIndex = suratKeluarData.findIndex(s => s.suratId === minit.suratId);
+      
+      const tindakanInfo = {
+        oleh: 'Setiausaha',
+        tindakan: `Minit: ${minit.tindakanTerpilih.join(', ')}`,
+        ulasan: minit.ulasan,
+        masa: new Date().toLocaleTimeString('ms-MY', { 
+          hour: '2-digit', 
+          minute: '2-digit',
+          hour12: false 
+        }),
+        tarikh: new Date().toLocaleDateString('ms-MY'),
+        status: 'completed'
+      };
+      
+      if (existingIndex !== -1) {
+        // Update existing - add new tindakan
+        if (!suratKeluarData[existingIndex].tindakan) {
+          suratKeluarData[existingIndex].tindakan = [];
+        }
+        suratKeluarData[existingIndex].tindakan.push(tindakanInfo);
+        suratKeluarData[existingIndex].status = 'masak';
+        suratKeluarData[existingIndex].updatedAt = Date.now();
+      } else {
+        // Create new surat untuk tindakan
+        const newSuratKeluar = {
+          id: minit.suratId,
+          suratId: minit.suratId,
+          noRujukan: minit.noRujukan,
+          dari: minit.dari,
+          perkara: minit.perkara,
+          tarikh: minit.tarikhSurat,
+          timestamp: Date.now(),
+          status: 'masak',
+          tindakan: [tindakanInfo],
+          ulasan: minit.ulasan,
+          jabatanTindakan: minit.tindakanTerpilih,
+          createdDate: new Date().toLocaleDateString('ms-MY'),
+          createdBy: 'Setiausaha'
+        };
+        
+        suratKeluarData.unshift(newSuratKeluar);
+      }
+      
+      localStorage.setItem('suratUntukTindakan', JSON.stringify(suratKeluarData));
+    }
+    
+    // Update time remaining every second
+    if (currentSurat && !isSuratLocked(currentSurat.timestamp)) {
+      setInterval(() => {
+        const timeRemaining = getTimeRemaining(currentSurat.timestamp);
+        const statusElement = document.querySelector('.status-text');
+        if (statusElement) {
+          statusElement.textContent = `Boleh edit (${timeRemaining})`;
+        }
+        
+        // Disable form when locked
+        if (isSuratLocked(currentSurat.timestamp)) {
+          document.querySelectorAll('#jabatanCheckboxes input[type="checkbox"]').forEach(cb => {
+            cb.disabled = true;
+          });
+          document.getElementById('ulasanText').disabled = true;
+          document.getElementById('submitBtn').disabled = true;
+          document.getElementById('submitBtn').innerHTML = '<i class="fas fa-lock"></i> Surat Dikunci';
+          document.getElementById('submitBtn').style.backgroundColor = 'var(--gray)';
+          
+          if (statusElement) {
+            statusElement.textContent = 'Surat telah dikunci';
+          }
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
