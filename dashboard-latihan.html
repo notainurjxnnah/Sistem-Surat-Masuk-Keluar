@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Sistem Latihan - Jabatan Latihan</title>
+    <!-- ... sama seperti index.html sebelumnya ... -->
+</head>
+<body>
+    <!-- Header Dashboard -->
+    <div class="dashboard-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2><i class="bi bi-speedometer2 me-2"></i>Dashboard Sistem Latihan</h2>
+                <p class="text-muted">Jabatan Latihan dan Pembangunan</p>
+            </div>
+            <!-- ... sama seperti sebelumnya ... -->
+        </div>
+
+        <!-- Butang untuk pergi ke Module Latihan -->
+        <div class="alert alert-info mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="bi bi-info-circle me-2"></i>
+                    Klik butang di bawah untuk pergi ke halaman modul latihan
+                </div>
+                <a href="module-latihan.html" target="_blank" class="btn btn-primary">
+                    <i class="bi bi-box-arrow-up-right me-1"></i> Pergi ke Module Latihan
+                </a>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs mb-4" id="dashboardTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="kursus-tab" data-bs-toggle="tab" data-bs-target="#kursus" type="button">
+                    <i class="bi bi-journal-text me-1"></i>Kursus/Latihan
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="staff-tab" data-bs-toggle="tab" data-bs-target="#staff" type="button">
+                    <i class="bi bi-people me-1"></i>Staff
+                </button>
+            </li>
+        </ul>
+
+        <!-- ... content tabs sama seperti sebelumnya ... -->
+    </div>
+</body>
+</html>
