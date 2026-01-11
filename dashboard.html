@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Sistem Surat Keluar Masuk - Majlis Daerah Gerik</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1a4b8c;
+            --primary-admin: #1a4b8c;
+            --primary-setiausaha: #28a745;
+            --primary-jabatan: #ff9e00;
+            --primary-latihan: #6f42c1;
+            --secondary: #2c5aa0;
+            --accent: #ff9e00;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 10px;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary);
+            color: white;
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            margin-right: 12px;
+            color: var(--accent);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-subtext {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex-grow: 1;
+            margin-bottom: 20px;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+            margin-right: 15px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Role Badge in Sidebar */
+        .role-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .role-badge.admin {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-left: 3px solid var(--accent);
+        }
+
+        .user-info {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--primary-admin);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            color: white;
+        }
+
+        .user-avatar.setiausaha {
+            background-color: var(--primary-setiausaha);
+        }
+
+        .user-avatar.jabatan {
+            background-color: var(--primary-jabatan);
+        }
+
+        .user-avatar.latihan {
+            background-color: var(--primary-latihan);
+        }
+
+        .user-details h4 {
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+        .user-details p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title h1 .role-indicator {
+            font-size: 1rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .page-title p {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        .back-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: var(--secondary);
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+        /* Welcome Section - Updated based on role */
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 30px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .welcome-section.setiausaha {
+            background: linear-gradient(135deg, var(--primary-setiausaha), #34c759);
+        }
+
+        .welcome-section.jabatan {
+            background: linear-gradient(135deg, var(--primary-jabatan), #ffb142);
+        }
+
+        .welcome-section.latihan {
+            background: linear-gradient(135deg, var(--primary-latihan), #8e44ad);
+        }
+
+        .welcome-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .welcome-section h2 i {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .welcome-section p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 800px;
+        }
+
+        .department-title {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: bold;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Stats Section */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat-box {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            border-top: 5px solid var(--primary);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-box.surat-masuk {
+            border-top-color: var(--success);
+        }
+
+        .stat-box.surat-keluar {
+            border-top-color: var(--warning);
+        }
+
+        .stat-box.ramalan-cukai {
+            border-top-color: var(--danger);
+        }
+
+        .stat-box.pengguna {
+            border-top-color: var(--info);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-title {
+            font-size: 1.1rem;
+            color: var(--gray);
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-value.empty {
+            color: var(--light-gray);
+            font-size: 1.8rem;
+            font-weight: normal;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .action-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+        }
+
+        .action-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .action-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .action-card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Time Section */
+        .time-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .today-info {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .today-info h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .date-display {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .day-display {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        /* Time Box */
+        .time-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--primary);
+        }
+
+        .time-box h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .time-display {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: 3px;
+            text-align: center;
+            line-height: 1;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .time-label {
+            font-size: 1.2rem;
+            color: var(--gray);
+            text-align: center;
+        }
+
+        /* Recent Activity */
+        .recent-activity {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .recent-activity h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .activity-icon.masuk {
+            background-color: var(--success);
+        }
+
+        .activity-icon.keluar {
+            background-color: var(--warning);
+        }
+
+        .activity-icon.user {
+            background-color: var(--info);
+        }
+
+        .activity-details h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .activity-details p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .activity-time {
+            margin-left: auto;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--light-gray);
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .time-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .time-display {
+                font-size: 4rem;
+            }
+            
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .logo {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+            
+            .nav-menu {
+                display: flex;
+                flex-grow: 0;
+                margin-bottom: 0;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+                margin-left: 5px;
+            }
+            
+            .nav-link span {
+                display: none;
+            }
+            
+            .user-info {
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+                display: none;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .time-display {
+                font-size: 3.5rem;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .time-display {
+                font-size: 3rem;
+            }
+            
+            .nav-link i {
+                margin-right: 0;
+            }
+            
+            .user-details {
+                display: none;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .back-button {
+                margin-top: 0;
+                align-self: flex-start;
+            }
+            
+            .page-title h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Role Indicator */
+        .role-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .role-tag {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-tag.admin {
+            background-color: rgba(26, 75, 140, 0.1);
+            color: var(--primary-admin);
+            border: 1px solid rgba(26, 75, 140, 0.3);
+        }
+
+        .role-tag.setiausaha {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--primary-setiausaha);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .role-tag.jabatan {
+            background-color: rgba(255, 158, 0, 0.1);
+            color: var(--primary-jabatan);
+            border: 1px solid rgba(255, 158, 0, 0.3);
+        }
+
+        .role-tag.latihan {
+            background-color: rgba(111, 66, 193, 0.1);
+            color: var(--primary-latihan);
+            border: 1px solid rgba(111, 66, 193, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-envelope-open-text"></i>
+            </div>
+            <div>
+                <div class="logo-text">Sistem Surat</div>
+                <div class="logo-subtext">Majlis Daerah Gerik</div>
+                <div class="role-badge admin" id="roleBadge">Pentadbir</div>
+            </div>
+        </div>
+        
+        <!-- Navigation Menu will be populated by JavaScript -->
+        <ul class="nav-menu" id="navMenu">
+            <!-- Menu items will be added here based on role -->
+        </ul>
+        
+        <div class="user-info">
+            <div class="user-avatar admin" id="userAvatar">A</div>
+            <div class="user-details">
+                <h4 id="userName">Admin Ahmad</h4>
+                <p id="userRole">Pentadbir Sistem</p>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <div class="page-title">
+                <div class="role-header">
+                    <h1>Dashboard</h1>
+                    <span class="role-tag admin" id="pageRoleTag">Admin</span>
+                </div>
+                <p>Sistem Pengurusan Surat Rasmi Majlis Daerah Gerik</p>
+            </div>
+            <button class="back-button" id="backButton">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </button>
+        </div>
+        
+        <!-- Welcome Section -->
+        <section class="welcome-section admin" id="welcomeSection">
+            <h2><i class="fas fa-user-cog"></i> Selamat Datang, <span id="welcomeName">Admin Ahmad</span></h2>
+            <p>Anda log masuk sebagai Pentadbir Sistem dengan akses penuh kepada semua modul</p>
+            <div class="department-title">JABATAN KHIDMAT PENGURUSAN BHG. PENTADBIRAN</div>
+        </section>
+        
+        <!-- Statistics Section -->
+        <section class="stats-container">
+            <div class="stat-box surat-masuk">
+                <div class="stat-header">
+                    <div class="stat-title">Surat Masuk</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="statSuratMasuk">0</div>
+                <div class="stat-desc">Surat masuk bulan ini</div>
+            </div>
+            
+            <div class="stat-box surat-keluar">
+                <div class="stat-header">
+                    <div class="stat-title">Surat Keluar</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="statSuratKeluar">0</div>
+                <div class="stat-desc">Surat keluar bulan ini</div>
+            </div>
+            
+            <div class="stat-box ramalan-cukai">
+                <div class="stat-header">
+                    <div class="stat-title">Ramalan Cukai</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="statRamalan">RM 0</div>
+                <div class="stat-desc">Anggaran bulan semasa</div>
+            </div>
+            
+            <div class="stat-box pengguna">
+                <div class="stat-header">
+                    <div class="stat-title">Pengguna Aktif</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="statPengguna">0</div>
+                <div class="stat-desc">Pengguna online</div>
+            </div>
+        </section>
+        
+        <!-- Quick Actions -->
+        <section class="quick-actions" id="quickActions">
+            <!-- Quick action buttons will be populated by JavaScript -->
+        </section>
+        
+        <!-- Time and Date Section -->
+        <section class="time-section">
+            <div class="today-info">
+                <h3>Statistik Surat</h3>
+                <div class="date-display">Hari ini</div>
+                <div class="day-display" id="current-date">Isnin, 1 Januari 2024</div>
+                <div style="margin-top: 15px; color: var(--gray);">
+                    <p>Statistik terkini akan dipaparkan di sini</p>
+                </div>
+            </div>
+            
+            <div class="time-box">
+                <h3>Masa Sistem</h3>
+                <div class="time-display" id="live-clock">00:00:00</div>
+                <div class="time-label">Waktu Semasa (Waktu Malaysia)</div>
+            </div>
+        </section>
+        
+        <!-- Recent Activity -->
+        <section class="recent-activity">
+            <h3>Aktiviti Terkini</h3>
+            <div class="activity-list" id="activityList">
+                <!-- Activity items will be populated by JavaScript -->
+            </div>
+            <div class="empty-state" id="emptyActivity">
+                <i class="fas fa-clipboard-list"></i>
+                <p>Tiada aktiviti terkini untuk dipaparkan</p>
+                <p style="font-size: 0.9rem; margin-top: 10px;">Data akan dipaparkan selepas dimasukkan</p>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Sistem Surat Keluar Masuk - Majlis Daerah Gerik. Hak Cipta Terpelihara.</p>
+            <p style="font-size: 0.8rem; margin-top: 5px;">Versi 2.1.0 | User: <span id="footerUser">Admin</span></p>
+        </footer>
+    </main>
+    
+    <script>
+        // ============================================
+        // AUTHENTICATION CHECK
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!currentUser) {
+                // Redirect to login if not logged in
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Check if user has permission to access this page
+            if (currentUser.role !== 'admin') {
+                alert('Anda tidak mempunyai akses ke halaman ini.');
+                
+                // Redirect to appropriate dashboard
+                switch(currentUser.role) {
+                    case 'setiausaha': window.location.href = 'setiausaha.html'; break;
+                    case 'jabatan': window.location.href = 'jabatan.html'; break;
+                    case 'latihan': window.location.href = 'latihan.html'; break;
+                    default: window.location.href = 'index.html';
+                }
+                return;
+            }
+            
+            // Initialize dashboard for the user
+            initializeDashboard(currentUser);
+        });
+        
+        // ============================================
+        // DASHBOARD INITIALIZATION
+        // ============================================
+        function initializeDashboard(user) {
+            // Update UI based on user role
+            updateUIForUser(user);
+            
+            // Load navigation menu based on role
+            loadNavigationMenu(user.role);
+            
+            // Load dashboard data
+            loadDashboardData(user.role);
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Start live clock
+            startLiveClock();
+            
+            // Update date
+            updateCurrentDate();
+        }
+        
+        // ============================================
+        // UPDATE UI BASED ON USER ROLE
+        // ============================================
+        function updateUIForUser(user) {
+            // Update user info in sidebar
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+            const userRole = document.getElementById('userRole');
+            const welcomeName = document.getElementById('welcomeName');
+            const footerUser = document.getElementById('footerUser');
+            const roleBadge = document.getElementById('roleBadge');
+            const pageRoleTag = document.getElementById('pageRoleTag');
+            const welcomeSection = document.getElementById('welcomeSection');
+            
+            // Set user info
+            const displayName = user.name || user.username || 'Pengguna';
+            const roleDisplayName = getRoleDisplayName(user.role);
+            
+            if (userName) userName.textContent = displayName;
+            if (userRole) userRole.textContent = roleDisplayName;
+            if (welcomeName) welcomeName.textContent = displayName;
+            if (footerUser) footerUser.textContent = displayName;
+            if (roleBadge) roleBadge.textContent = roleDisplayName;
+            if (pageRoleTag) pageRoleTag.textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+            
+            // Update avatar
+            if (userAvatar) {
+                userAvatar.textContent = displayName.charAt(0).toUpperCase();
+                userAvatar.className = 'user-avatar ' + user.role;
+                
+                // Set color based on role
+                switch(user.role) {
+                    case 'admin':
+                        userAvatar.style.backgroundColor = '#1a4b8c';
+                        break;
+                    case 'setiausaha':
+                        userAvatar.style.backgroundColor = '#28a745';
+                        break;
+                    case 'jabatan':
+                        userAvatar.style.backgroundColor = '#ff9e00';
+                        break;
+                    case 'latihan':
+                        userAvatar.style.backgroundColor = '#6f42c1';
+                        break;
+                }
+            }
+            
+            // Update welcome section color
+            if (welcomeSection) {
+                welcomeSection.className = 'welcome-section ' + user.role;
+            }
+        }
+        
+        function getRoleDisplayName(role) {
+            switch(role) {
+                case 'admin': return 'Pentadbir Sistem';
+                case 'setiausaha': return 'Setiausaha';
+                case 'jabatan': return 'Jabatan';
+                case 'latihan': return 'Latihan';
+                default: return 'Pengguna';
+            }
+        }
+        
+        // ============================================
+        // ROLE-BASED NAVIGATION MENU
+        // ============================================
+        function loadNavigationMenu(role) {
+            const navMenu = document.getElementById('navMenu');
+            
+            // Define menu items for each role
+            const menuItems = getMenuItemsForRole(role);
+            
+            // Clear existing menu items
+            navMenu.innerHTML = '';
+            
+            // Add menu items
+            menuItems.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'nav-item';
+                
+                const isActive = window.location.pathname.includes(item.href) || 
+                               (window.location.pathname.includes('dashboard.html') && item.href === 'dashboard.html');
+                
+                li.innerHTML = `
+                    <a href="${item.href}" class="nav-link ${isActive ? 'active' : ''}">
+                        <i class="fas ${item.icon}"></i>
+                        <span>${item.text}</span>
+                    </a>
+                `;
+                
+                navMenu.appendChild(li);
+            });
+            
+            // Add logout link
+            const logoutLi = document.createElement('li');
+            logoutLi.className = 'nav-item';
+            logoutLi.innerHTML = `
+                <a href="#" class="nav-link" id="logoutLink">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Keluar</span>
+                </a>
+            `;
+            navMenu.appendChild(logoutLi);
+        }
+        
+        function getMenuItemsForRole(role) {
+            // Common items for all roles
+            const baseItems = [];
+            
+            // Role-specific items
+            switch(role) {
+                case 'admin':
+                    return [
+                        { icon: 'fa-tachometer-alt', text: 'Dashboard', href: 'dashboard.html' },
+                        { icon: 'fa-envelope', text: 'Surat Masuk', href: 'surat-masuk.html' },
+                        { icon: 'fa-paper-plane', text: 'Surat Keluar', href: 'surat-keluar.html' },
+                        { icon: 'fa-chart-line', text: 'Ramalan Cukai', href: 'ramalan-cukai.html' },
+                        { icon: 'fa-users', text: 'Pengguna', href: 'pengguna.html' },
+                        { icon: 'fa-cog', text: 'Settings', href: 'settings.html' }
+                    ];
+                    
+                case 'setiausaha':
+                    return [
+                        { icon: 'fa-tachometer-alt', text: 'Dashboard', href: 'setiausaha.html' },
+                        { icon: 'fa-edit', text: 'Minit Surat', href: 'minit-surat.html' },
+                        { icon: 'fa-list', text: 'Senarai Diminit', href: 'senarai-minit.html' },
+                        { icon: 'fa-file-alt', text: 'Laporan', href: 'laporan-setiausaha.html' }
+                    ];
+                    
+                case 'jabatan':
+                    return [
+                        { icon: 'fa-tachometer-alt', text: 'Dashboard', href: 'jabatan.html' },
+                        { icon: 'fa-envelope', text: 'Surat Saya', href: 'surat-jabatan.html' },
+                        { icon: 'fa-tasks', text: 'Tugasan', href: 'tugasan-jabatan.html' },
+                        { icon: 'fa-file-alt', text: 'Laporan', href: 'laporan-jabatan.html' }
+                    ];
+                    
+                case 'latihan':
+                    return [
+                        { icon: 'fa-tachometer-alt', text: 'Dashboard', href: 'latihan.html' },
+                        { icon: 'fa-book', text: 'Modul', href: 'modul-latihan.html' },
+                        { icon: 'fa-file-alt', text: 'Laporan', href: 'laporan-latihan.html' },
+                        { icon: 'fa-chart-bar', text: 'Statistik', href: 'statistik-latihan.html' }
+                    ];
+                    
+                default:
+                    return baseItems;
+            }
+        }
+        
+        // ============================================
+        // QUICK ACTIONS BASED ON ROLE
+        // ============================================
+        function loadQuickActions(role) {
+            const quickActions = document.getElementById('quickActions');
+            
+            const actions = getQuickActionsForRole(role);
+            
+            if (actions.length === 0) {
+                quickActions.style.display = 'none';
+                return;
+            }
+            
+            quickActions.innerHTML = actions.map(action => `
+                <div class="action-card" onclick="${action.onclick}">
+                    <i class="fas ${action.icon}"></i>
+                    <h4>${action.title}</h4>
+                    <p>${action.description}</p>
+                </div>
+            `).join('');
+        }
+        
+        function getQuickActionsForRole(role) {
+            switch(role) {
+                case 'admin':
+                    return [
+                        {
+                            icon: 'fa-plus-circle',
+                            title: 'Tambah Surat',
+                            description: 'Tambah surat masuk baru ke sistem',
+                            onclick: "window.location.href='surat-masuk.html'"
+                        },
+                        {
+                            icon: 'fa-user-plus',
+                            title: 'Tambah Pengguna',
+                            description: 'Daftar pengguna baru ke sistem',
+                            onclick: "window.location.href='pengguna.html'"
+                        },
+                        {
+                            icon: 'fa-chart-pie',
+                            title: 'Lihat Laporan',
+                            description: 'Analisis statistik surat',
+                            onclick: "window.location.href='laporan.html'"
+                        }
+                    ];
+                    
+                case 'setiausaha':
+                    return [
+                        {
+                            icon: 'fa-edit',
+                            title: 'Tulis Minit',
+                            description: 'Tulis minit untuk surat masuk',
+                            onclick: "window.location.href='minit-surat.html'"
+                        },
+                        {
+                            icon: 'fa-list-check',
+                            title: 'Semak Tindakan',
+                            description: 'Semak status tindakan surat',
+                            onclick: "window.location.href='senarai-minit.html'"
+                        }
+                    ];
+                    
+                default:
+                    return [];
+            }
+        }
+        
+        // ============================================
+        // LOAD DASHBOARD DATA
+        // ============================================
+        function loadDashboardData(role) {
+            // Load statistics
+            loadStatistics();
+            
+            // Load recent activity
+            loadRecentActivity(role);
+            
+            // Load quick actions
+            loadQuickActions(role);
+        }
+        
+        function loadStatistics() {
+            // In real app, fetch from API/localStorage
+            const suratMasukData = JSON.parse(localStorage.getItem('suratMasukData')) || [];
+            const suratKeluarData = JSON.parse(localStorage.getItem('suratKeluarData')) || [];
+            const suratTindakan = JSON.parse(localStorage.getItem('suratUntukTindakan')) || [];
+            const usersData = JSON.parse(localStorage.getItem('systemUsers')) || [];
+            
+            // Update stats
+            document.getElementById('statSuratMasuk').textContent = suratMasukData.length;
+            document.getElementById('statSuratKeluar').textContent = suratKeluarData.length;
+            document.getElementById('statPengguna').textContent = usersData.length;
+            
+            // Calculate estimated tax (example)
+            const ramalan = suratMasukData.length * 150; // Example calculation
+            document.getElementById('statRamalan').textContent = `RM ${ramalan.toLocaleString()}`;
+        }
+        
+        function loadRecentActivity(role) {
+            const activityList = document.getElementById('activityList');
+            const emptyActivity = document.getElementById('emptyActivity');
+            
+            // Get activities from localStorage or generate sample
+            let activities = JSON.parse(localStorage.getItem('recentActivities')) || [];
+            
+            if (activities.length === 0) {
+                // Generate sample activities based on role
+                activities = generateSampleActivities(role);
+            }
+            
+            if (activities.length === 0) {
+                emptyActivity.style.display = 'block';
+                activityList.innerHTML = '';
+                return;
+            }
+            
+            emptyActivity.style.display = 'none';
+            
+            activityList.innerHTML = activities.slice(0, 5).map(activity => `
+                <li class="activity-item">
+                    <div class="activity-icon ${activity.type}">
+                        <i class="fas ${activity.icon}"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>${activity.title}</h4>
+                        <p>${activity.description}</p>
+                    </div>
+                    <div class="activity-time">${activity.time}</div>
+                </li>
+            `).join('');
+        }
+        
+        function generateSampleActivities(role) {
+            const now = new Date();
+            const sampleActivities = [];
+            
+            switch(role) {
+                case 'admin':
+                    sampleActivities.push(
+                        {
+                            type: 'masuk',
+                            icon: 'fa-envelope',
+                            title: 'Surat Masuk Baru',
+                            description: 'No. Rujukan: MDG/2024/001',
+                            time: '10:30'
+                        },
+                        {
+                            type: 'keluar',
+                            icon: 'fa-paper-plane',
+                            title: 'Surat Dihantar',
+                            description: 'Kepada: Jabatan Kerja Raya',
+                            time: '09:45'
+                        },
+                        {
+                            type: 'user',
+                            icon: 'fa-user-plus',
+                            title: 'Pengguna Baru',
+                            description: 'Setiausaha Siti didaftarkan',
+                            time: 'Hari ini'
+                        }
+                    );
+                    break;
+                    
+                case 'setiausaha':
+                    sampleActivities.push(
+                        {
+                            type: 'masuk',
+                            icon: 'fa-edit',
+                            title: 'Minit Ditulis',
+                            description: 'Untuk surat MDG/2024/001',
+                            time: '11:20'
+                        },
+                        {
+                            type: 'keluar',
+                            icon: 'fa-check-circle',
+                            title: 'Surat Diluluskan',
+                            description: 'Oleh Pengarah',
+                            time: '10:15'
+                        }
+                    );
+                    break;
+            }
+            
+            // Save to localStorage for future use
+            localStorage.setItem('recentActivities', JSON.stringify(sampleActivities));
+            
+            return sampleActivities;
+        }
+        
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        function setupEventListeners() {
+            // Back button
+            document.getElementById('backButton').addEventListener('click', function() {
+                window.history.back();
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (confirm('Adakah anda pasti ingin log keluar?')) {
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'index.html';
+                }
+            });
+            
+            // Navigation click handlers
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.nav-link') && !e.target.closest('#logoutLink')) {
+                    const link = e.target.closest('.nav-link');
+                    const href = link.getAttribute('href');
+                    
+                    // Update active state
+                    document.querySelectorAll('.nav-link').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    link.classList.add('active');
+                    
+                    // Navigate to page
+                    if (href && href !== '#') {
+                        window.location.href = href;
+                    }
+                }
+            });
+        }
+        
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function startLiveClock() {
+            function updateClock() {
+                const now = new Date();
+                let hours = now.getHours().toString().padStart(2, '0');
+                let minutes = now.getMinutes().toString().padStart(2, '0');
+                let seconds = now.getSeconds().toString().padStart(2, '0');
+                
+                document.getElementById('live-clock').textContent = `${hours}:${minutes}:${seconds}`;
+            }
+            
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+        
+        function updateCurrentDate() {
+            const monthNames = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", 
+                               "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
+            const dayNames = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
+            
+            const today = new Date();
+            const dayName = dayNames[today.getDay()];
+            const day = today.getDate();
+            const month = monthNames[today.getMonth()];
+            const year = today.getFullYear();
+            
+            document.getElementById('current-date').textContent = `${dayName}, ${day} ${month} ${year}`;
+        }
+        
+        // ============================================
+        // REFRESH DATA FUNCTION
+        // ============================================
+        window.refreshDashboard = function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                loadDashboardData(currentUser.role);
+            }
+        };
+        
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                loadStatistics();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
