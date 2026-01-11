@@ -1,1 +1,1542 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Senarai Surat Diminit - Setiausaha MDG</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
+    :root {
+      --primary: #1a4b8c;
+      --primary-dark: #0d2c5e;
+      --primary-light: #2a6bc5;
+      --secondary: #28a745;
+      --accent: #ff9e00;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --success: #28a745;
+      --warning: #ffc107;
+      --danger: #dc3545;
+      --info: #17a2b8;
+      --gray: #6c757d;
+      --light-gray: #e9ecef;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --border-radius: 10px;
+    }
+
+    body {
+      background-color: #f5f7fb;
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Sidebar Styles - Blue Gradient */
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 25px 15px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .logo-icon {
+      font-size: 28px;
+      margin-right: 12px;
+      color: white;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .logo-subtext {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-top: 3px;
+    }
+
+    .role-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 5px;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      border-left: 3px solid white;
+    }
+
+    .nav-menu {
+      list-style: none;
+      flex-grow: 1;
+      margin-bottom: 20px;
+    }
+
+    .nav-item {
+      margin-bottom: 8px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 14px 18px;
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .nav-link i {
+      font-size: 1.2rem;
+      margin-right: 15px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .user-info {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+    }
+
+    .user-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-right: 15px;
+      color: var(--primary);
+    }
+
+    .user-details h4 {
+      font-size: 1rem;
+      margin-bottom: 3px;
+    }
+
+    .user-details p {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 25px;
+      overflow-y: auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .page-title h1 {
+      color: var(--primary);
+      font-size: 2rem;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .page-title p {
+      color: var(--gray);
+      font-size: 1rem;
+    }
+
+    .back-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: var(--primary-light);
+    }
+
+    .back-button i {
+      margin-right: 8px;
+    }
+
+    /* Welcome Section - Blue Theme */
+    .welcome-section {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 25px 30px;
+      border-radius: var(--border-radius);
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .welcome-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .welcome-section h2 i {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .welcome-section p {
+      font-size: 1rem;
+      opacity: 0.9;
+      max-width: 800px;
+    }
+
+    .department-title {
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 12px 20px;
+      border-radius: var(--border-radius);
+      display: inline-block;
+      margin-top: 15px;
+      font-weight: bold;
+      border-left: 4px solid white;
+    }
+
+    /* Stats Section */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 1200px) {
+      .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stat-box {
+      background-color: white;
+      padding: 25px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      border-top: 5px solid var(--primary);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-box.total {
+      border-top-color: var(--primary);
+    }
+
+    .stat-box.today {
+      border-top-color: var(--info);
+    }
+
+    .stat-box.this-week {
+      border-top-color: var(--success);
+    }
+
+    .stat-box.this-month {
+      border-top-color: var(--accent);
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .stat-title {
+      font-size: 1.1rem;
+      color: var(--gray);
+      font-weight: 600;
+    }
+
+    .stat-icon {
+      font-size: 1.8rem;
+      color: var(--primary);
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .stat-desc {
+      font-size: 0.95rem;
+      color: var(--gray);
+    }
+
+    /* Table Section */
+    .table-section {
+      background-color: white;
+      padding: 25px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-header h3 {
+      color: var(--primary);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .section-header h3 i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+
+    .search-filter {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      flex: 1;
+      padding: 12px 15px;
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .search-box:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26, 75, 140, 0.1);
+    }
+
+    .filter-select {
+      padding: 12px 15px;
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      background-color: white;
+      color: var(--dark);
+      cursor: pointer;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .data-table thead {
+      background-color: rgba(26, 75, 140, 0.1);
+      color: var(--primary);
+    }
+
+    .data-table th {
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+      white-space: nowrap;
+      border-bottom: 2px solid rgba(26, 75, 140, 0.2);
+    }
+
+    .data-table tbody tr {
+      border-bottom: 1px solid var(--light-gray);
+      transition: background-color 0.3s ease;
+    }
+
+    .data-table tbody tr:hover {
+      background-color: rgba(26, 75, 140, 0.05);
+    }
+
+    .data-table td {
+      padding: 15px;
+      vertical-align: middle;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .status-dihantar {
+      background-color: rgba(26, 75, 140, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(26, 75, 140, 0.2);
+    }
+
+    .status-proses {
+      background-color: rgba(23, 162, 184, 0.1);
+      color: var(--info);
+      border: 1px solid rgba(23, 162, 184, 0.2);
+    }
+
+    .status-selesai {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+
+    .badge-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .jabatan-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      background-color: rgba(26, 75, 140, 0.1);
+      color: var(--primary);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid rgba(26, 75, 140, 0.2);
+    }
+
+    .action-btn {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-light);
+    }
+
+    .btn-info {
+      background-color: rgba(26, 75, 140, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(26, 75, 140, 0.2);
+    }
+
+    .btn-info:hover {
+      background-color: rgba(26, 75, 140, 0.2);
+    }
+
+    .action-btn i {
+      font-size: 0.8rem;
+      margin-right: 5px;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      padding: 8px 15px;
+      border: 1px solid var(--light-gray);
+      background-color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .pagination button:hover:not(:disabled) {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .pagination-info {
+      font-size: 0.9rem;
+      color: var(--gray);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gray);
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color: var(--light-gray);
+    }
+
+    .empty-state h4 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      font-size: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background-color: white;
+      border-radius: var(--border-radius);
+      width: 90%;
+      max-width: 700px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transform: translateY(-20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 20px 25px;
+      border-bottom: 1px solid var(--light-gray);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(26, 75, 140, 0.05);
+    }
+
+    .modal-header h3 {
+      color: var(--primary);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .modal-header h3 i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--gray);
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .close-modal:hover {
+      color: var(--danger);
+    }
+
+    .modal-body {
+      padding: 25px;
+    }
+
+    .minit-detail-item {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: var(--light);
+      border-radius: var(--border-radius);
+      border-left: 4px solid var(--primary);
+    }
+
+    .minit-detail-label {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+    }
+
+    .minit-detail-label i {
+      margin-right: 8px;
+      color: var(--primary);
+    }
+
+    .minit-detail-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .minit-detail-ulasan {
+      margin-top: 25px;
+      padding: 20px;
+      background-color: rgba(26, 75, 140, 0.05);
+      border-radius: var(--border-radius);
+      border-left: 4px solid var(--primary);
+    }
+
+    .minit-detail-ulasan h4 {
+      color: var(--primary);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .minit-detail-ulasan h4 i {
+      margin-right: 10px;
+      color: var(--primary);
+    }
+
+    .minit-detail-ulasan p {
+      line-height: 1.6;
+      color: var(--dark);
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      color: var(--gray);
+      font-size: 0.9rem;
+      padding-top: 20px;
+      border-top: 1px solid var(--light-gray);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        padding: 15px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .logo {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+      
+      .nav-menu {
+        display: flex;
+        flex-grow: 0;
+        margin-bottom: 0;
+      }
+      
+      .nav-item {
+        margin-bottom: 0;
+        margin-left: 5px;
+      }
+      
+      .nav-link span {
+        display: none;
+      }
+      
+      .user-info {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+        display: none;
+      }
+      
+      .main-content {
+        padding: 20px;
+      }
+      
+      .search-filter {
+        flex-direction: column;
+      }
+      
+      .modal {
+        width: 95%;
+        margin: 10px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .nav-link i {
+        margin-right: 0;
+      }
+      
+      .user-details {
+        display: none;
+      }
+      
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .back-button {
+        margin-top: 15px;
+        align-self: flex-start;
+      }
+      
+      .modal-body {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">
+        <i class="fas fa-user-tie"></i>
+      </div>
+      <div>
+        <div class="logo-text">Setiausaha</div>
+        <div class="logo-subtext">Majlis Daerah Gerik</div>
+        <div class="role-badge" id="roleBadge">Setiausaha</div>
+      </div>
+    </div>
+    
+    <ul class="nav-menu" id="navMenu">
+      <!-- Navigation will be populated by JavaScript -->
+    </ul>
+    
+    <div class="user-info">
+      <div class="user-avatar" id="userAvatar">S</div>
+      <div class="user-details">
+        <h4 id="userName">Setiausaha</h4>
+        <p id="userRole">Jabatan Khidmat Pengurusan</p>
+      </div>
+    </div>
+  </aside>
+  
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="header">
+      <div class="page-title">
+        <h1>Senarai Surat Diminit</h1>
+        <p>Semakan semua surat yang telah diminit</p>
+      </div>
+      <button class="back-button" id="backButton">
+        <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+      </button>
+    </div>
+    
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+      <h2><i class="fas fa-list"></i> Senarai Lengkap Surat Diminit</h2>
+      <p>Lihat dan urus semua minit surat yang telah dibuat. Anda boleh mencari, menapis, dan melihat butiran setiap minit.</p>
+      <div class="department-title">JABATAN KHIDMAT PENGURUSAN</div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="stats-container" id="statsContainer">
+      <!-- Stats akan diisi oleh JavaScript -->
+    </section>
+    
+    <!-- Surat Diminit Table -->
+    <section class="table-section">
+      <div class="section-header">
+        <h3><i class="fas fa-file-alt"></i> Senarai Surat Diminit</h3>
+        <button class="action-btn btn-primary" onclick="refreshData()">
+          <i class="fas fa-sync-alt"></i> Segar Semula
+        </button>
+      </div>
+      
+      <div class="search-filter">
+        <input type="text" class="search-box" id="searchInput" placeholder="Cari no. rujukan, perkara, atau jabatan...">
+        <select class="filter-select" id="filterStatus">
+          <option value="">Semua Status</option>
+          <option value="dihantar">Dihantar</option>
+          <option value="proses">Dalam Proses</option>
+          <option value="selesai">Selesai</option>
+        </select>
+        <select class="filter-select" id="filterDate">
+          <option value="">Semua Tarikh</option>
+          <option value="today">Hari Ini</option>
+          <option value="week">Minggu Ini</option>
+          <option value="month">Bulan Ini</option>
+        </select>
+      </div>
+      
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>No. Rujukan</th>
+              <th>Perkara</th>
+              <th>Jabatan Tindakan</th>
+              <th>Tarikh Diminit</th>
+              <th>Status</th>
+              <th>Tindakan</th>
+            </tr>
+          </thead>
+          <tbody id="minitTableBody">
+            <!-- Data akan diisi oleh JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Pagination -->
+      <div class="pagination" id="pagination" style="display: none;">
+        <button id="prevBtn" disabled>
+          <i class="fas fa-chevron-left"></i> Sebelumnya
+        </button>
+        <span class="pagination-info" id="pageInfo">Halaman 1 dari 1</span>
+        <button id="nextBtn" disabled>
+          Seterusnya <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      
+      <div id="emptyState" class="empty-state" style="display: none;">
+        <i class="fas fa-clipboard-list"></i>
+        <h4>Tiada Surat Diminit</h4>
+        <p>Tiada surat yang telah diminit. Pergi ke halaman "Minit Surat" untuk meminit surat masuk.</p>
+        <button class="action-btn btn-primary" style="margin-top: 20px;" onclick="window.location.href='minit-surat.html'">
+          <i class="fas fa-edit"></i> Tulis Minit Surat
+        </button>
+      </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2025 Sistem Pengurusan Minit Surat - Majlis Daerah Gerik. Hak Cipta Terpelihara.</p>
+      <p style="font-size: 0.8rem; margin-top: 5px;">Versi 2.1.0 | User: <span id="footerUser">Setiausaha</span></p>
+    </footer>
+  </main>
+  
+  <!-- Modal for Minit Details -->
+  <div class="modal-overlay" id="minitModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3><i class="fas fa-file-alt"></i> Butiran Minit Surat</h3>
+        <button class="close-modal" id="closeModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Modal content will be inserted here -->
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // ============================================
+    // AUTHENTICATION CHECK
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if user is logged in
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
+      if (!currentUser) {
+        // Redirect to login if not logged in
+        window.location.href = 'index.html';
+        return;
+      }
+      
+      // Check if user has permission to access this page
+      if (currentUser.role !== 'setiausaha') {
+        alert('Anda tidak mempunyai akses ke halaman Setiausaha.');
+        
+        // Redirect to appropriate dashboard
+        switch(currentUser.role) {
+          case 'admin': window.location.href = 'dashboard.html'; break;
+          case 'jabatan': window.location.href = 'jabatan.html'; break;
+          case 'latihan': window.location.href = 'latihan.html'; break;
+          default: window.location.href = 'index.html';
+        }
+        return;
+      }
+      
+      // Initialize the page
+      initializePage(currentUser);
+    });
+    
+    // ============================================
+    // PAGE INITIALIZATION
+    // ============================================
+    function initializePage(user) {
+      // Update UI based on user
+      updateUIForSetiausaha(user);
+      
+      // Load navigation menu for Setiausaha
+      loadSetiausahaNavigation();
+      
+      // Load data
+      refreshData();
+      
+      // Setup event listeners
+      setupEventListeners();
+    }
+    
+    // ============================================
+    // UPDATE UI FOR SETIAUSAHA
+    // ============================================
+    function updateUIForSetiausaha(user) {
+      // Update user info in sidebar
+      const userAvatar = document.getElementById('userAvatar');
+      const userName = document.getElementById('userName');
+      const userRole = document.getElementById('userRole');
+      const footerUser = document.getElementById('footerUser');
+      const roleBadge = document.getElementById('roleBadge');
+      
+      // Set user info
+      const displayName = user.name || user.username || 'Setiausaha';
+      const roleDisplayName = 'Setiausaha Pentadbiran';
+      
+      if (userName) userName.textContent = displayName;
+      if (userRole) userRole.textContent = roleDisplayName;
+      if (footerUser) footerUser.textContent = displayName;
+      if (roleBadge) roleBadge.textContent = 'Setiausaha';
+      
+      // Update avatar
+      if (userAvatar) {
+        userAvatar.textContent = displayName.charAt(0).toUpperCase();
+        userAvatar.style.backgroundColor = 'white';
+        userAvatar.style.color = '#1a4b8c';
+      }
+    }
+    
+    // ============================================
+    // SIMPLIFIED SETIAUSAHA NAVIGATION MENU
+    // ============================================
+    function loadSetiausahaNavigation() {
+      const navMenu = document.getElementById('navMenu');
+      
+      // Simplified Setiausaha menu items (only 3 options)
+      const menuItems = [
+        { icon: 'fa-tachometer-alt', text: 'Dashboard', href: 'setiausaha.html' },
+        { icon: 'fa-edit', text: 'Minit Surat', href: 'minit-surat.html' },
+        { icon: 'fa-list', text: 'Senarai Diminit', href: 'senarai-surat-diminit.html' }
+      ];
+      
+      // Clear existing menu items
+      navMenu.innerHTML = '';
+      
+      // Add menu items
+      menuItems.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'nav-item';
+        
+        const isActive = window.location.pathname.includes(item.href) || 
+                       (window.location.pathname.includes('senarai-surat-diminit.html') && item.href === 'senarai-surat-diminit.html');
+        
+        li.innerHTML = `
+          <a href="${item.href}" class="nav-link ${isActive ? 'active' : ''}">
+            <i class="fas ${item.icon}"></i>
+            <span>${item.text}</span>
+          </a>
+        `;
+        
+        navMenu.appendChild(li);
+      });
+      
+      // Add logout link
+      const logoutLi = document.createElement('li');
+      logoutLi.className = 'nav-item';
+      logoutLi.innerHTML = `
+        <a href="#" class="nav-link" id="logoutLink">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Log Keluar</span>
+        </a>
+      `;
+      navMenu.appendChild(logoutLi);
+    }
+    
+    // Data from localStorage
+    let minitData = [];
+    let suratKeluarData = [];
+    let suratMasukData = [];
+    
+    // Pagination variables
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    let filteredMinitData = [];
+    
+    // Load statistics
+    function loadStats() {
+      const statsContainer = document.getElementById('statsContainer');
+      
+      // Calculate counts
+      const totalMinit = minitData.length;
+      
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      const todayCount = minitData.filter(minit => {
+        const minitDate = new Date(minit.timestamp).toISOString().split('T')[0];
+        return minitDate === todayStr;
+      }).length;
+      
+      // This week count
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(today.getDate() - 7);
+      const thisWeekCount = minitData.filter(minit => {
+        const minitDate = new Date(minit.timestamp);
+        return minitDate >= oneWeekAgo;
+      }).length;
+      
+      // This month count
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const thisMonthCount = minitData.filter(minit => {
+        const minitDate = new Date(minit.timestamp);
+        return minitDate >= startOfMonth;
+      }).length;
+      
+      statsContainer.innerHTML = `
+        <div class="stat-box total">
+          <div class="stat-header">
+            <div class="stat-title">Jumlah Diminit</div>
+            <div class="stat-icon">
+              <i class="fas fa-file-alt"></i>
+            </div>
+          </div>
+          <div class="stat-value">${totalMinit}</div>
+          <div class="stat-desc">Keseluruhan minit</div>
+        </div>
+        
+        <div class="stat-box today">
+          <div class="stat-header">
+            <div class="stat-title">Hari Ini</div>
+            <div class="stat-icon">
+              <i class="fas fa-calendar-day"></i>
+            </div>
+          </div>
+          <div class="stat-value">${todayCount}</div>
+          <div class="stat-desc">Minit hari ini</div>
+        </div>
+        
+        <div class="stat-box this-week">
+          <div class="stat-header">
+            <div class="stat-title">Minggu Ini</div>
+            <div class="stat-icon">
+              <i class="fas fa-calendar-week"></i>
+            </div>
+          </div>
+          <div class="stat-value">${thisWeekCount}</div>
+          <div class="stat-desc">7 hari kebelakangan</div>
+        </div>
+        
+        <div class="stat-box this-month">
+          <div class="stat-header">
+            <div class="stat-title">Bulan Ini</div>
+            <div class="stat-icon">
+              <i class="fas fa-calendar-month"></i>
+            </div>
+          </div>
+          <div class="stat-value">${thisMonthCount}</div>
+          <div class="stat-desc">Bulan semasa</div>
+        </div>
+      `;
+    }
+    
+    // Load minit table
+    function loadMinitTable() {
+      applyFilters();
+      renderTable();
+      updatePagination();
+    }
+    
+    // Apply filters
+    function applyFilters() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const statusFilter = document.getElementById('filterStatus').value;
+      const dateFilter = document.getElementById('filterDate').value;
+      
+      filteredMinitData = minitData.filter(minit => {
+        // Search filter
+        const matchesSearch = !searchTerm || 
+          minit.noRujukan.toLowerCase().includes(searchTerm) ||
+          minit.perkara.toLowerCase().includes(searchTerm) ||
+          minit.dari.toLowerCase().includes(searchTerm) ||
+          minit.tindakanTerpilih.some(jabatan => 
+            jabatan.toLowerCase().includes(searchTerm)
+          );
+        
+        // Status filter (get status from suratKeluarData)
+        let minitStatus = 'dihantar'; // Default
+        const suratKeluar = suratKeluarData.find(s => s.suratId === minit.suratId);
+        if (suratKeluar) {
+          minitStatus = suratKeluar.status === 'selesai' ? 'selesai' : 
+                       suratKeluar.status === 'masak' ? 'proses' : 'dihantar';
+        }
+        
+        const matchesStatus = !statusFilter || minitStatus === statusFilter;
+        
+        // Date filter
+        const minitDate = new Date(minit.timestamp);
+        const today = new Date();
+        let matchesDate = true;
+        
+        if (dateFilter === 'today') {
+          const todayStr = today.toISOString().split('T')[0];
+          const minitDateStr = minitDate.toISOString().split('T')[0];
+          matchesDate = minitDateStr === todayStr;
+        } else if (dateFilter === 'week') {
+          const oneWeekAgo = new Date();
+          oneWeekAgo.setDate(today.getDate() - 7);
+          matchesDate = minitDate >= oneWeekAgo;
+        } else if (dateFilter === 'month') {
+          const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+          matchesDate = minitDate >= startOfMonth;
+        }
+        
+        return matchesSearch && matchesStatus && matchesDate;
+      });
+      
+      // Sort by latest first
+      filteredMinitData.sort((a, b) => b.timestamp - a.timestamp);
+      
+      currentPage = 1; // Reset to first page when filters change
+    }
+    
+    // Render table
+    function renderTable() {
+      const tableBody = document.getElementById('minitTableBody');
+      const emptyState = document.getElementById('emptyState');
+      const pagination = document.getElementById('pagination');
+      
+      if (filteredMinitData.length === 0) {
+        tableBody.innerHTML = '';
+        emptyState.style.display = 'block';
+        pagination.style.display = 'none';
+        return;
+      }
+      
+      emptyState.style.display = 'none';
+      pagination.style.display = 'flex';
+      
+      // Calculate pagination slice
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const currentItems = filteredMinitData.slice(startIndex, endIndex);
+      
+      tableBody.innerHTML = currentItems.map(minit => {
+        // Get status from suratKeluarData
+        let status = 'dihantar';
+        let statusText = 'Dihantar';
+        let statusClass = 'status-dihantar';
+        
+        const suratKeluar = suratKeluarData.find(s => s.suratId === minit.suratId);
+        if (suratKeluar) {
+          if (suratKeluar.status === 'selesai') {
+            status = 'selesai';
+            statusText = 'Selesai';
+            statusClass = 'status-selesai';
+          } else if (suratKeluar.status === 'masak') {
+            status = 'proses';
+            statusText = 'Dalam Proses';
+            statusClass = 'status-proses';
+          }
+        }
+        
+        // Format date
+        const minitDate = new Date(minit.timestamp);
+        const formattedDate = minitDate.toLocaleDateString('ms-MY', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        // Limit jabatan badges to 3 items
+        const jabatanBadges = minit.tindakanTerpilih.slice(0, 3).map(jabatan => 
+          `<span class="jabatan-badge">${jabatan}</span>`
+        ).join('');
+        
+        const moreCount = minit.tindakanTerpilih.length > 3 ? 
+          `+${minit.tindakanTerpilih.length - 3}` : '';
+        
+        return `
+          <tr>
+            <td><strong>${minit.noRujukan}</strong></td>
+            <td>
+              <div><strong>${minit.perkara}</strong></div>
+              <small style="color: var(--gray);">Dari: ${minit.dari}</small>
+            </td>
+            <td>
+              <div class="badge-list">
+                ${jabatanBadges}
+                ${moreCount ? `<span class="jabatan-badge">${moreCount} lagi</span>` : ''}
+              </div>
+            </td>
+            <td>${formattedDate}</td>
+            <td>
+              <span class="status-badge ${statusClass}">
+                ${statusText}
+              </span>
+            </td>
+            <td>
+              <button class="action-btn btn-info" onclick="viewMinitDetails('${minit.id}')">
+                <i class="fas fa-eye"></i> Lihat
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+    
+    // Update pagination
+    function updatePagination() {
+      const totalPages = Math.ceil(filteredMinitData.length / itemsPerPage);
+      const pageInfo = document.getElementById('pageInfo');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      
+      pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+    }
+    
+    // Setup event listeners
+    function setupEventListeners() {
+      // Back button
+      document.getElementById('backButton').addEventListener('click', function() {
+        window.location.href = 'setiausaha.html';
+      });
+      
+      // Logout functionality
+      const logoutLink = document.getElementById('logoutLink');
+      if (logoutLink) {
+        logoutLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          if (confirm('Adakah anda pasti ingin log keluar?')) {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+          }
+        });
+      }
+      
+      // Search input
+      document.getElementById('searchInput').addEventListener('input', function() {
+        loadMinitTable();
+      });
+      
+      // Filter select
+      document.getElementById('filterStatus').addEventListener('change', function() {
+        loadMinitTable();
+      });
+      
+      document.getElementById('filterDate').addEventListener('change', function() {
+        loadMinitTable();
+      });
+      
+      // Pagination buttons
+      document.getElementById('prevBtn').addEventListener('click', function() {
+        if (currentPage > 1) {
+          currentPage--;
+          renderTable();
+          updatePagination();
+        }
+      });
+      
+      document.getElementById('nextBtn').addEventListener('click', function() {
+        const totalPages = Math.ceil(filteredMinitData.length / itemsPerPage);
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderTable();
+          updatePagination();
+        }
+      });
+      
+      // Modal close button
+      document.getElementById('closeModal').addEventListener('click', function() {
+        closeModal();
+      });
+      
+      // Close modal when clicking outside
+      document.getElementById('minitModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeModal();
+        }
+      });
+      
+      // Close modal with Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeModal();
+        }
+      });
+    }
+    
+    // View minit details in modal
+    function viewMinitDetails(minitId) {
+      const minit = minitData.find(m => m.id == minitId);
+      if (!minit) return;
+      
+      // Get original surat data
+      const surat = suratMasukData.find(s => s.id == minit.suratId);
+      
+      // Get status from suratKeluarData
+      let status = 'dihantar';
+      let statusText = 'Dihantar';
+      let statusClass = 'status-dihantar';
+      
+      const suratKeluar = suratKeluarData.find(s => s.suratId === minit.suratId);
+      if (suratKeluar) {
+        if (suratKeluar.status === 'selesai') {
+          status = 'selesai';
+          statusText = 'Selesai';
+          statusClass = 'status-selesai';
+        } else if (suratKeluar.status === 'masak') {
+          status = 'proses';
+          statusText = 'Dalam Proses';
+          statusClass = 'status-proses';
+        }
+      }
+      
+      // Format dates
+      const minitDate = new Date(minit.timestamp);
+      const formattedMinitDate = minitDate.toLocaleDateString('ms-MY', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      
+      const modalBody = document.getElementById('modalBody');
+      modalBody.innerHTML = `
+        <div class="minit-detail-item">
+          <div class="minit-detail-label">
+            <i class="fas fa-hashtag"></i> No. Rujukan
+          </div>
+          <div class="minit-detail-value">${minit.noRujukan}</div>
+        </div>
+        
+        <div class="minit-detail-item">
+          <div class="minit-detail-label">
+            <i class="fas fa-user"></i> Dari (Pengirim)
+          </div>
+          <div class="minit-detail-value">${minit.dari}</div>
+        </div>
+        
+        <div class="minit-detail-item">
+          <div class="minit-detail-label">
+            <i class="fas fa-file-alt"></i> Perkara
+          </div>
+          <div class="minit-detail-value">${minit.perkara}</div>
+        </div>
+        
+        <div class="minit-detail-item">
+          <div class="minit-detail-label">
+            <i class="fas fa-calendar"></i> Tarikh Surat
+          </div>
+          <div class="minit-detail-value">${minit.tarikhSurat}</div>
+        </div>
+        
+        <div class="minit-detail-item">
+          <div class="minit-detail-label">
+            <i class="fas fa-users"></i> Jabatan Tindakan
+          </div>
+          <div class="minit-detail-value">
+            ${minit.tindakanTerpilih.map(jabatan => 
+              `<span class="jabatan-badge" style="margin: 2px;">${jabatan}</span>`
+            ).join('')}
+          </div>
+        </div>
+        
+        <div class="minit-detail-item">
+          <div class="minit-detail-label">
+            <i class="fas fa-calendar-check"></i> Tarikh Diminit
+          </div>
+          <div class="minit-detail-value">${formattedMinitDate}</div>
+        </div>
+        
+        <div class="minit-detail-item">
+          <div class="minit-detail-label">
+            <i class="fas fa-info-circle"></i> Status
+          </div>
+          <div class="minit-detail-value">
+            <span class="status-badge ${statusClass}">${statusText}</span>
+          </div>
+        </div>
+        
+        ${surat && surat.fail ? `
+        <div class="minit-detail-item">
+          <div class="minit-detail-label">
+            <i class="fas fa-paperclip"></i> Lampiran
+          </div>
+          <div class="minit-detail-value">${surat.fail}</div>
+        </div>
+        ` : ''}
+        
+        <div class="minit-detail-ulasan">
+          <h4><i class="fas fa-comment"></i> Ulasan / Minit</h4>
+          <p>${minit.ulasan}</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 25px; padding-top: 15px; border-top: 1px solid var(--light-gray);">
+          <small style="color: var(--gray);">
+            <i class="fas fa-user-tie"></i> Diminit oleh: ${minit.createdBy}
+          </small>
+        </div>
+      `;
+      
+      // Show modal
+      document.getElementById('minitModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    // Close modal
+    function closeModal() {
+      document.getElementById('minitModal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Refresh data
+    function refreshData() {
+      // Reload data from localStorage
+      minitData = JSON.parse(localStorage.getItem('minitData')) || [];
+      suratKeluarData = JSON.parse(localStorage.getItem('suratUntukTindakan')) || [];
+      suratMasukData = JSON.parse(localStorage.getItem('suratMasukData')) || [];
+      
+      loadStats();
+      loadMinitTable();
+      
+      // Show notification
+      showNotification('Data telah disegar semula', 'success');
+    }
+    
+    // Show notification
+    function showNotification(message, type = 'info') {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: var(--border-radius);
+        background-color: ${type === 'success' ? 'var(--success)' : 'var(--primary)'};
+        color: white;
+        font-weight: 600;
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        transform: translateX(120%);
+        transition: transform 0.3s ease;
+      `;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      // Animate in
+      setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+      }, 10);
+      
+      // Remove after 3 seconds
+      setTimeout(() => {
+        notification.style.transform = 'translateX(120%)';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
+    }
+    
+    // Refresh data when page becomes visible
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        refreshData();
+      }
+    });
+  </script>
+</body>
+</html>
