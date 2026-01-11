@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Masuk - Sistem Surat Majlis Daerah Gerik</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-admin: #1a4b8c;      /* Biru - Admin */
+            --primary-setiausaha: #28a745; /* Hijau - Setiausaha */
+            --primary-jabatan: #ff9e00;    /* Jingga - Jabatan */
+            --primary-latihan: #6f42c1;    /* Ungu - Latihan */
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 15px;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a4b8c 0%, #2c5aa0 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        /* Left Panel - Branding */
+        .login-left {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            font-size: 60px;
+            color: var(--primary-admin);
+            margin-bottom: 20px;
+        }
+
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-admin);
+            margin-bottom: 10px;
+        }
+
+        .logo-subtext {
+            font-size: 1.1rem;
+            color: var(--gray);
+        }
+
+        .system-info {
+            margin-top: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(26, 75, 140, 0.1), rgba(255, 158, 0, 0.1));
+            border-radius: var(--border-radius);
+            border-left: 5px solid var(--primary-admin);
+        }
+
+        .system-info h3 {
+            color: var(--primary-admin);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .system-info p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Right Panel - Login Form */
+        .login-right {
+            background: white;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h2 {
+            font-size: 2rem;
+            color: var(--primary-admin);
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        /* Role Selection */
+        .role-selection {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .role-card {
+            padding: 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .role-card.active {
+            border-width: 3px;
+        }
+
+        .role-card.admin {
+            border-color: var(--primary-admin);
+        }
+
+        .role-card.setiausaha {
+            border-color: var(--primary-setiausaha);
+        }
+
+        .role-card.jabatan {
+            border-color: var(--primary-jabatan);
+        }
+
+        .role-card.latihan {
+            border-color: var(--primary-latihan);
+        }
+
+        .role-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .role-card.admin .role-icon {
+            color: var(--primary-admin);
+        }
+
+        .role-card.setiausaha .role-icon {
+            color: var(--primary-setiausaha);
+        }
+
+        .role-card.jabatan .role-icon {
+            color: var(--primary-jabatan);
+        }
+
+        .role-card.latihan .role-icon {
+            color: var(--primary-latihan);
+        }
+
+        .role-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group label i {
+            margin-right: 10px;
+            color: var(--primary-admin);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-admin);
+            box-shadow: 0 0 0 3px rgba(26, 75, 140, 0.1);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Remember Me & Forgot Password */
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .remember-me label {
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .forgot-password {
+            color: var(--primary-admin);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-admin), #2c5aa0);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 75, 140, 0.3);
+        }
+
+        .login-btn i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        .login-footer {
+            margin-top: 30px;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+            
+            .login-left {
+                padding: 30px;
+                order: 2;
+            }
+            
+            .login-right {
+                padding: 40px 30px;
+                order: 1;
+            }
+            
+            .role-selection {
+                grid-template-columns: 1fr;
+            }
+            
+            .login-options {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .login-left, .login-right {
+                padding: 25px 20px;
+            }
+            
+            .logo-text {
+                font-size: 1.8rem;
+            }
+            
+            .login-header h2 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Panel - Branding -->
+        <div class="login-left">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="fas fa-envelope-open-text"></i>
+                </div>
+                <div class="logo-text">Sistem Surat</div>
+                <div class="logo-subtext">Majlis Daerah Gerik</div>
+            </div>
+            
+            <div class="system-info">
+                <h3>Sistem Pengurusan Surat Rasmi</h3>
+                <p>Sistem yang membolehkan pengurusan surat keluar masuk yang efisien dan sistematik untuk Jabatan Khidmat Pengurusan, Majlis Daerah Gerik.</p>
+            </div>
+            
+            <div style="margin-top: 40px;">
+                <h4 style="color: var(--primary-admin); margin-bottom: 15px; font-size: 1.2rem;">
+                    <i class="fas fa-info-circle"></i> Maklumat Sistem
+                </h4>
+                <div style="color: var(--gray); font-size: 0.9rem;">
+                    <p><i class="fas fa-check-circle" style="color: var(--primary-setiausaha);"></i> Versi: 2.1.0</p>
+                    <p><i class="fas fa-check-circle" style="color: var(--primary-jabatan);"></i> Status: Online</p>
+                    <p><i class="fas fa-check-circle" style="color: var(--primary-latihan);"></i> Terakhir dikemaskini: Jan 2024</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Panel - Login Form -->
+        <div class="login-right">
+            <div class="login-header">
+                <h2>Log Masuk</h2>
+                <p>Sila pilih peranan dan masukkan maklumat log masuk anda</p>
+            </div>
+            
+            <!-- Role Selection -->
+            <div class="role-selection">
+                <div class="role-card admin active" data-role="admin">
+                    <div class="role-icon">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <div class="role-name">Admin</div>
+                    <small style="color: var(--gray); margin-top: 5px; font-size: 0.85rem;">Pentadbir Sistem</small>
+                </div>
+                
+                <div class="role-card setiausaha" data-role="setiausaha">
+                    <div class="role-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="role-name">Setiausaha</div>
+                    <small style="color: var(--gray); margin-top: 5px; font-size: 0.85rem;">Jabatan Pengurusan</small>
+                </div>
+                
+                <div class="role-card jabatan" data-role="jabatan">
+                    <div class="role-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="role-name">Jabatan</div>
+                    <small style="color: var(--gray); margin-top: 5px; font-size: 0.85rem;">Unit/Jabatan</small>
+                </div>
+                
+                <div class="role-card latihan" data-role="latihan">
+                    <div class="role-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="role-name">Latihan</div>
+                    <small style="color: var(--gray); margin-top: 5px; font-size: 0.85rem;">Modul Latihan</small>
+                </div>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> ID Pengguna</label>
+                    <input type="text" id="username" class="form-control" placeholder="Masukkan ID pengguna" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Kata Laluan</label>
+                    <div class="password-container">
+                        <input type="password" id="password" class="form-control" placeholder="Masukkan kata laluan" required>
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="login-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">Ingat saya</label>
+                    </div>
+                    <a href="#" class="forgot-password">Lupa kata laluan?</a>
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Log Masuk
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <p>&copy; 2025 Majlis Daerah Gerik. Hak Cipta Terpelihara.</p>
+                <p style="margin-top: 5px;">Sistem Pengurusan Surat Keluar Masuk</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Role Selection
+        const roleCards = document.querySelectorAll('.role-card');
+        let selectedRole = 'admin';
+        
+        roleCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all cards
+                roleCards.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked card
+                this.classList.add('active');
+                
+                // Update selected role
+                selectedRole = this.getAttribute('data-role');
+                
+                // Update login button color based on role
+                updateLoginButtonColor();
+            });
+        });
+        
+        // Update login button color based on selected role
+        function updateLoginButtonColor() {
+            const loginBtn = document.querySelector('.login-btn');
+            let primaryColor;
+            
+            switch(selectedRole) {
+                case 'admin':
+                    primaryColor = '#1a4b8c';
+                    break;
+                case 'setiausaha':
+                    primaryColor = '#28a745';
+                    break;
+                case 'jabatan':
+                    primaryColor = '#ff9e00';
+                    break;
+                case 'latihan':
+                    primaryColor = '#6f42c1';
+                    break;
+            }
+            
+            loginBtn.style.background = `linear-gradient(135deg, ${primaryColor}, ${adjustColor(primaryColor, 20)})`;
+        }
+        
+        // Helper function to adjust color brightness
+        function adjustColor(color, amount) {
+            return '#' + color.replace(/^#/, '').replace(/../g, color => 
+                ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2)
+            );
+        }
+        
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        // Login Form Submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple validation
+            if (!username || !password) {
+                alert('Sila isi kedua-dua ID pengguna dan kata laluan');
+                return;
+            }
+            
+            // Simulate login process
+            showLoading();
+            
+            setTimeout(() => {
+                // Save user info to localStorage
+                localStorage.setItem('currentUser', JSON.stringify({
+                    username: username,
+                    role: selectedRole,
+                    loginTime: new Date().toISOString(),
+                    name: getRoleDisplayName(selectedRole)
+                }));
+                
+                // Redirect based on role
+                redirectToDashboard();
+            }, 1500);
+        });
+        
+        // Show loading state
+        function showLoading() {
+            const loginBtn = document.querySelector('.login-btn');
+            const originalText = loginBtn.innerHTML;
+            
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sedang memproses...';
+            loginBtn.disabled = true;
+            
+            // Re-enable after 3 seconds (in case of error)
+            setTimeout(() => {
+                loginBtn.innerHTML = originalText;
+                loginBtn.disabled = false;
+            }, 3000);
+        }
+        
+        // Get display name for role
+        function getRoleDisplayName(role) {
+            switch(role) {
+                case 'admin': return 'Pentadbir Sistem';
+                case 'setiausaha': return 'Setiausaha';
+                case 'jabatan': return 'Jabatan';
+                case 'latihan': return 'Latihan';
+                default: return 'Pengguna';
+            }
+        }
+        
+        // Redirect to appropriate dashboard
+        function redirectToDashboard() {
+            switch(selectedRole) {
+                case 'admin':
+                    window.location.href = 'dashboard.html';
+                    break;
+                case 'setiausaha':
+                    window.location.href = 'setiausaha.html';
+                    break;
+                case 'jabatan':
+                    // Redirect to jabatan dashboard (you need to create this)
+                    window.location.href = 'jabatan.html';
+                    break;
+                case 'latihan':
+                    // Redirect to latihan dashboard (you need to create this)
+                    window.location.href = 'latihan.html';
+                    break;
+                default:
+                    window.location.href = 'dashboard.html';
+            }
+        }
+        
+        // Check if user is already logged in
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            
+            if (currentUser) {
+                // User is already logged in, redirect to appropriate page
+                const userData = JSON.parse(currentUser);
+                selectedRole = userData.role;
+                
+                // Update UI to show current role
+                roleCards.forEach(card => {
+                    if (card.getAttribute('data-role') === selectedRole) {
+                        card.classList.add('active');
+                    } else {
+                        card.classList.remove('active');
+                    }
+                });
+                
+                updateLoginButtonColor();
+            }
+        });
+        
+        // Initialize button color
+        updateLoginButtonColor();
+    </script>
+</body>
+</html>
