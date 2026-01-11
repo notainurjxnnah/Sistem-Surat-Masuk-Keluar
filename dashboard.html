@@ -1082,32 +1082,7 @@
                 </div>
             `).join('');
         }
-        
-        function getQuickActionsForRole(role) {
-            switch(role) {
-                case 'admin':
-                    return [
-                        {
-                            icon: 'fa-plus-circle',
-                            title: 'Tambah Surat',
-                            description: 'Tambah surat masuk baru ke sistem',
-                            onclick: "window.location.href='surat-masuk.html'"
-                        },
-                        {
-                            icon: 'fa-user-plus',
-                            title: 'Tambah Pengguna',
-                            description: 'Daftar pengguna baru ke sistem',
-                            onclick: "window.location.href='pengguna.html'"
-                        },
-                        {
-                            icon: 'fa-chart-pie',
-                            title: 'Lihat Laporan',
-                            description: 'Analisis statistik surat',
-                            onclick: "window.location.href='laporan.html'"
-                        }
-                    ];
-                    
-                case 'setiausaha':
+        case 'setiausaha':
                     return [
                         {
                             icon: 'fa-edit',
