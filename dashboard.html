@@ -3,28 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Sistem Surat Majlis Daerah Gerik</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Sistem Surat Keluar Masuk - Majlis Daerah Gerik</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-admin: #1a4b8c;
-            --secondary-admin: #2c5aa0;
-            --light-bg: #f8f9fa;
-            --dark-bg: #343a40;
-            --sidebar-bg: #1e3f7a;
-            --sidebar-hover: #2c5aa0;
-            --text-light: #f8f9fa;
-            --text-dark: #343a40;
-            --success: #28a745;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --info: #17a2b8;
-            --border-radius: 10px;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -32,1272 +13,751 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        :root {
+            --primary: #1a4b8c;
+            --secondary: #2c5aa0;
+            --accent: #ff9e00;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 10px;
+        }
+
         body {
-            background-color: var(--light-bg);
-            color: var(--text-dark);
-            display: flex;
+            background-color: #f5f7fb;
+            color: var(--dark);
             min-height: 100vh;
+            display: flex;
         }
 
         /* Sidebar Styles */
         .sidebar {
             width: 250px;
-            background-color: var(--sidebar-bg);
-            color: var(--text-light);
+            background-color: var(--primary);
+            color: white;
+            padding: 25px 15px;
             display: flex;
             flex-direction: column;
-            transition: var(--transition);
-            position: fixed;
-            height: 100vh;
-            z-index: 1000;
+            box-shadow: var(--shadow);
+            z-index: 100;
         }
 
-        .sidebar-header {
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.2);
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-header h2 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-        }
-
-        .sidebar-header p {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        .sidebar-menu {
-            flex: 1;
-            padding: 20px 0;
-            overflow-y: auto;
-        }
-
-        .menu-item {
-            padding: 15px 25px;
+        .logo {
             display: flex;
             align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            margin-right: 12px;
+            color: var(--accent);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-subtext {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            color: white;
             text-decoration: none;
-            color: var(--text-light);
-            transition: var(--transition);
-            border-left: 4px solid transparent;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
         }
 
-        .menu-item:hover {
-            background-color: var(--sidebar-hover);
-            border-left-color: var(--text-light);
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
-        .menu-item.active {
-            background-color: var(--sidebar-hover);
-            border-left-color: var(--text-light);
-            font-weight: 600;
-        }
-
-        .menu-item i {
-            width: 25px;
-            margin-right: 15px;
+        .nav-link i {
             font-size: 1.2rem;
-        }
-
-        .menu-item span {
-            font-size: 1rem;
-        }
-
-        .sidebar-footer {
-            padding: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-right: 15px;
+            width: 24px;
             text-align: center;
-            font-size: 0.9rem;
+        }
+
+        .user-info {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+
+        .user-details h4 {
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+        .user-details p {
+            font-size: 0.85rem;
             opacity: 0.8;
         }
 
         /* Main Content Styles */
         .main-content {
             flex: 1;
-            margin-left: 250px;
-            padding: 20px;
-            transition: var(--transition);
+            padding: 25px;
+            overflow-y: auto;
         }
 
-        /* Top Navigation */
-        .top-nav {
-            background-color: white;
-            padding: 15px 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .page-title h1 {
-            color: var(--primary-admin);
-            font-size: 1.8rem;
-        }
-
-        .page-title p {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-details {
-            text-align: right;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .user-role {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: var(--primary-admin);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .logout-btn {
-            background-color: var(--danger);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition);
-        }
-
-        .logout-btn:hover {
-            background-color: #c82333;
-            transform: translateY(-2px);
-        }
-
-        /* Dashboard Content */
-        .dashboard-content {
-            display: none;
-        }
-
-        .dashboard-content.active {
-            display: block;
-        }
-
-        /* Statistics Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
             margin-bottom: 30px;
         }
 
-        .stat-card {
+        .page-title h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        .back-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: var(--secondary);
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+        /* Welcome Section - Dikemaskini untuk Jabatan Khidmat Pengurusan */
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 30px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .welcome-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .welcome-section p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 800px;
+        }
+
+        .department-title {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: bold;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Stats Section - UPDATED for only 4 items */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat-box {
             background-color: white;
             padding: 25px;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             display: flex;
-            align-items: center;
-            transition: var(--transition);
+            flex-direction: column;
+            border-top: 5px solid var(--primary);
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        .stat-box.surat-masuk {
+            border-top-color: var(--success);
+        }
+
+        .stat-box.surat-keluar {
+            border-top-color: var(--warning);
+        }
+
+        .stat-box.ramalan-cukai {
+            border-top-color: var(--danger);
+        }
+
+        .stat-box.setting {
+            border-top-color: var(--secondary);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-title {
+            font-size: 1.1rem;
+            color: var(--gray);
+            font-weight: 600;
         }
 
         .stat-icon {
-            width: 60px;
-            height: 60px;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-value.empty {
+            color: var(--light-gray);
+            font-size: 1.8rem;
+            font-weight: normal;
+        }
+
+        /* Time Section */
+        .time-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .today-info {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .today-info h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .date-display {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .day-display {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        /* Time Box - Besar seperti dalam gambar */
+        .time-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--primary);
+        }
+
+        .time-box h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .time-display {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: 3px;
+            text-align: center;
+            line-height: 1;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .time-label {
+            font-size: 1.2rem;
+            color: var(--gray);
+            text-align: center;
+        }
+
+        /* Recent Activity */
+        .recent-activity {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .recent-activity h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 20px;
-            font-size: 1.5rem;
+            margin-right: 15px;
+            font-size: 1.2rem;
             color: white;
         }
 
-        .stat-content h3 {
-            font-size: 2rem;
-            color: var(--text-dark);
+        .activity-icon.masuk {
+            background-color: var(--success);
+        }
+
+        .activity-icon.keluar {
+            background-color: var(--warning);
+        }
+
+        .activity-icon.ramalan {
+            background-color: var(--danger);
+        }
+
+        .activity-details h4 {
+            font-size: 1.1rem;
             margin-bottom: 5px;
         }
 
-        .stat-content p {
-            color: #6c757d;
+        .activity-details p {
+            color: var(--gray);
             font-size: 0.9rem;
         }
 
-        .stat-icon.surat-masuk { background: linear-gradient(135deg, #28a745, #20c997); }
-        .stat-icon.surat-keluar { background: linear-gradient(135deg, #17a2b8, #20c997); }
-        .stat-icon.pending { background: linear-gradient(135deg, #ffc107, #fd7e14); }
-        .stat-icon.selesai { background: linear-gradient(135deg, #6f42c1, #6610f2); }
-
-        /* Tabs for Ramalan Cukai */
-        .tax-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 10px;
+        .activity-time {
+            margin-left: auto;
+            color: var(--gray);
+            font-size: 0.9rem;
         }
 
-        .tax-tab {
-            padding: 10px 20px;
-            background-color: white;
-            border: 2px solid #e9ecef;
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
-            cursor: pointer;
-            font-weight: 600;
-            color: #6c757d;
-            transition: var(--transition);
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
         }
 
-        .tax-tab:hover {
-            background-color: #f8f9fa;
-        }
-
-        .tax-tab.active {
-            border-color: var(--primary-admin);
-            border-bottom-color: white;
-            color: var(--primary-admin);
-            background-color: white;
-            margin-bottom: -2px;
-        }
-
-        .tax-content {
-            display: none;
-            background-color: white;
-            padding: 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-
-        .tax-content.active {
-            display: block;
-        }
-
-        /* Charts for Ramalan Cukai */
-        .charts-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .chart-card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 20px;
-            transition: var(--transition);
-        }
-
-        .chart-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .chart-title {
-            color: var(--primary-admin);
+        .empty-state i {
+            font-size: 3rem;
             margin-bottom: 15px;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: var(--light-gray);
         }
 
-        .chart-wrapper {
-            position: relative;
-            height: 300px;
-            width: 100%;
+        .empty-state p {
+            font-size: 1.1rem;
         }
 
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .control-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        select, button {
-            padding: 8px 15px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            background-color: white;
+        /* Footer */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: var(--gray);
             font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
         }
-
-        button {
-            background-color: var(--primary-admin);
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        button:hover {
-            background-color: var(--secondary-admin);
-        }
-
-        .prediction-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 40px;
-            box-shadow: var(--shadow);
-        }
-
-        .prediction-table th {
-            background-color: var(--primary-admin);
-            color: white;
-            padding: 15px;
-            text-align: left;
-        }
-
-        .prediction-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .prediction-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .prediction-table tr:hover {
-            background-color: #f0f5ff;
-        }
-
-        .conclusion {
-            background-color: #e8f4f8;
-            padding: 25px;
-            border-radius: var(--border-radius);
-            margin-top: 40px;
-            border-left: 4px solid var(--primary-admin);
-        }
-
-        .category-tag {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-right: 8px;
-        }
-
-        .residential { background-color: #e3f2fd; color: #1565c0; }
-        .commercial { background-color: #e8f5e9; color: #2e7d32; }
-        .corporate { background-color: #f3e5f5; color: #7b1fa2; }
-
-        /* Table for Surat */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            box-shadow: var(--shadow);
-        }
-
-        .data-table th {
-            background-color: var(--primary-admin);
-            color: white;
-            padding: 15px;
-            text-align: left;
-        }
-
-        .data-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .data-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .data-table tr:hover {
-            background-color: #f0f5ff;
-        }
-
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .status-pending { background-color: #fff3cd; color: #856404; }
-        .status-process { background-color: #cce5ff; color: #004085; }
-        .status-completed { background-color: #d4edda; color: #155724; }
-        .status-rejected { background-color: #f8d7da; color: #721c24; }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-                overflow: hidden;
-            }
-
-            .sidebar:hover {
-                width: 250px;
-            }
-
-            .sidebar-header h2,
-            .sidebar-header p,
-            .menu-item span,
-            .sidebar-footer {
-                opacity: 0;
-                transition: opacity 0.3s;
-            }
-
-            .sidebar:hover .sidebar-header h2,
-            .sidebar:hover .sidebar-header p,
-            .sidebar:hover .menu-item span,
-            .sidebar:hover .sidebar-footer {
-                opacity: 1;
-            }
-
-            .main-content {
-                margin-left: 70px;
-            }
-
-            .sidebar:hover + .main-content {
-                margin-left: 250px;
-            }
-
-            .charts-container {
+        @media (max-width: 1024px) {
+            .time-section {
                 grid-template-columns: 1fr;
             }
-
-            .top-nav {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-
-            .user-info {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .user-details {
-                text-align: center;
+            
+            .time-display {
+                font-size: 4rem;
             }
         }
 
-        @media (max-width: 480px) {
-            .main-content {
-                padding: 15px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .tax-tabs {
+        @media (max-width: 768px) {
+            body {
                 flex-direction: column;
             }
+            
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .logo {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+            
+            .nav-menu {
+                display: flex;
+                flex-grow: 0;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+                margin-left: 10px;
+            }
+            
+            .nav-link span {
+                display: none;
+            }
+            
+            .user-info {
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .time-display {
+                font-size: 3.5rem;
+            }
+        }
 
-            .tax-tab {
-                text-align: center;
+        @media (max-width: 576px) {
+            .time-display {
+                font-size: 3rem;
+            }
+            
+            .nav-link i {
+                margin-right: 0;
+            }
+            
+            .user-details {
+                display: none;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .back-button {
+                margin-top: 15px;
+                align-self: flex-start;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h2><i class="fas fa-envelope-open-text"></i> MDG</h2>
-            <p>Sistem Surat</p>
-        </div>
-
-        <div class="sidebar-menu">
-            <a href="#dashboard" class="menu-item active" data-tab="dashboard">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="#surat-masuk" class="menu-item" data-tab="surat-masuk">
-                <i class="fas fa-inbox"></i>
-                <span>Surat Masuk</span>
-            </a>
-            <a href="#surat-keluar" class="menu-item" data-tab="surat-keluar">
-                <i class="fas fa-paper-plane"></i>
-                <span>Surat Keluar</span>
-            </a>
-            <a href="#ramalan-cukai" class="menu-item" data-tab="ramalan-cukai">
-                <i class="fas fa-chart-line"></i>
-                <span>Ramalan Cukai</span>
-            </a>
-            <a href="#laporan" class="menu-item" data-tab="laporan">
-                <i class="fas fa-file-alt"></i>
-                <span>Laporan</span>
-            </a>
-            <a href="#pengguna" class="menu-item" data-tab="pengguna">
-                <i class="fas fa-users"></i>
-                <span>Pengguna</span>
-            </a>
-            <a href="#tetapan" class="menu-item" data-tab="tetapan">
-                <i class="fas fa-cog"></i>
-                <span>Tetapan Sistem</span>
-            </a>
-        </div>
-
-        <div class="sidebar-footer">
-            <p>Versi 2.1.0</p>
-            <p>© 2025 MD Gerik</p>
-        </div>
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="main-content">
-        <!-- Top Navigation -->
-        <div class="top-nav">
-            <div class="page-title">
-                <h1 id="pageTitle">Dashboard Utama</h1>
-                <p id="pageSubtitle">Selamat datang ke Sistem Pengurusan Surat</p>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-envelope-open-text"></i>
             </div>
-
-            <div class="user-info">
-                <div class="user-details">
-                    <div class="user-name" id="userName">Pentadbir Sistem</div>
-                    <div class="user-role" id="userRole">Admin</div>
-                </div>
-                <div class="user-avatar" id="userAvatar">A</div>
-                <button class="logout-btn" id="logoutBtn">
+            <div>
+                <div class="logo-text">Sistem Surat</div>
+                <div class="logo-subtext">Majlis Daerah Gerik</div>
+            </div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="surat-masuk.html" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Surat Masuk</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="surat-keluar.html" class="nav-link">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Surat Keluar</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="ramalan-cukai.html" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Ramalan Cukai</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="settings.html" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <!-- TAMBAHAN: Log Keluar link di sini -->
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">
                     <i class="fas fa-sign-out-alt"></i>
-                    Log Keluar
-                </button>
+                    <span>Log Keluar</span>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="user-info">
+            <div class="user-avatar">A</div>
+            <div class="user-details">
+                <h4>Admin Ahmad</h4>
+                <p>Pentadbir Sistem</p>
             </div>
         </div>
-
-        <!-- Dashboard Content -->
-        <div id="dashboard" class="dashboard-content active">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon surat-masuk">
-                        <i class="fas fa-inbox"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="suratMasukCount">0</h3>
-                        <p>Surat Masuk</p>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <div class="page-title">
+                <h1>Dashboard</h1>
+                <p>Sistem Pengurusan Surat Rasmi Majlis Daerah Gerik</p>
+            </div>
+            <button class="back-button" id="backButton">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </button>
+        </div>
+        
+        <!-- Welcome Section - Dikemaskini -->
+        <section class="welcome-section">
+            <h2>Selamat Datang</h2>
+            <p>Sistem Pengurusan Surat Rasmi Majlis Daerah Gerik</p>
+            <div class="department-title">JABATAN KHIDMAT PENGURUSAN BHG. PENTADBIRAN </div>
+        </section>
+        
+        <!-- Statistics Section - Tanpa Data Dummy -->
+        <section class="stats-container">
+            <div class="stat-box surat-masuk">
+                <div class="stat-header">
+                    <div class="stat-title">Surat Masuk</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-envelope"></i>
                     </div>
                 </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon surat-keluar">
+                <div class="stat-value empty">Data akan dimuatkan</div>
+            </div>
+            
+            <div class="stat-box surat-keluar">
+                <div class="stat-header">
+                    <div class="stat-title">Surat Keluar</div>
+                    <div class="stat-icon">
                         <i class="fas fa-paper-plane"></i>
                     </div>
-                    <div class="stat-content">
-                        <h3 id="suratKeluarCount">0</h3>
-                        <p>Surat Keluar</p>
+                </div>
+                <div class="stat-value empty">Data akan dimuatkan</div>
+            </div>
+            
+            <div class="stat-box ramalan-cukai">
+                <div class="stat-header">
+                    <div class="stat-title">Ramalan Cukai</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
                     </div>
                 </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon pending">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="suratPendingCount">0</h3>
-                        <p>Dalam Proses</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon selesai">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="suratSelesaiCount">0</h3>
-                        <p>Selesai</p>
+                <div class="stat-value empty">Data akan dimuatkan</div>
+            </div>
+            
+            <div class="stat-box setting">
+                <div class="stat-header">
+                    <div class="stat-title">Settings</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-cog"></i>
                     </div>
                 </div>
+                <div class="stat-value empty">Data akan dimuatkan</div>
             </div>
-
-            <div style="background-color: white; padding: 25px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-top: 30px;">
-                <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Aktiviti Terkini</h2>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>No. Rujukan</th>
-                            <th>Jenis Surat</th>
-                            <th>Tarikh</th>
-                            <th>Status</th>
-                            <th>Tindakan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recentActivities">
-                        <!-- Data akan diisi oleh JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Surat Masuk Content -->
-        <div id="surat-masuk" class="dashboard-content">
-            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Senarai Surat Masuk</h2>
-            <div style="margin-bottom: 20px;">
-                <button style="background-color: var(--primary-admin); color: white; padding: 10px 20px; border: none; border-radius: var(--border-radius); cursor: pointer; margin-right: 10px;">
-                    <i class="fas fa-plus"></i> Tambah Surat Masuk
-                </button>
-                <button style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: var(--border-radius); cursor: pointer;">
-                    <i class="fas fa-filter"></i> Tapisan
-                </button>
-            </div>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>No. Rujukan</th>
-                        <th>Pengirim</th>
-                        <th>Perkara</th>
-                        <th>Tarikh Terima</th>
-                        <th>Status</th>
-                        <th>Tindakan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>SM/2025/001</td>
-                        <td>Jabatan Kerja Raya</td>
-                        <td>Permohonan Kelulusan Pelan</td>
-                        <td>15 Jan 2025</td>
-                        <td><span class="status-badge status-pending">Dalam Proses</span></td>
-                        <td>
-                            <button style="background-color: var(--primary-admin); color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; margin-right: 5px;">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button style="background-color: var(--success); color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <!-- More rows can be added here -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Surat Keluar Content -->
-        <div id="surat-keluar" class="dashboard-content">
-            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Senarai Surat Keluar</h2>
-            <!-- Similar structure to surat-masuk -->
-        </div>
-
-        <!-- RAMALAN CUKAI Content -->
-        <div id="ramalan-cukai" class="dashboard-content">
-            <div style="background-color: #e8f4f8; padding: 20px; border-radius: var(--border-radius); margin-bottom: 30px; border-left: 4px solid var(--primary-admin);">
-                <h2 style="color: var(--primary-admin); margin-bottom: 10px;">Ramalan Aras Cukai Taksiran</h2>
-                <p>Sejak <strong>39 tahun lepas</strong> (1985-2024), kadar cukai taksiran bagi negeri Perak kekal stabil tanpa kenaikan. Namun, selari dengan pertumbuhan pembangunan dan keperluan fiskal, kerajaan negeri Perak telah meluluskan <strong>kenaikan cukai taksiran berkuat kuasa tahun 2026</strong>.</p>
-                <div style="background-color: white; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                    <h4 style="color: var(--primary-admin); margin-bottom: 10px;">Kadar Baru 2026:</h4>
-                    <p><span class="category-tag residential">Perumahan</span>: 6.0% (dari 5.20%)</p>
-                    <p><span class="category-tag commercial">Kedai/Perniagaan</span>: 6.0% (dari 5.60%)</p>
-                    <p><span class="category-tag corporate">Syarikat/Industri</span>: 6.0% (dari 6.50%)</p>
-                    <p><em>Nota: Semua kategori diselaraskan kepada kadar 6% mulai 2026</em></p>
+        </section>
+        
+        <!-- Time and Date Section -->
+        <section class="time-section">
+            <div class="today-info">
+                <h3>Statistik Surat</h3>
+                <div class="date-display">Hari ini</div>
+                <div class="day-display" id="current-date">Jumaat, 12 Disember 2025</div>
+                <div style="margin-top: 15px; color: var(--gray);">
+                    <p>Data statistik akan dipaparkan setelah dimuatkan</p>
                 </div>
             </div>
-
-            <!-- Tabs for different views -->
-            <div class="tax-tabs">
-                <div class="tax-tab active" data-tax-view="charts">Graf Ramalan</div>
-                <div class="tax-tab" data-tax-view="table">Jadual Ramalan</div>
-                <div class="tax-tab" data-tax-view="analysis">Analisis</div>
+            
+            <!-- Time Box Besar -->
+            <div class="time-box">
+                <h3>Masa Sistem</h3>
+                <div class="time-display" id="live-clock">01:00:30</div>
+                <div class="time-label">Waktu Semasa (Waktu Malaysia)</div>
             </div>
-
-            <!-- Charts View -->
-            <div id="tax-charts" class="tax-content active">
-                <div class="charts-container">
-                    <div class="chart-card">
-                        <h3 class="chart-title">
-                            <span class="category-tag residential">●</span>
-                            Ramalan Cukai Taksiran - Perumahan
-                        </h3>
-                        <div class="chart-wrapper">
-                            <canvas id="residentialChart"></canvas>
-                        </div>
-                        <div class="controls">
-                            <div class="control-group">
-                                <label>Tahun Mula:</label>
-                                <select id="residentialStartYear">
-                                    <option value="1985">1985</option>
-                                    <option value="2000">2000</option>
-                                    <option value="2010">2010</option>
-                                    <option value="2020" selected>2020</option>
-                                </select>
-                            </div>
-                            <button onclick="downloadTaxData('perumahan')">Muat Turun Data</button>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-card">
-                        <h3 class="chart-title">
-                            <span class="category-tag commercial">●</span>
-                            Ramalan Cukai Taksiran - Kedai/Perniagaan
-                        </h3>
-                        <div class="chart-wrapper">
-                            <canvas id="commercialChart"></canvas>
-                        </div>
-                        <div class="controls">
-                            <div class="control-group">
-                                <label>Tahun Mula:</label>
-                                <select id="commercialStartYear">
-                                    <option value="1985">1985</option>
-                                    <option value="2000">2000</option>
-                                    <option value="2010">2010</option>
-                                    <option value="2020" selected>2020</option>
-                                </select>
-                            </div>
-                            <button onclick="downloadTaxData('kedai')">Muat Turun Data</button>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-card">
-                        <h3 class="chart-title">
-                            <span class="category-tag corporate">●</span>
-                            Ramalan Cukai Taksiran - Syarikat/Industri
-                        </h3>
-                        <div class="chart-wrapper">
-                            <canvas id="corporateChart"></canvas>
-                        </div>
-                        <div class="controls">
-                            <div class="control-group">
-                                <label>Tahun Mula:</label>
-                                <select id="corporateStartYear">
-                                    <option value="1985">1985</option>
-                                    <option value="2000">2000</option>
-                                    <option value="2010">2010</option>
-                                    <option value="2020" selected>2020</option>
-                                </select>
-                            </div>
-                            <button onclick="downloadTaxData('syarikat')">Muat Turun Data</button>
-                        </div>
-                    </div>
-                </div>
+        </section>
+        
+        <!-- Recent Activity - Tanpa Data Dummy -->
+        <section class="recent-activity">
+            <h3>Aktiviti Terkini</h3>
+            <div class="empty-state">
+                <i class="fas fa-clipboard-list"></i>
+                <p>Tiada aktiviti terkini untuk dipaparkan</p>
+                <p style="font-size: 0.9rem; margin-top: 10px;">Data akan dipaparkan selepas dimasukkan</p>
             </div>
-
-            <!-- Table View -->
-            <div id="tax-table" class="tax-content">
-                <h3 style="color: var(--primary-admin); margin-bottom: 20px;">Ramalan 5-Tahunan (2026-2050)</h3>
-                <table class="prediction-table">
-                    <thead>
-                        <tr>
-                            <th>Tahun</th>
-                            <th>Perumahan (%)</th>
-                            <th>Kedai/Perniagaan (%)</th>
-                            <th>Syarikat/Industri (%)</th>
-                            <th>Fasa Pembangunan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="predictionTableBody">
-                        <!-- Data akan diisi oleh JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Analysis View -->
-            <div id="tax-analysis" class="tax-content">
-                <div class="conclusion">
-                    <h3 style="color: var(--primary-admin); margin-bottom: 15px;">Analisis Ramalan Cukai</h3>
-                    <p>Berdasarkan analisis matematik dan model ramalan, kenaikan cukai taksiran mulai 2026 adalah langkah kerajaan negeri Perak untuk <strong>membiayai pembangunan</strong> sambil mengekalkan daya saing negeri.</p>
-                    
-                    <p><strong>Kesan utama berdasarkan model matematik:</strong></p>
-                    <ul style="margin-left: 20px; margin-top: 10px; margin-bottom: 15px;">
-                        <li>Untuk perumahan: Peningkatan ±RM50 setahun untuk harta bernilai RM62,400</li>
-                        <li>Kadar diselaraskan kepada 6% untuk semua kategori mulai 2026</li>
-                        <li>Ramalan menunjukkan kenaikan sederhana setiap 5 tahun selepas 2026</li>
-                    </ul>
-                    
-                    <p><strong>Fasa Ramalan 5-Tahunan:</strong></p>
-                    <ol style="margin-left: 20px; margin-top: 10px;">
-                        <li><strong>2026–2030:</strong> Fasa pelarasan – kesan inflasi dan penyesuaian pasaran</li>
-                        <li><strong>2031–2035:</strong> Kadar stabil dengan insentif untuk hartanah hijau</li>
-                        <li><strong>2036–2040:</strong> Kemungkinan kenaikan tambahan untuk pembiayaan infrastruktur mega</li>
-                        <li><strong>2041–2050:</strong> Kadar dijangka stabil pada 7–8% (bergantung kepada ekonomi makro)</li>
-                    </ol>
-                    
-                    <p style="margin-top: 15px;">Pemantauan berkala terhadap ramalan ini disyorkan untuk perancangan hartanah dan pelaburan jangka panjang di Negeri Perak.</p>
-                </div>
-                
-                <div style="background-color: white; padding: 20px; border-radius: var(--border-radius); margin-top: 20px; box-shadow: var(--shadow);">
-                    <h4 style="color: var(--primary-admin); margin-bottom: 15px;">Data Matematik Model</h4>
-                    <p><strong>Pemboleh Ubah Model:</strong></p>
-                    <ul style="margin-left: 20px; margin-bottom: 15px;">
-                        <li>A (Luas Harta): 1,000 kaki²</li>
-                        <li>k (Kadar Anggaran): RM5.20 / kaki² / bulan</li>
-                        <li>r (Kadar Cukai): 6% (0.06)</li>
-                    </ul>
-                    
-                    <p><strong>Formula Pengiraan:</strong></p>
-                    <p>Nilai Taksiran = k × A × 12 = RM5.20 × 1,000 × 12 = RM62,400/tahun</p>
-                    <p>Cukai Taksiran (2026) = Nilai Taksiran × r = RM62,400 × 0.06 = RM3,744/tahun</p>
-                    <p>Kenaikan tahunan ≈ RM50 (berdasarkan model ramalan)</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Other dashboard sections (laporan, pengguna, tetapan) -->
-        <div id="laporan" class="dashboard-content">
-            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Laporan Sistem</h2>
-            <!-- Laporan content -->
-        </div>
-
-        <div id="pengguna" class="dashboard-content">
-            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Pengurusan Pengguna</h2>
-            <!-- Pengguna content -->
-        </div>
-
-        <div id="tetapan" class="dashboard-content">
-            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Tetapan Sistem</h2>
-            <!-- Tetapan content -->
-        </div>
-    </div>
-
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Sistem Surat Keluar Masuk - Majlis Daerah Gerik. Hak Cipta Terpelihara.</p>
+        </footer>
+    </main>
+    
     <script>
-        // Check if user is logged in
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        // Live Clock Function
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours().toString().padStart(2, '0');
+            let minutes = now.getMinutes().toString().padStart(2, '0');
+            let seconds = now.getSeconds().toString().padStart(2, '0');
             
-            if (!currentUser) {
-                // Redirect to login page if not logged in
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            // Update user info
-            document.getElementById('userName').textContent = currentUser.name || 'Pengguna';
-            document.getElementById('userRole').textContent = getRoleDisplayName(currentUser.role);
-            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
-            
-            // Update page title based on role
-            const roleName = getRoleDisplayName(currentUser.role);
-            document.getElementById('pageTitle').textContent = `Dashboard ${roleName}`;
-            
-            // Load dashboard stats
-            loadDashboardStats();
-            loadRecentActivities();
-            
-            // Initialize tax prediction charts
-            initializeTaxCharts();
-            populatePredictionTable();
-            
-            // Setup event listeners
-            setupEventListeners();
+            document.getElementById('live-clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        
+        // Update clock immediately and every second
+        updateClock();
+        setInterval(updateClock, 1000);
+        
+        // Update date display with current date
+        const monthNames = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", 
+                           "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
+        const dayNames = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
+        
+        const today = new Date();
+        const dayName = dayNames[today.getDay()];
+        const day = today.getDate();
+        const month = monthNames[today.getMonth()];
+        const year = today.getFullYear();
+        
+        // Update the date display to show current date
+        document.getElementById('current-date').textContent = `${dayName}, ${day} ${month} ${year}`;
+        
+        // Simple back button functionality - goes back in browser history
+        document.getElementById('backButton').addEventListener('click', function() {
+            window.history.back();
         });
         
-        // Role display names
-        function getRoleDisplayName(role) {
-            switch(role) {
-                case 'admin': return 'Pentadbir Sistem';
-                case 'setiausaha': return 'Setiausaha';
-                case 'jabatan': return 'Jabatan';
-                case 'latihan': return 'Latihan';
-                default: return 'Pengguna';
-            }
-        }
-        
-        // Dashboard statistics
-        function loadDashboardStats() {
-            // Simulate API call
-            setTimeout(() => {
-                document.getElementById('suratMasukCount').textContent = '24';
-                document.getElementById('suratKeluarCount').textContent = '18';
-                document.getElementById('suratPendingCount').textContent = '7';
-                document.getElementById('suratSelesaiCount').textContent = '35';
-            }, 500);
-        }
-        
-        // Recent activities
-        function loadRecentActivities() {
-            const activities = [
-                { ref: 'SK/2025/015', type: 'Keluar', date: '20 Jan 2025', status: 'completed' },
-                { ref: 'SM/2025/014', type: 'Masuk', date: '19 Jan 2025', status: 'pending' },
-                { ref: 'SK/2025/013', type: 'Keluar', date: '18 Jan 2025', status: 'process' },
-                { ref: 'SM/2025/012', type: 'Masuk', date: '17 Jan 2025', status: 'completed' },
-                { ref: 'SK/2025/011', type: 'Keluar', date: '16 Jan 2025', status: 'completed' }
-            ];
-            
-            const tbody = document.getElementById('recentActivities');
-            tbody.innerHTML = '';
-            
-            activities.forEach(activity => {
-                const row = document.createElement('tr');
-                let statusBadge;
-                
-                switch(activity.status) {
-                    case 'pending': 
-                        statusBadge = '<span class="status-badge status-pending">Dalam Proses</span>';
-                        break;
-                    case 'process': 
-                        statusBadge = '<span class="status-badge status-process">Sedang Diproses</span>';
-                        break;
-                    case 'completed': 
-                        statusBadge = '<span class="status-badge status-completed">Selesai</span>';
-                        break;
-                }
-                
-                row.innerHTML = `
-                    <td>${activity.ref}</td>
-                    <td>Surat ${activity.type}</td>
-                    <td>${activity.date}</td>
-                    <td>${statusBadge}</td>
-                    <td>
-                        <button style="background-color: var(--primary-admin); color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">
-                            <i class="fas fa-eye"></i> Lihat
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-        
-        // Setup event listeners
-        function setupEventListeners() {
-            // Sidebar navigation
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Remove active class from all items
-                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-                    
-                    // Add active class to clicked item
-                    this.classList.add('active');
-                    
-                    // Get tab ID
-                    const tabId = this.getAttribute('data-tab');
-                    
-                    // Hide all content
-                    document.querySelectorAll('.dashboard-content').forEach(content => {
-                        content.classList.remove('active');
-                    });
-                    
-                    // Show selected content
-                    document.getElementById(tabId).classList.add('active');
-                    
-                    // Update page title
-                    updatePageTitle(tabId);
+        // Nav link active state
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Remove active class from all nav links
+                document.querySelectorAll('.nav-link').forEach(item => {
+                    item.classList.remove('active');
                 });
+                // Add active class to clicked link
+                this.classList.add('active');
             });
-            
-            // Tax tabs
-            document.querySelectorAll('.tax-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Remove active class from all tabs
-                    document.querySelectorAll('.tax-tab').forEach(t => t.classList.remove('active'));
-                    
-                    // Add active class to clicked tab
-                    this.classList.add('active');
-                    
-                    // Get view type
-                    const viewType = this.getAttribute('data-tax-view');
-                    
-                    // Hide all tax content
-                    document.querySelectorAll('.tax-content').forEach(content => {
-                        content.classList.remove('active');
-                    });
-                    
-                    // Show selected content
-                    document.getElementById(`tax-${viewType}`).classList.add('active');
-                });
-            });
-            
-            // Logout button
-            document.getElementById('logoutBtn').addEventListener('click', function() {
-                if (confirm('Adakah anda pasti ingin log keluar?')) {
-                    localStorage.removeItem('currentUser');
-                    window.location.href = 'index.html';
+        });
+        
+        // Highlight current page in navigation
+        function highlightCurrentPage() {
+            const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
                 }
             });
         }
         
-        // Update page title based on active tab
-        function updatePageTitle(tabId) {
-            const titles = {
-                'dashboard': 'Dashboard Utama',
-                'surat-masuk': 'Surat Masuk',
-                'surat-keluar': 'Surat Keluar',
-                'ramalan-cukai': 'Ramalan Cukai Taksiran',
-                'laporan': 'Laporan Sistem',
-                'pengguna': 'Pengurusan Pengguna',
-                'tetapan': 'Tetapan Sistem'
-            };
-            
-            const subtitles = {
-                'dashboard': 'Selamat datang ke Sistem Pengurusan Surat',
-                'surat-masuk': 'Senarai dan pengurusan surat masuk',
-                'surat-keluar': 'Senarai dan pengurusan surat keluar',
-                'ramalan-cukai': 'Ramalan kadar cukai taksiran 2026-2050',
-                'laporan': 'Laporan dan statistik sistem',
-                'pengguna': 'Pengurusan pengguna dan akses',
-                'tetapan': 'Tetapan dan konfigurasi sistem'
-            };
-            
-            document.getElementById('pageTitle').textContent = titles[tabId] || 'Dashboard';
-            document.getElementById('pageSubtitle').textContent = subtitles[tabId] || '';
-        }
-        
-        // ========== RAMALAN CUKAI FUNCTIONS ==========
-        
-        // Data untuk ramalan cukai
-        const historicalYears = Array.from({length: 40}, (_, i) => 1985 + i); // 1985-2024
-        const predictionYears = [2026, 2030, 2035, 2040, 2045, 2050];
-        
-        // Data sejarah: Kadar stabil selama 39 tahun
-        const historicalRates = {
-            residential: Array(40).fill(5.20), // 1985-2024: 5.20%
-            commercial: Array(40).fill(5.60),  // 1985-2024: 5.60%
-            corporate: Array(40).fill(6.50)    // 1985-2024: 6.50%
-        };
-        
-        // Data ramalan 2026-2050 (setiap 5 tahun)
-        const predictionRates = {
-            residential: [6.0, 6.2, 6.5, 6.8, 7.0, 7.2],   // 2026, 2030, 2035, 2040, 2045, 2050
-            commercial: [6.0, 6.3, 6.6, 6.9, 7.1, 7.3],    // 2026, 2030, 2035, 2040, 2045, 2050
-            corporate: [6.0, 6.4, 6.8, 7.2, 7.5, 7.8]      // 2026, 2030, 2035, 2040, 2045, 2050
-        };
-        
-        // Fasa pembangunan untuk jadual
-        const developmentPhases = {
-            2026: "Fasa Pelarasan - Kenaikan pertama selepas 39 tahun",
-            2030: "Fasa Stabilisasi - Penyesuaian pasaran",
-            2035: "Fasa Pertumbuhan - Pembiayaan infrastruktur",
-            2040: "Fasa Kematangan - Pembangunan mampan",
-            2045: "Fasa Penstabilan - Kadar optimum",
-            2050: "Fasa Jangka Panjang - Visi 2050"
-        };
-        
-        // Warna untuk graf
-        const chartColors = {
-            residential: {
-                line: 'rgba(33, 150, 243, 1)',
-                fill: 'rgba(33, 150, 243, 0.1)',
-                point: 'rgba(33, 150, 243, 1)'
-            },
-            commercial: {
-                line: 'rgba(76, 175, 80, 1)',
-                fill: 'rgba(76, 175, 80, 0.1)',
-                point: 'rgba(76, 175, 80, 1)'
-            },
-            corporate: {
-                line: 'rgba(156, 39, 176, 1)',
-                fill: 'rgba(156, 39, 176, 0.1)',
-                point: 'rgba(156, 39, 176, 1)'
-            }
-        };
-        
-        // Fungsi untuk mendapatkan semua tahun (sejarah + ramalan)
-        function getAllYears(startYear = 1985) {
-            const allHistorical = historicalYears.filter(year => year >= startYear);
-            return [...allHistorical, ...predictionYears];
-        }
-        
-        // Fungsi untuk mendapatkan semua kadar (sejarah + ramalan)
-        function getAllRates(category, startYear = 1985) {
-            const startIndex = historicalYears.findIndex(year => year === startYear);
-            const historical = historicalRates[category].slice(startIndex);
-            return [...historical, ...predictionRates[category]];
-        }
-        
-        // Fungsi untuk membuat graf cukai
-        function createTaxChart(canvasId, category, label) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            const startYearSelect = document.getElementById(canvasId.replace('Chart', 'StartYear'));
-            
-            function updateChart() {
-                const startYear = parseInt(startYearSelect.value);
-                const years = getAllYears(startYear);
-                const rates = getAllRates(category, startYear);
-                
-                if (window[canvasId + 'ChartInstance']) {
-                    window[canvasId + 'ChartInstance'].destroy();
-                }
-                
-                window[canvasId + 'ChartInstance'] = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: years,
-                        datasets: [{
-                            label: `Kadar Cukai ${label}`,
-                            data: rates,
-                            borderColor: chartColors[category].line,
-                            backgroundColor: chartColors[category].fill,
-                            pointBackgroundColor: years.map(year => 
-                                year >= 2026 ? chartColors[category].point : 'rgba(100, 100, 100, 0.7)'
-                            ),
-                            pointBorderColor: years.map(year => 
-                                year >= 2026 ? chartColors[category].point : 'rgba(100, 100, 100, 0.7)'
-                            ),
-                            pointRadius: years.map(year => year === 2025 || year === 2026 || year % 10 === 0 ? 6 : 3),
-                            pointHoverRadius: 8,
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: false,
-                                title: {
-                                    display: true,
-                                    text: 'Kadar Cukai (%)'
-                                },
-                                min: 4,
-                                max: 9
-                            },
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Tahun'
-                                },
-                                ticks: {
-                                    maxTicksLimit: 10
-                                }
-                            }
-                        },
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const year = context.label;
-                                        const value = context.parsed.y;
-                                        let status = "Sejarah";
-                                        
-                                        if (year >= 2026) {
-                                            status = "Ramalan";
-                                        }
-                                        
-                                        if (year === 2026) {
-                                            return `${label}: ${value}% (KENAIKAN ${status})`;
-                                        }
-                                        
-                                        return `${label}: ${value}% (${status})`;
-                                    }
-                                }
-                            },
-                            legend: {
-                                display: false
-                            }
-                        },
-                        interaction: {
-                            intersect: false,
-                            mode: 'index'
-                        }
-                    }
-                });
-            }
-            
-            // Update graf apabila tahun mula berubah
-            startYearSelect.addEventListener('change', updateChart);
-            
-            // Buat graf pertama
-            updateChart();
-        }
-        
-        // Fungsi untuk mengisi jadual ramalan
-        function populatePredictionTable() {
-            const tableBody = document.getElementById('predictionTableBody');
-            tableBody.innerHTML = '';
-            
-            // Tambah baris untuk tahun 2025 (sebelum kenaikan)
-            const row2025 = document.createElement('tr');
-            row2025.innerHTML = `
-                <td><strong>2025</strong> (Sebelum)</td>
-                <td>5.20%</td>
-                <td>5.60%</td>
-                <td>6.50%</td>
-                <td>Kadar stabil selama 39 tahun</td>
-            `;
-            tableBody.appendChild(row2025);
-            
-            // Tambah baris untuk tahun ramalan
-            predictionYears.forEach(year => {
-                const row = document.createElement('tr');
-                const residentialRate = predictionRates.residential[predictionYears.indexOf(year)];
-                const commercialRate = predictionRates.commercial[predictionYears.indexOf(year)];
-                const corporateRate = predictionRates.corporate[predictionYears.indexOf(year)];
-                
-                row.innerHTML = `
-                    <td><strong>${year}</strong>${year === 2026 ? ' (KENAIKAN)' : ''}</td>
-                    <td>${residentialRate}%</td>
-                    <td>${commercialRate}%</td>
-                    <td>${corporateRate}%</td>
-                    <td>${developmentPhases[year]}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-        
-        // Fungsi untuk memuat turun data cukai
-        function downloadTaxData(category) {
-            let csvContent = "data:text/csv;charset=utf-8,";
-            let headers = "Tahun,Kadar(%)";
-            let dataRows = [];
-            
-            // Data sejarah
-            historicalYears.forEach((year, index) => {
-                let rate;
-                if (category === 'perumahan') rate = historicalRates.residential[index];
-                else if (category === 'kedai') rate = historicalRates.commercial[index];
-                else if (category === 'syarikat') rate = historicalRates.corporate[index];
-                
-                dataRows.push(`${year},${rate}`);
-            });
-            
-            // Data ramalan
-            predictionYears.forEach((year, index) => {
-                let rate;
-                if (category === 'perumahan') rate = predictionRates.residential[index];
-                else if (category === 'kedai') rate = predictionRates.commercial[index];
-                else if (category === 'syarikat') rate = predictionRates.corporate[index];
-                
-                dataRows.push(`${year},${rate}`);
-            });
-            
-            csvContent += headers + "\n" + dataRows.join("\n");
-            
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `ramalan_cukai_${category}_perak.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-        
-        // Inisialisasi graf cukai
-        function initializeTaxCharts() {
-            createTaxChart('residentialChart', 'residential', 'Perumahan');
-            createTaxChart('commercialChart', 'commercial', 'Kedai/Perniagaan');
-            createTaxChart('corporateChart', 'corporate', 'Syarikat/Industri');
-        }
+        // Run on page load
+        highlightCurrentPage();
     </script>
 </body>
 </html>
