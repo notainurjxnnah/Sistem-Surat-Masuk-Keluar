@@ -1,1 +1,1133 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramalan Cukai Taksiran - Sistem Surat MDG</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-admin: #1a4b8c;
+            --secondary-admin: #2c5aa0;
+            --light-bg: #f8f9fa;
+            --dark-bg: #343a40;
+            --text-light: #f8f9fa;
+            --text-dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --border-radius: 10px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-admin), var(--secondary-admin));
+            color: white;
+            padding: 20px 30px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 30px;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .header-title p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        /* Introduction Section */
+        .intro-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--primary-admin);
+        }
+
+        .highlight-box {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            border: 1px solid #e9ecef;
+        }
+
+        /* Tabs */
+        .tax-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tax-tab {
+            padding: 12px 25px;
+            background-color: white;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6c757d;
+            transition: var(--transition);
+        }
+
+        .tax-tab:hover {
+            background-color: #f8f9fa;
+        }
+
+        .tax-tab.active {
+            border-color: var(--primary-admin);
+            border-bottom-color: white;
+            color: var(--primary-admin);
+            background-color: white;
+            margin-bottom: -2px;
+        }
+
+        .tax-content {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .tax-content.active {
+            display: block;
+        }
+
+        /* Charts */
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .chart-title {
+            color: var(--primary-admin);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        select, button {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: white;
+            font-size: 0.9rem;
+        }
+
+        button {
+            background-color: var(--primary-admin);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        button:hover {
+            background-color: var(--secondary-admin);
+        }
+
+        .prediction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .prediction-table th {
+            background-color: var(--primary-admin);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .prediction-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .prediction-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .prediction-table tr:hover {
+            background-color: #f0f5ff;
+        }
+
+        .conclusion {
+            background-color: #e8f4f8;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            border-left: 4px solid var(--primary-admin);
+        }
+
+        /* Category Tags */
+        .category-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .residential { background-color: #e3f2fd; color: #1565c0; }
+        .commercial { background-color: #e8f5e9; color: #2e7d32; }
+        .corporate { background-color: #f3e5f5; color: #7b1fa2; }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .info-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .info-card h3 {
+            color: var(--primary-admin);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f5ff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-container {
+                padding: 20px;
+            }
+            
+            .tax-tabs {
+                flex-direction: column;
+            }
+            
+            .tax-tab {
+                text-align: center;
+                border-radius: var(--border-radius);
+            }
+            
+            .tax-tab.active {
+                border-radius: var(--border-radius);
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 15px;
+            }
+            
+            .chart-card {
+                padding: 15px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .control-group {
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="header-title">
+                <h1>Ramalan Cukai Taksiran</h1>
+                <p>Berdasarkan Data Sebenar Negeri Perak (1985-2050)</p>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div id="userInfo" style="display: flex; align-items: center; gap: 10px; color: white;">
+                <i class="fas fa-user-circle" style="font-size: 1.2rem;"></i>
+                <div>
+                    <div id="currentUserName">Loading...</div>
+                    <small id="currentUserRole" style="opacity: 0.8;">Loading...</small>
+                </div>
+            </div>
+            <a href="dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Kembali ke Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Introduction -->
+        <div class="intro-section">
+            <h2 style="color: var(--primary-admin); margin-bottom: 15px;">RAMALAN ARAS CUKAI TAKSIRAN NEGERI PERAK</h2>
+            <p>Sejak <strong>39 tahun lepas</strong> (1985-2024), kadar cukai taksiran bagi negeri Perak kekal stabil tanpa kenaikan. Namun, selari dengan pertumbuhan pembangunan dan keperluan fiskal, kerajaan negeri Perak telah meluluskan <strong>kenaikan cukai taksiran berkuat kuasa tahun 2026</strong>.</p>
+            
+            <div class="highlight-box">
+                <h3 style="color: var(--primary-admin); margin-bottom: 10px;">DATA KADAR CUKAI BERDASARKAN INPUT:</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    <div>
+                        <strong>Kategori Perumahan (k₁):</strong><br>
+                        <span class="category-tag residential">1985-2024: 5.20%</span><br>
+                        <span class="category-tag residential">2026: 6.0%</span>
+                    </div>
+                    <div>
+                        <strong>Kategori Kedai (k₂):</strong><br>
+                        <span class="category-tag commercial">1985-2024: 5.60%</span><br>
+                        <span class="category-tag commercial">2026: 6.0%</span>
+                    </div>
+                    <div>
+                        <strong>Kategori Syarikat (k₃):</strong><br>
+                        <span class="category-tag corporate">1985-2024: 6.50%</span><br>
+                        <span class="category-tag corporate">2026: 6.0%</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 15px; padding: 15px; background-color: white; border-radius: 5px;">
+                    <h4 style="color: var(--primary-admin); margin-bottom: 10px;">MODEL MATEMATIK BERDASARKAN INPUT ANDA:</h4>
+                    <p><strong>Pemboleh Ubah:</strong></p>
+                    <ul style="margin-left: 20px; color: #6c757d;">
+                        <li>A (Luas Harta) = 1,000 kaki²</li>
+                        <li>k (Kadar Anggaran) = RM5.20/kaki²/bulan</li>
+                        <li>r (Kadar Cukai) = 6% (0.06)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tax-tabs">
+            <div class="tax-tab active" data-tax-view="charts">
+                <i class="fas fa-chart-bar"></i> Graf Ramalan
+            </div>
+            <div class="tax-tab" data-tax-view="table">
+                <i class="fas fa-table"></i> Jadual Data
+            </div>
+            <div class="tax-tab" data-tax-view="analysis">
+                <i class="fas fa-calculator"></i> Analisis Matematik
+            </div>
+        </div>
+
+        <!-- Charts View -->
+        <div id="tax-charts" class="tax-content active">
+            <h3 style="color: var(--primary-admin); margin-bottom: 20px;">GRAF RAMALAN KADAR CUKAI TAKSIRAN (1985-2050)</h3>
+            <p style="color: #6c757d; margin-bottom: 20px;">Visualisasi kadar cukai berdasarkan data sejarah dan ramalan untuk 3 kategori utama.</p>
+            
+            <div class="charts-container">
+                <!-- PERUMAHAN -->
+                <div class="chart-card">
+                    <h3 class="chart-title">
+                        <span class="category-tag residential">●</span>
+                        Kategori Perumahan (k₁)
+                    </h3>
+                    <div class="chart-wrapper">
+                        <canvas id="residentialChart"></canvas>
+                    </div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Tahun Mula:</label>
+                            <select id="residentialStartYear">
+                                <option value="1985">1985</option>
+                                <option value="1990">1990</option>
+                                <option value="2000">2000</option>
+                                <option value="2010">2010</option>
+                                <option value="2020" selected>2020</option>
+                            </select>
+                        </div>
+                        <button onclick="downloadTaxData('perumahan')">
+                            <i class="fas fa-download"></i> Muat Turun Data
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- KEDAI -->
+                <div class="chart-card">
+                    <h3 class="chart-title">
+                        <span class="category-tag commercial">●</span>
+                        Kategori Kedai/Perniagaan (k₂)
+                    </h3>
+                    <div class="chart-wrapper">
+                        <canvas id="commercialChart"></canvas>
+                    </div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Tahun Mula:</label>
+                            <select id="commercialStartYear">
+                                <option value="1985">1985</option>
+                                <option value="1990">1990</option>
+                                <option value="2000">2000</option>
+                                <option value="2010">2010</option>
+                                <option value="2020" selected>2020</option>
+                            </select>
+                        </div>
+                        <button onclick="downloadTaxData('kedai')">
+                            <i class="fas fa-download"></i> Muat Turun Data
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- SYARIKAT -->
+                <div class="chart-card">
+                    <h3 class="chart-title">
+                        <span class="category-tag corporate">●</span>
+                        Kategori Syarikat/Industri (k₃)
+                    </h3>
+                    <div class="chart-wrapper">
+                        <canvas id="corporateChart"></canvas>
+                    </div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Tahun Mula:</label>
+                            <select id="corporateStartYear">
+                                <option value="1985">1985</option>
+                                <option value="1990">1990</option>
+                                <option value="2000">2000</option>
+                                <option value="2010">2010</option>
+                                <option value="2020" selected>2020</option>
+                            </select>
+                        </div>
+                        <button onclick="downloadTaxData('syarikat')">
+                            <i class="fas fa-download"></i> Muat Turun Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle" style="margin-right: 10px;"></i>PANDUAN MEMBACA GRAF</h3>
+                    <ul style="line-height: 1.8; color: #6c757d;">
+                        <li><strong>Garis Putus-putus:</strong> Data sejarah 1985-2024</li>
+                        <li><strong>Garis Padu:</strong> Ramalan 2026-2050</li>
+                        <li><strong>Titik Merah:</strong> Tahun 2026 (kenaikan pertama)</li>
+                        <li><strong>Kawasan Berbayang:</strong> Julat ketidakpastian ramalan</li>
+                        <li><strong>Hover:</strong> Lihat nilai tepat untuk setiap tahun</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-chart-line" style="margin-right: 10px;"></i>TREND PENTING</h3>
+                    <ul style="line-height: 1.8; color: #6c757d;">
+                        <li><strong>1985-2024:</strong> Kadar stabil selama 39 tahun</li>
+                        <li><strong>2026:</strong> Semua kategori diselaraskan ke 6%</li>
+                        <li><strong>2026-2050:</strong> Kenaikan sederhana setiap 5 tahun</li>
+                        <li><strong>Kesan:</strong> Penyatuan kadar merentas kategori</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table View -->
+        <div id="tax-table" class="tax-content">
+            <h3 style="color: var(--primary-admin); margin-bottom: 20px;">JADUAL RAMALAN 5-TAHUNAN (2026-2050)</h3>
+            <p style="color: #6c757d; margin-bottom: 20px;">Data kadar cukai taksiran berdasarkan model matematik dan trend sejarah.</p>
+            
+            <table class="prediction-table">
+                <thead>
+                    <tr>
+                        <th>Tahun</th>
+                        <th>Perumahan (%)</th>
+                        <th>Kedai/Perniagaan (%)</th>
+                        <th>Syarikat/Industri (%)</th>
+                        <th>Status</th>
+                        <th>Kesan Cukai Tahunan*</th>
+                    </tr>
+                </thead>
+                <tbody id="predictionTableBody">
+                    <!-- Data akan diisi oleh JavaScript -->
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 15px; font-size: 0.9rem; color: #6c757d;">
+                <p>*Kesan Cukai Tahunan dianggarkan untuk harta bernilai RM62,400 (berdasarkan model A=1,000 kaki², k=RM5.20/kaki²/bulan)</p>
+            </div>
+            
+            <div class="info-grid" style="margin-top: 30px;">
+                <div class="info-card">
+                    <h3><i class="fas fa-history" style="margin-right: 10px;"></i>DATA SEJARAH (1985-2024)</h3>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <th style="padding: 8px; border-bottom: 1px solid #eee;">Kategori</th>
+                            <th style="padding: 8px; border-bottom: 1px solid #eee;">Kadar</th>
+                            <th style="padding: 8px; border-bottom: 1px solid #eee;">Tempoh</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #eee;">Perumahan</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #eee;">5.20%</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #eee;">39 tahun</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #eee;">Kedai</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #eee;">5.60%</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #eee;">39 tahun</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #eee;">Syarikat</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #eee;">6.50%</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #eee;">39 tahun</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-bullseye" style="margin-right: 10px;"></i>SASARAN 2026</h3>
+                    <ul style="line-height: 1.8; color: #6c757d;">
+                        <li><strong>Semua kategori:</strong> 6.0%</li>
+                        <li><strong>Perumahan:</strong> +0.8% (dari 5.20%)</li>
+                        <li><strong>Kedai:</strong> +0.4% (dari 5.60%)</li>
+                        <li><strong>Syarikat:</strong> -0.5% (dari 6.50%)</li>
+                        <li><strong>Matlamat:</strong> Penyatuan dan penyelarasan kadar</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis View -->
+        <div id="tax-analysis" class="tax-content">
+            <h3 style="color: var(--primary-admin); margin-bottom: 20px;">ANALISIS MODEL MATEMATIK CUKAI TAKSIRAN</h3>
+            
+            <div class="conclusion">
+                <h4 style="color: var(--primary-admin); margin-bottom: 15px;">MODEL BERDASARKAN DATA INPUT ANDA</h4>
+                
+                <div style="background-color: white; padding: 20px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <h5 style="color: var(--primary-admin); margin-bottom: 10px;">PEMBOLEH UBAH MODEL (DARI INPUT):</h5>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                        <div style="padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                            <p><strong>Simbol: A</strong></p>
+                            <p>Luas Harta</p>
+                            <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary-admin);">1,000 kaki²</p>
+                        </div>
+                        <div style="padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                            <p><strong>Simbol: k</strong></p>
+                            <p>Kadar Anggaran</p>
+                            <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary-admin);">RM5.20/kaki²/bulan</p>
+                        </div>
+                        <div style="padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                            <p><strong>Simbol: r</strong></p>
+                            <p>Kadar Cukai 2026</p>
+                            <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary-admin);">6% (0.06)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background-color: white; padding: 20px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <h5 style="color: var(--primary-admin); margin-bottom: 15px;">PENGIRAAN MATEMATIK (BERDASARKAN INPUT):</h5>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-weight: bold; color: var(--primary-admin); margin-bottom: 10px;">Langkah 1: Kira Nilai Taksiran Tahunan</p>
+                        <div style="padding: 15px; background-color: #f8f9fa; border-radius: 5px; font-family: monospace;">
+                            <p>Nilai Taksiran = A × k × 12 bulan</p>
+                            <p>= 1,000 kaki² × RM5.20/kaki²/bulan × 12 bulan</p>
+                            <p>= <strong style="color: var(--primary-admin);">RM62,400/tahun</strong></p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-weight: bold; color: var(--primary-admin); margin-bottom: 10px;">Langkah 2: Kira Cukai Taksiran 2026</p>
+                        <div style="padding: 15px; background-color: #f8f9fa; border-radius: 5px; font-family: monospace;">
+                            <p>Cukai Taksiran 2026 = Nilai Taksiran × r</p>
+                            <p>= RM62,400 × 0.06</p>
+                            <p>= <strong style="color: var(--primary-admin);">RM3,744/tahun</strong></p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-weight: bold; color: var(--primary-admin); margin-bottom: 10px;">Langkah 3: Bandingkan dengan 2025 (Sebelum Kenaikan)</p>
+                        <div style="padding: 15px; background-color: #f8f9fa; border-radius: 5px; font-family: monospace;">
+                            <p>Cukai Taksiran 2025 = RM62,400 × 0.052</p>
+                            <p>= <strong style="color: #6c757d;">RM3,244.80/tahun</strong></p>
+                            <hr style="margin: 10px 0;">
+                            <p>Perbezaan = RM3,744 - RM3,244.80</p>
+                            <p>= <strong style="color: var(--primary-admin);">RM499.20/tahun</strong></p>
+                            <p>= <strong style="color: var(--primary-admin);">RM41.60/bulan</strong></p>
+                            <p>= <strong style="color: var(--primary-admin);">RM1.37/hari</strong></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background-color: white; padding: 20px; border-radius: var(--border-radius);">
+                    <h5 style="color: var(--primary-admin); margin-bottom: 10px;">KESIMPULAN ANALISIS:</h5>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                        <div style="padding: 15px; background-color: #e8f4f8; border-radius: 5px;">
+                            <p style="font-weight: bold; color: var(--primary-admin);">Kenaikan Perumahan</p>
+                            <p>5.20% → 6.0%</p>
+                            <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary-admin);">+0.8%</p>
+                        </div>
+                        <div style="padding: 15px; background-color: #e8f4f8; border-radius: 5px;">
+                            <p style="font-weight: bold; color: var(--primary-admin);">Kenaikan Kedai</p>
+                            <p>5.60% → 6.0%</p>
+                            <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary-admin);">+0.4%</p>
+                        </div>
+                        <div style="padding: 15px; background-color: #e8f4f8; border-radius: 5px;">
+                            <p style="font-weight: bold; color: var(--primary-admin);">Penurunan Syarikat</p>
+                            <p>6.50% → 6.0%</p>
+                            <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary-admin);">-0.5%</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                        <p style="color: #6c757d; line-height: 1.6;">
+                            <strong>Interpretasi:</strong> Kenaikan cukai taksiran 2026 melibatkan penyelarasan semua kategori ke kadar 6%. 
+                            Ini bermakna kenaikan untuk perumahan dan kedai, tetapi penurunan untuk syarikat. 
+                            Matlamat utama adalah penyatuan kadar untuk keseragaman dan keadilan.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; background-color: white; padding: 25px; border-radius: var(--border-radius); box-shadow: var(--shadow);">
+                <h4 style="color: var(--primary-admin); margin-bottom: 15px;">RAMALAN IMPAK JANGKA PANJANG (2026-2050)</h4>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div style="padding: 20px; background: linear-gradient(135deg, #f0f5ff, #e8f4f8); border-radius: var(--border-radius);">
+                        <h5 style="color: var(--primary-admin); margin-bottom: 10px;">2026-2030: FASA PELARASAN</h5>
+                        <ul style="color: #6c757d; line-height: 1.6;">
+                            <li>Kesan inflasi dan penyesuaian pasaran</li>
+                            <li>Penyelarasan kadar merentas kategori</li>
+                            <li>Monitoring kesan terhadap ekonomi tempatan</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="padding: 20px; background: linear-gradient(135deg, #f0f5ff, #e8f4f8); border-radius: var(--border-radius);">
+                        <h5 style="color: var(--primary-admin); margin-bottom: 10px;">2031-2040: FASA PEMBANGUNAN</h5>
+                        <ul style="color: #6c757d; line-height: 1.6;">
+                            <li>Kadar stabil dengan kenaikan sederhana</li>
+                            <li>Pembiayaan infrastruktur pembangunan</li>
+                            <li>Insentif untuk hartanah hijau</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="padding: 20px; background: linear-gradient(135deg, #f0f5ff, #e8f4f8); border-radius: var(--border-radius);">
+                        <h5 style="color: var(--primary-admin); margin-bottom: 10px;">2041-2050: FASA KESTABILAN</h5>
+                        <ul style="color: #6c757d; line-height: 1.6;">
+                            <li>Kadar optimum tercapai (7-8%)</li>
+                            <li>Pembangunan mampan jangka panjang</li>
+                            <li>Visi pembangunan Negeri Perak 2050</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!currentUser) {
+                // Redirect to login page if not logged in
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Update user info
+            updateUserInfo(currentUser);
+            
+            // Initialize tax prediction charts
+            initializeTaxCharts();
+            populatePredictionTable();
+            
+            // Setup event listeners
+            setupEventListeners();
+        });
+        
+        // Update user information
+        function updateUserInfo(userData) {
+            document.getElementById('currentUserName').textContent = userData.name || userData.username || 'Pengguna';
+            document.getElementById('currentUserRole').textContent = getRoleDisplayName(userData.role);
+        }
+        
+        // Role display names
+        function getRoleDisplayName(role) {
+            switch(role) {
+                case 'admin': return 'Pentadbir Sistem';
+                case 'setiausaha': return 'Setiausaha';
+                case 'jabatan': return 'Jabatan';
+                case 'latihan': return 'Latihan';
+                default: return 'Pengguna';
+            }
+        }
+        
+        // ========== DATA RAMALAN CUKAI BERDASARKAN INPUT ==========
+        
+        // Data sejarah 39 tahun (1985-2024) - BERDASARKAN INPUT
+        const historicalYears = Array.from({length: 40}, (_, i) => 1985 + i);
+        
+        // Kadar sejarah berdasarkan input Anda:
+        // k₁ = 5.20% (Perumahan)
+        // k₂ = 5.60% (Kedai)
+        // k₃ = 6.50% (Syarikat)
+        const historicalRates = {
+            perumahan: Array(40).fill(5.20),   // k₁ = 5.20% selama 39 tahun
+            kedai: Array(40).fill(5.60),       // k₂ = 5.60% selama 39 tahun
+            syarikat: Array(40).fill(6.50)     // k₃ = 6.50% selama 39 tahun
+        };
+        
+        // Data ramalan setiap 5 tahun (2026-2050) - BERDASARKAN TREND
+        const predictionYears = [2026, 2030, 2035, 2040, 2045, 2050];
+        
+        // Ramalan kadar berdasarkan analisis trend
+        const predictionRates = {
+            perumahan: [6.0, 6.2, 6.5, 6.8, 7.0, 7.2],   // Dari 6.0% naik ke 7.2% pada 2050
+            kedai: [6.0, 6.3, 6.6, 6.9, 7.1, 7.3],       // Dari 6.0% naik ke 7.3% pada 2050
+            syarikat: [6.0, 6.4, 6.8, 7.2, 7.5, 7.8]     // Dari 6.0% naik ke 7.8% pada 2050
+        };
+        
+        // Kesan cukai tahunan (berdasarkan model matematik input)
+        const taxImpact = {
+            2025: "RM3,245",  // Sebelum kenaikan (5.20% dari RM62,400)
+            2026: "RM3,744",  // Selepas kenaikan (6.0% dari RM62,400)
+            2030: "RM3,869",  // Anggaran untuk 6.2%
+            2035: "RM4,056",  // Anggaran untuk 6.5%
+            2040: "RM4,243",  // Anggaran untuk 6.8%
+            2045: "RM4,368",  // Anggaran untuk 7.0%
+            2050: "RM4,493"   // Anggaran untuk 7.2%
+        };
+        
+        // Fasa pembangunan
+        const developmentPhases = {
+            2026: "Fasa Pelarasan",
+            2030: "Fasa Stabilisasi",
+            2035: "Fasa Pertumbuhan",
+            2040: "Fasa Kematangan",
+            2045: "Fasa Penstabilan",
+            2050: "Fasa Jangka Panjang"
+        };
+        
+        // Warna untuk graf
+        const chartColors = {
+            perumahan: {
+                line: 'rgba(33, 150, 243, 1)',      // Biru
+                fill: 'rgba(33, 150, 243, 0.1)',
+                point: 'rgba(33, 150, 243, 1)'
+            },
+            kedai: {
+                line: 'rgba(76, 175, 80, 1)',       // Hijau
+                fill: 'rgba(76, 175, 80, 0.1)',
+                point: 'rgba(76, 175, 80, 1)'
+            },
+            syarikat: {
+                line: 'rgba(156, 39, 176, 1)',      // Ungu
+                fill: 'rgba(156, 39, 176, 0.1)',
+                point: 'rgba(156, 39, 176, 1)'
+            }
+        };
+        
+        // Fungsi untuk mendapatkan semua tahun (sejarah + ramalan)
+        function getAllYears(startYear = 1985) {
+            const allHistorical = historicalYears.filter(year => year >= startYear);
+            return [...allHistorical, ...predictionYears];
+        }
+        
+        // Fungsi untuk mendapatkan semua kadar (sejarah + ramalan)
+        function getAllRates(category, startYear = 1985) {
+            const startIndex = historicalYears.findIndex(year => year === startYear);
+            const historical = historicalRates[category].slice(startIndex);
+            return [...historical, ...predictionRates[category]];
+        }
+        
+        // Fungsi untuk membuat graf cukai
+        function createTaxChart(canvasId, category, label) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const startYearSelect = document.getElementById(canvasId.replace('Chart', 'StartYear'));
+            
+            function updateChart() {
+                const startYear = parseInt(startYearSelect.value);
+                const years = getAllYears(startYear);
+                const rates = getAllRates(category, startYear);
+                
+                // Clear existing chart if exists
+                if (window[canvasId + 'ChartInstance']) {
+                    window[canvasId + 'ChartInstance'].destroy();
+                }
+                
+                // Create gradient for prediction area
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, chartColors[category].fill);
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                
+                window[canvasId + 'ChartInstance'] = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: years,
+                        datasets: [{
+                            label: `Kadar Cukai ${label}`,
+                            data: rates,
+                            borderColor: chartColors[category].line,
+                            backgroundColor: gradient,
+                            pointBackgroundColor: years.map(year => 
+                                year >= 2026 ? '#ff4444' : chartColors[category].point
+                            ),
+                            pointBorderColor: years.map(year => 
+                                year >= 2026 ? '#ff4444' : chartColors[category].point
+                            ),
+                            pointRadius: years.map(year => {
+                                if (year === 2026) return 8; // Highlight 2026
+                                if (year === 2025 || year % 10 === 0) return 6; // Decade markers
+                                return year >= 2026 ? 5 : 3; // More points for prediction
+                            }),
+                            pointHoverRadius: 10,
+                            borderWidth: years.map(year => year >= 2026 ? 3 : 2),
+                            borderDash: years.map(year => year >= 2026 ? [] : [5, 5]),
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                title: {
+                                    display: true,
+                                    text: 'Kadar Cukai (%)',
+                                    font: { weight: 'bold' }
+                                },
+                                min: 4.5,
+                                max: 8.5,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Tahun',
+                                    font: { weight: 'bold' }
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                },
+                                ticks: {
+                                    maxTicksLimit: 12
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                borderColor: chartColors[category].line,
+                                borderWidth: 2,
+                                callbacks: {
+                                    title: function(tooltipItems) {
+                                        const year = tooltipItems[0].label;
+                                        return `Tahun: ${year}`;
+                                    },
+                                    label: function(context) {
+                                        const year = parseInt(context.label);
+                                        const value = context.parsed.y;
+                                        
+                                        if (year === 2026) {
+                                            return [
+                                                `KENAIKAN PENTING`,
+                                                `Kadar: ${value}%`,
+                                                `Status: RAMALAN (Mula 2026)`
+                                            ];
+                                        } else if (year >= 2026) {
+                                            return [
+                                                `Kadar: ${value}%`,
+                                                `Status: RAMALAN`,
+                                                `Fasa: ${developmentPhases[year] || 'Akan Ditentukan'}`
+                                            ];
+                                        } else if (year === 2025) {
+                                            return [
+                                                `Kadar: ${value}%`,
+                                                `Status: SEJARAH (Terakhir)`,
+                                                `Tempoh Stabil: 39 Tahun`
+                                            ];
+                                        } else {
+                                            return [
+                                                `Kadar: ${value}%`,
+                                                `Status: SEJARAH`,
+                                                `Tempoh: ${year}-2024`
+                                            ];
+                                        }
+                                    }
+                                }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        }
+                    }
+                });
+            }
+            
+            // Update graf apabila tahun mula berubah
+            startYearSelect.addEventListener('change', updateChart);
+            
+            // Buat graf pertama
+            updateChart();
+        }
+        
+        // Fungsi untuk mengisi jadual ramalan
+        function populatePredictionTable() {
+            const tableBody = document.getElementById('predictionTableBody');
+            tableBody.innerHTML = '';
+            
+            // Tambah baris untuk tahun 2025 (sebelum kenaikan)
+            const row2025 = document.createElement('tr');
+            row2025.innerHTML = `
+                <td><strong>2025</strong> (Sebelum)</td>
+                <td>5.20%</td>
+                <td>5.60%</td>
+                <td>6.50%</td>
+                <td><span style="color: #6c757d; font-weight: 600;">SEJARAH (Terakhir)</span></td>
+                <td>${taxImpact[2025]}</td>
+            `;
+            tableBody.appendChild(row2025);
+            
+            // Highlight row for 2025
+            row2025.style.backgroundColor = '#f8f9fa';
+            
+            // Tambah baris untuk tahun ramalan
+            predictionYears.forEach(year => {
+                const row = document.createElement('tr');
+                const residentialRate = predictionRates.perumahan[predictionYears.indexOf(year)];
+                const commercialRate = predictionRates.kedai[predictionYears.indexOf(year)];
+                const corporateRate = predictionRates.syarikat[predictionYears.indexOf(year)];
+                const is2026 = year === 2026;
+                
+                // Determine status color
+                let statusColor, statusText;
+                if (is2026) {
+                    statusColor = '#dc3545'; // Red for important change
+                    statusText = 'KENAIKAN PENTING';
+                } else {
+                    statusColor = '#28a745'; // Green for prediction
+                    statusText = 'RAMALAN';
+                }
+                
+                row.innerHTML = `
+                    <td><strong>${year}</strong>${is2026 ? ' (KENAIKAN)' : ''}</td>
+                    <td>${residentialRate.toFixed(1)}%</td>
+                    <td>${commercialRate.toFixed(1)}%</td>
+                    <td>${corporateRate.toFixed(1)}%</td>
+                    <td><span style="color: ${statusColor}; font-weight: 600;">${statusText}</span></td>
+                    <td>${taxImpact[year] || 'Akan Dikira'}</td>
+                `;
+                
+                // Highlight 2026 row
+                if (is2026) {
+                    row.style.backgroundColor = '#fff3cd';
+                }
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Add summary row
+            const summaryRow = document.createElement('tr');
+            summaryRow.innerHTML = `
+                <td colspan="6" style="background-color: #e8f4f8; text-align: center; font-weight: 600; color: var(--primary-admin);">
+                    <i class="fas fa-info-circle"></i> Jumlah Kenaikan 2026-2050: 
+                    Perumahan (+2.0%), Kedai (+1.7%), Syarikat (+1.3%)
+                </td>
+            `;
+            tableBody.appendChild(summaryRow);
+        }
+        
+        // Fungsi untuk memuat turun data cukai
+        function downloadTaxData(category) {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            let headers = "Tahun,Kadar(%),Status,Kategori";
+            let dataRows = [];
+            
+            // Data sejarah
+            historicalYears.forEach((year, index) => {
+                const rate = historicalRates[category][index];
+                dataRows.push(`${year},${rate.toFixed(2)},SEJARAH,${getCategoryName(category)}`);
+            });
+            
+            // Data ramalan
+            predictionYears.forEach((year, index) => {
+                const rate = predictionRates[category][index];
+                const status = year === 2026 ? 'KENAIKAN PENTING' : 'RAMALAN';
+                dataRows.push(`${year},${rate.toFixed(1)},${status},${getCategoryName(category)}`);
+            });
+            
+            csvContent += headers + "\n" + dataRows.join("\n");
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `ramalan_cukai_${category}_perak_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Helper function to get category name
+        function getCategoryName(category) {
+            switch(category) {
+                case 'perumahan': return 'Perumahan';
+                case 'kedai': return 'Kedai/Perniagaan';
+                case 'syarikat': return 'Syarikat/Industri';
+                default: return category;
+            }
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Tax tabs
+            document.querySelectorAll('.tax-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    document.querySelectorAll('.tax-tab').forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Get view type
+                    const viewType = this.getAttribute('data-tax-view');
+                    
+                    // Hide all tax content
+                    document.querySelectorAll('.tax-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show selected content
+                    document.getElementById(`tax-${viewType}`).classList.add('active');
+                });
+            });
+        }
+        
+        // Inisialisasi graf cukai
+        function initializeTaxCharts() {
+            createTaxChart('residentialChart', 'perumahan', 'Perumahan (k₁)');
+            createTaxChart('commercialChart', 'kedai', 'Kedai/Perniagaan (k₂)');
+            createTaxChart('corporateChart', 'syarikat', 'Syarikat/Industri (k₃)');
+        }
+    </script>
+</body>
+</html>
