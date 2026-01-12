@@ -3,27 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Sistem Surat Majlis Daerah Gerik</title>
+    <title>Log Masuk - Sistem Surat Majlis Daerah Gerik</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-admin: #1a4b8c;
-            --secondary-admin: #2c5aa0;
-            --light-bg: #f8f9fa;
-            --dark-bg: #343a40;
-            --sidebar-bg: #1e3f7a;
-            --sidebar-hover: #2c5aa0;
-            --text-light: #f8f9fa;
-            --text-dark: #343a40;
-            --success: #28a745;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --info: #17a2b8;
-            --border-radius: 10px;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -31,597 +13,579 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        body {
-            background-color: var(--light-bg);
-            color: var(--text-dark);
-            display: flex;
-            min-height: 100vh;
+        :root {
+            --primary-admin: #1a4b8c;      /* Biru - Admin */
+            --primary-setiausaha: #28a745; /* Hijau - Setiausaha */
+            --primary-jabatan: #ff9e00;    /* Jingga - Jabatan */
+            --primary-latihan: #6f42c1;    /* Ungu - Latihan */
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 15px;
         }
 
-        /* Sidebar Styles */
-        .sidebar {
-            width: 250px;
-            background-color: var(--sidebar-bg);
-            color: var(--text-light);
+        body {
+            background: linear-gradient(135deg, #1a4b8c 0%, #2c5aa0 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        /* Left Panel - Branding */
+        .login-left {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 40px;
             display: flex;
             flex-direction: column;
-            transition: var(--transition);
-            position: fixed;
-            height: 100vh;
-            z-index: 1000;
+            justify-content: center;
         }
 
-        .sidebar-header {
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.2);
+        .logo-area {
             text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
         }
 
-        .sidebar-header h2 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
+        .logo-icon {
+            font-size: 60px;
+            color: var(--primary-admin);
+            margin-bottom: 20px;
         }
 
-        .sidebar-header p {
-            font-size: 0.9rem;
-            opacity: 0.8;
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-admin);
+            margin-bottom: 10px;
         }
 
-        .sidebar-menu {
-            flex: 1;
-            padding: 20px 0;
-            overflow-y: auto;
+        .logo-subtext {
+            font-size: 1.1rem;
+            color: var(--gray);
         }
 
-        .menu-item {
-            padding: 15px 25px;
+        .system-info {
+            margin-top: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(26, 75, 140, 0.1), rgba(255, 158, 0, 0.1));
+            border-radius: var(--border-radius);
+            border-left: 5px solid var(--primary-admin);
+        }
+
+        .system-info h3 {
+            color: var(--primary-admin);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .system-info p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Right Panel - Login Form */
+        .login-right {
+            background: white;
+            padding: 50px 40px;
             display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: var(--text-light);
-            transition: var(--transition);
-            border-left: 4px solid transparent;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .menu-item:hover {
-            background-color: var(--sidebar-hover);
-            border-left-color: var(--text-light);
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
         }
 
-        .menu-item.active {
-            background-color: var(--sidebar-hover);
-            border-left-color: var(--text-light);
-            font-weight: 600;
+        .login-header h2 {
+            font-size: 2rem;
+            color: var(--primary-admin);
+            margin-bottom: 10px;
         }
 
-        .menu-item i {
-            width: 25px;
-            margin-right: 15px;
-            font-size: 1.2rem;
-        }
-
-        .menu-item span {
+        .login-header p {
+            color: var(--gray);
             font-size: 1rem;
         }
 
-        .sidebar-footer {
-            padding: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        /* Main Content Styles */
-        .main-content {
-            flex: 1;
-            margin-left: 250px;
-            padding: 20px;
-            transition: var(--transition);
-        }
-
-        /* Top Navigation */
-        .top-nav {
-            background-color: white;
-            padding: 15px 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .page-title h1 {
-            color: var(--primary-admin);
-            font-size: 1.8rem;
-        }
-
-        .page-title p {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-details {
-            text-align: right;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .user-role {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: var(--primary-admin);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .logout-btn {
-            background-color: var(--danger);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition);
-        }
-
-        .logout-btn:hover {
-            background-color: #c82333;
-            transform: translateY(-2px);
-        }
-
-        /* Dashboard Content */
-        .dashboard-content {
-            display: none;
-        }
-
-        .dashboard-content.active {
-            display: block;
-        }
-
-        /* Statistics Cards */
-        .stats-grid {
+        /* Role Selection */
+        .role-selection {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
             margin-bottom: 30px;
         }
 
-        .stat-card {
-            background-color: white;
-            padding: 25px;
+        .role-card {
+            padding: 20px;
+            border: 2px solid var(--light-gray);
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
             display: flex;
-            align-items: center;
-            transition: var(--transition);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-right: 20px;
-            font-size: 1.5rem;
-            color: white;
         }
 
-        .stat-content h3 {
-            font-size: 2rem;
-            color: var(--text-dark);
-            margin-bottom: 5px;
-        }
-
-        .stat-content p {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-
-        .stat-icon.surat-masuk { background: linear-gradient(135deg, #28a745, #20c997); }
-        .stat-icon.surat-keluar { background: linear-gradient(135deg, #17a2b8, #20c997); }
-        .stat-icon.pending { background: linear-gradient(135deg, #ffc107, #fd7e14); }
-        .stat-icon.selesai { background: linear-gradient(135deg, #6f42c1, #6610f2); }
-
-        /* Table for Surat */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        .role-card:hover {
+            transform: translateY(-5px);
             box-shadow: var(--shadow);
         }
 
-        .data-table th {
-            background-color: var(--primary-admin);
-            color: white;
-            padding: 15px;
-            text-align: left;
+        .role-card.active {
+            border-width: 3px;
         }
 
-        .data-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
+        .role-card.admin {
+            border-color: var(--primary-admin);
         }
 
-        .data-table tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .role-card.setiausaha {
+            border-color: var(--primary-setiausaha);
         }
 
-        .data-table tr:hover {
-            background-color: #f0f5ff;
+        .role-card.jabatan {
+            border-color: var(--primary-jabatan);
         }
 
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        .role-card.latihan {
+            border-color: var(--primary-latihan);
+        }
+
+        .role-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .role-card.admin .role-icon {
+            color: var(--primary-admin);
+        }
+
+        .role-card.setiausaha .role-icon {
+            color: var(--primary-setiausaha);
+        }
+
+        .role-card.jabatan .role-icon {
+            color: var(--primary-jabatan);
+        }
+
+        .role-card.latihan .role-icon {
+            color: var(--primary-latihan);
+        }
+
+        .role-name {
             font-weight: 600;
+            font-size: 1.1rem;
         }
 
-        .status-pending { background-color: #fff3cd; color: #856404; }
-        .status-process { background-color: #cce5ff; color: #004085; }
-        .status-completed { background-color: #d4edda; color: #155724; }
-        .status-rejected { background-color: #f8d7da; color: #721c24; }
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 25px;
+        }
 
-        /* Empty State */
-        .empty-state {
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group label i {
+            margin-right: 10px;
+            color: var(--primary-admin);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-admin);
+            box-shadow: 0 0 0 3px rgba(26, 75, 140, 0.1);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Remember Me & Forgot Password */
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .remember-me label {
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .forgot-password {
+            color: var(--primary-admin);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-admin), #2c5aa0);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 75, 140, 0.3);
+        }
+
+        .login-btn i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        .login-footer {
+            margin-top: 30px;
             text-align: center;
-            padding: 40px 20px;
-            color: #6c757d;
-        }
-
-        .empty-state i {
-            font-size: 60px;
-            margin-bottom: 20px;
-            color: #dee2e6;
+            color: var(--gray);
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-                overflow: hidden;
+            .login-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
             }
-
-            .sidebar:hover {
-                width: 250px;
+            
+            .login-left {
+                padding: 30px;
+                order: 2;
             }
-
-            .sidebar-header h2,
-            .sidebar-header p,
-            .menu-item span,
-            .sidebar-footer {
-                opacity: 0;
-                transition: opacity 0.3s;
+            
+            .login-right {
+                padding: 40px 30px;
+                order: 1;
             }
-
-            .sidebar:hover .sidebar-header h2,
-            .sidebar:hover .sidebar-header p,
-            .sidebar:hover .menu-item span,
-            .sidebar:hover .sidebar-footer {
-                opacity: 1;
+            
+            .role-selection {
+                grid-template-columns: 1fr;
             }
-
-            .main-content {
-                margin-left: 70px;
-            }
-
-            .sidebar:hover + .main-content {
-                margin-left: 250px;
-            }
-
-            .top-nav {
+            
+            .login-options {
                 flex-direction: column;
                 gap: 15px;
-                text-align: center;
-            }
-
-            .user-info {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .user-details {
-                text-align: center;
+                align-items: flex-start;
             }
         }
 
         @media (max-width: 480px) {
-            .main-content {
-                padding: 15px;
+            body {
+                padding: 10px;
             }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
+            
+            .login-left, .login-right {
+                padding: 25px 20px;
+            }
+            
+            .logo-text {
+                font-size: 1.8rem;
+            }
+            
+            .login-header h2 {
+                font-size: 1.6rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h2><i class="fas fa-envelope-open-text"></i> MDG</h2>
-            <p>Sistem Surat</p>
-        </div>
-
-        <div class="sidebar-menu">
-            <a href="#dashboard" class="menu-item active" data-tab="dashboard">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="#surat-masuk" class="menu-item" data-tab="surat-masuk">
-                <i class="fas fa-inbox"></i>
-                <span>Surat Masuk</span>
-            </a>
-            <a href="#surat-keluar" class="menu-item" data-tab="surat-keluar">
-                <i class="fas fa-paper-plane"></i>
-                <span>Surat Keluar</span>
-            </a>
-            <a href="#ramalan-cukai" class="menu-item" data-tab="ramalan-cukai">
-                <i class="fas fa-chart-line"></i>
-                <span>Ramalan Cukai</span>
-            </a>
-            <a href="#laporan" class="menu-item" data-tab="laporan">
-                <i class="fas fa-file-alt"></i>
-                <span>Laporan</span>
-            </a>
-            <a href="#pengguna" class="menu-item" data-tab="pengguna">
-                <i class="fas fa-users"></i>
-                <span>Pengguna</span>
-            </a>
-            <a href="#tetapan" class="menu-item" data-tab="tetapan">
-                <i class="fas fa-cog"></i>
-                <span>Tetapan Sistem</span>
-            </a>
-        </div>
-
-        <div class="sidebar-footer">
-            <p>Versi 2.1.0</p>
-            <p>© 2025 MD Gerik</p>
-        </div>
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="main-content">
-        <!-- Top Navigation -->
-        <div class="top-nav">
-            <div class="page-title">
-                <h1 id="pageTitle">Dashboard Utama</h1>
-                <p id="pageSubtitle">Selamat datang ke Sistem Pengurusan Surat</p>
-            </div>
-
-            <div class="user-info">
-                <div class="user-details">
-                    <div class="user-name" id="userName">Loading...</div>
-                    <div class="user-role" id="userRole">Loading...</div>
+    <div class="login-container">
+        <!-- Left Panel - Branding -->
+        <div class="login-left">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="fas fa-envelope-open-text"></i>
                 </div>
-                <div class="user-avatar" id="userAvatar">?</div>
-                <button class="logout-btn" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Log Keluar
-                </button>
+                <div class="logo-text">Sistem Surat</div>
+                <div class="logo-subtext">Majlis Daerah Gerik</div>
             </div>
-        </div>
-
-        <!-- Dashboard Content -->
-        <div id="dashboard" class="dashboard-content active">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon surat-masuk">
-                        <i class="fas fa-inbox"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="suratMasukCount">0</h3>
-                        <p>Surat Masuk</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon surat-keluar">
-                        <i class="fas fa-paper-plane"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="suratKeluarCount">0</h3>
-                        <p>Surat Keluar</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon pending">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="suratPendingCount">0</h3>
-                        <p>Dalam Proses</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon selesai">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="suratSelesaiCount">0</h3>
-                        <p>Selesai</p>
-                    </div>
-                </div>
-            </div>
-
-            <div style="background-color: white; padding: 25px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-top: 30px;">
-                <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Aktiviti Terkini</h2>
-                <div id="recentActivities" class="empty-state">
-                    <i class="fas fa-inbox"></i>
-                    <h3>Tiada Aktiviti</h3>
-                    <p>Belum ada aktiviti surat masuk atau keluar</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Surat Masuk Content -->
-        <div id="surat-masuk" class="dashboard-content">
-            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Senarai Surat Masuk</h2>
-            <div style="margin-bottom: 20px;">
-                <button id="addSuratMasuk" style="background-color: var(--primary-admin); color: white; padding: 10px 20px; border: none; border-radius: var(--border-radius); cursor: pointer; margin-right: 10px;">
-                    <i class="fas fa-plus"></i> Tambah Surat Masuk
-                </button>
-                <button id="filterSuratMasuk" style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: var(--border-radius); cursor: pointer;">
-                    <i class="fas fa-filter"></i> Tapisan
-                </button>
-            </div>
-            <div id="suratMasukTable" class="empty-state">
-                <i class="fas fa-file-alt"></i>
-                <h3>Tiada Surat Masuk</h3>
-                <p>Klik butang "Tambah Surat Masuk" untuk menambah rekod pertama</p>
-            </div>
-        </div>
-
-        <!-- Surat Keluar Content -->
-        <div id="surat-keluar" class="dashboard-content">
-            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Senarai Surat Keluar</h2>
-            <div style="margin-bottom: 20px;">
-                <button id="addSuratKeluar" style="background-color: var(--primary-admin); color: white; padding: 10px 20px; border: none; border-radius: var(--border-radius); cursor: pointer; margin-right: 10px;">
-                    <i class="fas fa-plus"></i> Tambah Surat Keluar
-                </button>
-                <button id="filterSuratKeluar" style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: var(--border-radius); cursor: pointer;">
-                    <i class="fas fa-filter"></i> Tapisan
-                </button>
-            </div>
-            <div id="suratKeluarTable" class="empty-state">
-                <i class="fas fa-paper-plane"></i>
-                <h3>Tiada Surat Keluar</h3>
-                <p>Klik butang "Tambah Surat Keluar" untuk menambah rekod pertama</p>
-            </div>
-        </div>
-
-        <!-- RAMALAN CUKAI Content -->
-        <div id="ramalan-cukai" class="dashboard-content">
-            <div style="text-align: center; padding: 50px 20px;">
-                <div style="font-size: 60px; color: var(--primary-admin); margin-bottom: 20px;">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <h2 style="color: var(--primary-admin); margin-bottom: 15px;">Ramalan Cukai Taksiran</h2>
-                <p style="color: #6c757d; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
-                    Sistem ramalan cukai taksiran untuk negeri Perak (1985-2050). 
-                    Berdasarkan data sebenar dan model matematik.
-                </p>
-                <button onclick="window.location.href='ramalan-cukai.html'" 
-                        style="background: linear-gradient(135deg, var(--primary-admin), var(--secondary-admin)); 
-                               color: white; 
-                               padding: 15px 30px; 
-                               border: none; 
-                               border-radius: var(--border-radius); 
-                               font-size: 1.1rem; 
-                               font-weight: 600; 
-                               cursor: pointer;
-                               display: inline-flex;
-                               align-items: center;
-                               gap: 10px;">
-                    <i class="fas fa-external-link-alt"></i>
-                    Buka Sistem Ramalan Cukai
-                </button>
-                
-                <div style="margin-top: 40px; background-color: #f8f9fa; padding: 20px; border-radius: var(--border-radius); max-width: 600px; margin-left: auto; margin-right: auto;">
-                    <h4 style="color: var(--primary-admin); margin-bottom: 15px;">Maklumat Data:</h4>
-                    <div style="text-align: left; color: #6c757d; line-height: 1.8;">
-                        <p><strong>Tempoh:</strong> 1985 - 2050</p>
-                        <p><strong>Kategori:</strong> Perumahan, Kedai/Perniagaan, Syarikat/Industri</p>
-                        <p><strong>Kenaikan 2026:</strong> 6% untuk semua kategori</p>
-                        <p><strong>Sumber Data:</strong> Model Matematik Cukai Taksiran Negeri Perak</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Other dashboard sections -->
-        <div id="laporan" class="dashboard-content">
-            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Laporan Sistem</h2>
-            <div class="empty-state">
-                <i class="fas fa-chart-bar"></i>
-                <h3>Tiada Laporan</h3>
-                <p>Fungsi laporan akan tersedia selepas data dimasukkan</p>
-            </div>
-        </div>
-
-        <div id="pengguna" class="dashboard-content">
-            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Pengurusan Pengguna</h2>
-            <div class="empty-state">
-                <i class="fas fa-users"></i>
-                <h3>Tiada Pengguna</h3>
-                <p>Fungsi pengurusan pengguna akan tersedia tidak lama lagi</p>
-            </div>
-        </div>
-
-        <div id="tetapan" class="dashboard-content">
-            <h2 style="color: var(--primary-admin); margin-bottom: 20px;">Tetapan Sistem</h2>
-            <div class="empty-state">
-                <i class="fas fa-cogs"></i>
-                <h3>Tetapan Sistem</h3>
-                <p>Fungsi tetapan sistem akan tersedia tidak lama lagi</p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Check if user is logged in
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             
-            if (!currentUser) {
-                // Redirect to login page if not logged in
-                window.location.href = 'index.html';
+            <div class="system-info">
+                <h3>Sistem Pengurusan Surat Rasmi</h3>
+                <p>Sistem yang membolehkan pengurusan surat keluar masuk yang efisien dan sistematik untuk Jabatan Khidmat Pengurusan, Majlis Daerah Gerik.</p>
+            </div>
+            
+            <div style="margin-top: 40px;">
+                <h4 style="color: var(--primary-admin); margin-bottom: 15px; font-size: 1.2rem;">
+                    <i class="fas fa-info-circle"></i> Maklumat Sistem
+                </h4>
+                <div style="color: var(--gray); font-size: 0.9rem;">
+                    <p><i class="fas fa-check-circle" style="color: var(--primary-setiausaha);"></i> Versi: 2.1.0</p>
+                    <p><i class="fas fa-check-circle" style="color: var(--primary-jabatan);"></i> Status: Online</p>
+                    <p><i class="fas fa-check-circle" style="color: var(--primary-latihan);"></i> Terakhir dikemaskini: Jan 2024</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Panel - Login Form -->
+        <div class="login-right">
+            <div class="login-header">
+                <h2>Log Masuk</h2>
+                <p>Sila pilih peranan dan masukkan maklumat log masuk anda</p>
+            </div>
+            
+            <!-- Role Selection -->
+            <div class="role-selection">
+                <div class="role-card admin active" data-role="admin">
+                    <div class="role-icon">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <div class="role-name">Admin</div>
+                    <small style="color: var(--gray); margin-top: 5px; font-size: 0.85rem;">Pentadbir Sistem</small>
+                </div>
+                
+                <div class="role-card setiausaha" data-role="setiausaha">
+                    <div class="role-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="role-name">Setiausaha</div>
+                    <small style="color: var(--gray); margin-top: 5px; font-size: 0.85rem;">Jabatan Pengurusan</small>
+                </div>
+                
+                <div class="role-card jabatan" data-role="jabatan">
+                    <div class="role-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="role-name">Jabatan</div>
+                    <small style="color: var(--gray); margin-top: 5px; font-size: 0.85rem;">Unit/Jabatan</small>
+                </div>
+                
+                <div class="role-card latihan" data-role="latihan">
+                    <div class="role-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="role-name">Latihan</div>
+                    <small style="color: var(--gray); margin-top: 5px; font-size: 0.85rem;">Modul Latihan</small>
+                </div>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> ID Pengguna</label>
+                    <input type="text" id="username" class="form-control" placeholder="Masukkan ID pengguna" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Kata Laluan</label>
+                    <div class="password-container">
+                        <input type="password" id="password" class="form-control" placeholder="Masukkan kata laluan" required>
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="login-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">Ingat saya</label>
+                    </div>
+                    <a href="#" class="forgot-password">Lupa kata laluan?</a>
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Log Masuk
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <p>&copy; 2025 Majlis Daerah Gerik. Hak Cipta Terpelihara.</p>
+                <p style="margin-top: 5px;">Sistem Pengurusan Surat Keluar Masuk</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Role Selection
+        const roleCards = document.querySelectorAll('.role-card');
+        let selectedRole = 'admin';
+        
+        roleCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all cards
+                roleCards.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked card
+                this.classList.add('active');
+                
+                // Update selected role
+                selectedRole = this.getAttribute('data-role');
+                
+                // Update login button color based on role
+                updateLoginButtonColor();
+            });
+        });
+        
+        // Update login button color based on selected role
+        function updateLoginButtonColor() {
+            const loginBtn = document.querySelector('.login-btn');
+            let primaryColor;
+            
+            switch(selectedRole) {
+                case 'admin':
+                    primaryColor = '#1a4b8c';
+                    break;
+                case 'setiausaha':
+                    primaryColor = '#28a745';
+                    break;
+                case 'jabatan':
+                    primaryColor = '#ff9e00';
+                    break;
+                case 'latihan':
+                    primaryColor = '#6f42c1';
+                    break;
+            }
+            
+            loginBtn.style.background = `linear-gradient(135deg, ${primaryColor}, ${adjustColor(primaryColor, 20)})`;
+        }
+        
+        // Helper function to adjust color brightness
+        function adjustColor(color, amount) {
+            return '#' + color.replace(/^#/, '').replace(/../g, color => 
+                ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2)
+            );
+        }
+        
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        // Login Form Submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple validation
+            if (!username || !password) {
+                alert('Sila isi kedua-dua ID pengguna dan kata laluan');
                 return;
             }
             
-            // Update user info
-            updateUserInfo(currentUser);
+            // Simulate login process
+            showLoading();
             
-            // Load dashboard stats from localStorage
-            loadDashboardStats();
-            
-            // Setup event listeners
-            setupEventListeners();
+            setTimeout(() => {
+                // Save user info to localStorage
+                localStorage.setItem('currentUser', JSON.stringify({
+                    username: username,
+                    role: selectedRole,
+                    loginTime: new Date().toISOString(),
+                    name: getRoleDisplayName(selectedRole)
+                }));
+                
+                // Redirect based on role
+                redirectToDashboard();
+            }, 1500);
         });
         
-        // Update user information
-        function updateUserInfo(userData) {
-            document.getElementById('userName').textContent = userData.name || userData.username || 'Pengguna';
-            document.getElementById('userRole').textContent = getRoleDisplayName(userData.role);
-            document.getElementById('userAvatar').textContent = (userData.name || userData.username || 'P').charAt(0).toUpperCase();
+        // Show loading state
+        function showLoading() {
+            const loginBtn = document.querySelector('.login-btn');
+            const originalText = loginBtn.innerHTML;
+            
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sedang memproses...';
+            loginBtn.disabled = true;
+            
+            // Re-enable after 3 seconds (in case of error)
+            setTimeout(() => {
+                loginBtn.innerHTML = originalText;
+                loginBtn.disabled = false;
+            }, 3000);
         }
         
-        // Role display names
+        // Get display name for role
         function getRoleDisplayName(role) {
             switch(role) {
                 case 'admin': return 'Pentadbir Sistem';
@@ -632,472 +596,52 @@
             }
         }
         
-        // Dashboard statistics
-        function loadDashboardStats() {
-            // Get data from localStorage
-            const suratMasuk = JSON.parse(localStorage.getItem('suratMasuk')) || [];
-            const suratKeluar = JSON.parse(localStorage.getItem('suratKeluar')) || [];
-            
-            // Calculate statistics
-            const stats = {
-                masuk: suratMasuk.length,
-                keluar: suratKeluar.length,
-                pending: suratMasuk.filter(s => s.status === 'pending').length + 
-                        suratKeluar.filter(s => s.status === 'pending').length,
-                selesai: suratMasuk.filter(s => s.status === 'completed').length + 
-                        suratKeluar.filter(s => s.status === 'completed').length
-            };
-            
-            // Update display
-            document.getElementById('suratMasukCount').textContent = stats.masuk;
-            document.getElementById('suratKeluarCount').textContent = stats.keluar;
-            document.getElementById('suratPendingCount').textContent = stats.pending;
-            document.getElementById('suratSelesaiCount').textContent = stats.selesai;
-            
-            // Load recent activities
-            loadRecentActivities(suratMasuk, suratKeluar);
-        }
-        
-        // Recent activities
-        function loadRecentActivities(suratMasuk, suratKeluar) {
-            const container = document.getElementById('recentActivities');
-            
-            if (suratMasuk.length === 0 && suratKeluar.length === 0) {
-                // Show empty state
-                container.innerHTML = `
-                    <i class="fas fa-inbox"></i>
-                    <h3>Tiada Aktiviti</h3>
-                    <p>Belum ada aktiviti surat masuk atau keluar</p>
-                `;
-                container.className = 'empty-state';
-                return;
+        // Redirect to appropriate dashboard
+        function redirectToDashboard() {
+            switch(selectedRole) {
+                case 'admin':
+                    window.location.href = 'dashboard.html';
+                    break;
+                case 'setiausaha':
+                    window.location.href = 'setiausaha.html';
+                    break;
+                case 'jabatan':
+                    // Redirect to jabatan dashboard (you need to create this)
+                    window.location.href = 'jabatan.html';
+                    break;
+                case 'latihan':
+                    // Redirect to latihan dashboard (you need to create this)
+                    window.location.href = 'latihan.html';
+                    break;
+                default:
+                    window.location.href = 'dashboard.html';
             }
+        }
+        
+        // Check if user is already logged in
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
             
-            // Combine and sort by date (newest first)
-            const allSurat = [
-                ...suratMasuk.map(s => ({...s, type: 'Masuk'})),
-                ...suratKeluar.map(s => ({...s, type: 'Keluar'}))
-            ].sort((a, b) => new Date(b.tarikh) - new Date(a.tarikh));
-            
-            // Take latest 5
-            const recent = allSurat.slice(0, 5);
-            
-            // Create table
-            let tableHTML = `
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>No. Rujukan</th>
-                            <th>Jenis Surat</th>
-                            <th>Tarikh</th>
-                            <th>Status</th>
-                            <th>Tindakan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            recent.forEach(surat => {
-                let statusBadge;
-                switch(surat.status) {
-                    case 'pending': 
-                        statusBadge = '<span class="status-badge status-pending">Dalam Proses</span>';
-                        break;
-                    case 'process': 
-                        statusBadge = '<span class="status-badge status-process">Sedang Diproses</span>';
-                        break;
-                    case 'completed': 
-                        statusBadge = '<span class="status-badge status-completed">Selesai</span>';
-                        break;
-                    default:
-                        statusBadge = '<span class="status-badge status-pending">Dalam Proses</span>';
-                }
+            if (currentUser) {
+                // User is already logged in, redirect to appropriate page
+                const userData = JSON.parse(currentUser);
+                selectedRole = userData.role;
                 
-                tableHTML += `
-                    <tr>
-                        <td>${surat.noRujukan || '-'}</td>
-                        <td>Surat ${surat.type}</td>
-                        <td>${formatDate(surat.tarikh)}</td>
-                        <td>${statusBadge}</td>
-                        <td>
-                            <button onclick="viewSurat('${surat.id}', '${surat.type.toLowerCase()}')" 
-                                    style="background-color: var(--primary-admin); color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">
-                                <i class="fas fa-eye"></i> Lihat
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            tableHTML += '</tbody></table>';
-            container.innerHTML = tableHTML;
-            container.className = '';
-        }
-        
-        // Format date
-        function formatDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('ms-MY', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
-        }
-        
-        // View surat details
-        function viewSurat(id, type) {
-            alert(`Lihat surat ${type} dengan ID: ${id}`);
-            // Implementation for viewing surat details
-        }
-        
-        // Setup event listeners
-        function setupEventListeners() {
-            // Sidebar navigation
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Remove active class from all items
-                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-                    
-                    // Add active class to clicked item
-                    this.classList.add('active');
-                    
-                    // Get tab ID
-                    const tabId = this.getAttribute('data-tab');
-                    
-                    // Hide all content
-                    document.querySelectorAll('.dashboard-content').forEach(content => {
-                        content.classList.remove('active');
-                    });
-                    
-                    // Show selected content
-                    document.getElementById(tabId).classList.add('active');
-                    
-                    // Update page title
-                    updatePageTitle(tabId);
-                    
-                    // Load data for specific tabs
-                    if (tabId === 'surat-masuk') {
-                        loadSuratMasukTable();
-                    } else if (tabId === 'surat-keluar') {
-                        loadSuratKeluarTable();
+                // Update UI to show current role
+                roleCards.forEach(card => {
+                    if (card.getAttribute('data-role') === selectedRole) {
+                        card.classList.add('active');
+                    } else {
+                        card.classList.remove('active');
                     }
                 });
-            });
-            
-            // Add Surat Masuk button
-            document.getElementById('addSuratMasuk').addEventListener('click', function() {
-                showAddSuratForm('masuk');
-            });
-            
-            // Add Surat Keluar button
-            document.getElementById('addSuratKeluar').addEventListener('click', function() {
-                showAddSuratForm('keluar');
-            });
-            
-            // Filter buttons
-            document.getElementById('filterSuratMasuk').addEventListener('click', function() {
-                showFilterOptions('masuk');
-            });
-            
-            document.getElementById('filterSuratKeluar').addEventListener('click', function() {
-                showFilterOptions('keluar');
-            });
-            
-            // Logout button
-            document.getElementById('logoutBtn').addEventListener('click', function() {
-                if (confirm('Adakah anda pasti ingin log keluar?')) {
-                    localStorage.removeItem('currentUser');
-                    window.location.href = 'index.html';
-                }
-            });
-        }
-        
-        // Load Surat Masuk table
-        function loadSuratMasukTable() {
-            const container = document.getElementById('suratMasukTable');
-            const suratMasuk = JSON.parse(localStorage.getItem('suratMasuk')) || [];
-            
-            if (suratMasuk.length === 0) {
-                container.innerHTML = `
-                    <i class="fas fa-file-alt"></i>
-                    <h3>Tiada Surat Masuk</h3>
-                    <p>Klik butang "Tambah Surat Masuk" untuk menambah rekod pertama</p>
-                `;
-                container.className = 'empty-state';
-                return;
-            }
-            
-            let tableHTML = `
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>No. Rujukan</th>
-                            <th>Pengirim</th>
-                            <th>Perkara</th>
-                            <th>Tarikh Terima</th>
-                            <th>Status</th>
-                            <th>Tindakan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            suratMasuk.forEach(surat => {
-                let statusBadge;
-                switch(surat.status) {
-                    case 'pending': 
-                        statusBadge = '<span class="status-badge status-pending">Dalam Proses</span>';
-                        break;
-                    case 'process': 
-                        statusBadge = '<span class="status-badge status-process">Sedang Diproses</span>';
-                        break;
-                    case 'completed': 
-                        statusBadge = '<span class="status-badge status-completed">Selesai</span>';
-                        break;
-                    default:
-                        statusBadge = '<span class="status-badge status-pending">Dalam Proses</span>';
-                }
                 
-                tableHTML += `
-                    <tr>
-                        <td>${surat.noRujukan || '-'}</td>
-                        <td>${surat.pengirim || '-'}</td>
-                        <td>${surat.perkara || '-'}</td>
-                        <td>${formatDate(surat.tarikh)}</td>
-                        <td>${statusBadge}</td>
-                        <td>
-                            <button onclick="viewSurat('${surat.id}', 'masuk')" 
-                                    style="background-color: var(--primary-admin); color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; margin-right: 5px;">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button onclick="editSurat('${surat.id}', 'masuk')" 
-                                    style="background-color: var(--success); color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            tableHTML += '</tbody></table>';
-            container.innerHTML = tableHTML;
-            container.className = '';
-        }
-        
-        // Load Surat Keluar table
-        function loadSuratKeluarTable() {
-            const container = document.getElementById('suratKeluarTable');
-            const suratKeluar = JSON.parse(localStorage.getItem('suratKeluar')) || [];
-            
-            if (suratKeluar.length === 0) {
-                container.innerHTML = `
-                    <i class="fas fa-paper-plane"></i>
-                    <h3>Tiada Surat Keluar</h3>
-                    <p>Klik butang "Tambah Surat Keluar" untuk menambah rekod pertama</p>
-                `;
-                container.className = 'empty-state';
-                return;
+                updateLoginButtonColor();
             }
-            
-            let tableHTML = `
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>No. Rujukan</th>
-                            <th>Penerima</th>
-                            <th>Perkara</th>
-                            <th>Tarikh Hantar</th>
-                            <th>Status</th>
-                            <th>Tindakan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            suratKeluar.forEach(surat => {
-                let statusBadge;
-                switch(surat.status) {
-                    case 'pending': 
-                        statusBadge = '<span class="status-badge status-pending">Dalam Proses</span>';
-                        break;
-                    case 'process': 
-                        statusBadge = '<span class="status-badge status-process">Sedang Diproses</span>';
-                        break;
-                    case 'completed': 
-                        statusBadge = '<span class="status-badge status-completed">Selesai</span>';
-                        break;
-                    default:
-                        statusBadge = '<span class="status-badge status-pending">Dalam Proses</span>';
-                }
-                
-                tableHTML += `
-                    <tr>
-                        <td>${surat.noRujukan || '-'}</td>
-                        <td>${surat.penerima || '-'}</td>
-                        <td>${surat.perkara || '-'}</td>
-                        <td>${formatDate(surat.tarikh)}</td>
-                        <td>${statusBadge}</td>
-                        <td>
-                            <button onclick="viewSurat('${surat.id}', 'keluar')" 
-                                    style="background-color: var(--primary-admin); color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            tableHTML += '</tbody></table>';
-            container.innerHTML = tableHTML;
-            container.className = '';
-        }
+        });
         
-        // Show add surat form
-        function showAddSuratForm(type) {
-            const formHTML = `
-                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1001;">
-                    <div style="background: white; padding: 30px; border-radius: var(--border-radius); width: 500px; max-width: 90%; max-height: 90vh; overflow-y: auto;">
-                        <h3 style="color: var(--primary-admin); margin-bottom: 20px;">Tambah Surat ${type === 'masuk' ? 'Masuk' : 'Keluar'}</h3>
-                        
-                        <form id="addSuratForm">
-                            <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">No. Rujukan</label>
-                                <input type="text" id="noRujukan" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" required>
-                            </div>
-                            
-                            <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">
-                                    ${type === 'masuk' ? 'Pengirim' : 'Penerima'}
-                                </label>
-                                <input type="text" id="pihak" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" required>
-                            </div>
-                            
-                            <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Perkara</label>
-                                <textarea id="perkara" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; min-height: 100px;" required></textarea>
-                            </div>
-                            
-                            <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Tarikh</label>
-                                <input type="date" id="tarikh" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" required>
-                            </div>
-                            
-                            <div style="margin-bottom: 20px;">
-                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Status</label>
-                                <select id="status" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
-                                    <option value="pending">Dalam Proses</option>
-                                    <option value="process">Sedang Diproses</option>
-                                    <option value="completed">Selesai</option>
-                                </select>
-                            </div>
-                            
-                            <div style="display: flex; gap: 10px;">
-                                <button type="submit" style="flex: 1; background-color: var(--primary-admin); color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
-                                    Simpan
-                                </button>
-                                <button type="button" onclick="closeForm()" style="flex: 1; background-color: #6c757d; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
-                                    Batal
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            `;
-            
-            const formDiv = document.createElement('div');
-            formDiv.innerHTML = formHTML;
-            document.body.appendChild(formDiv);
-            
-            // Set today's date as default
-            document.getElementById('tarikh').valueAsDate = new Date();
-            
-            // Handle form submission
-            document.getElementById('addSuratForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                saveSurat(type);
-            });
-        }
-        
-        // Save surat
-        function saveSurat(type) {
-            const formData = {
-                id: Date.now().toString(),
-                noRujukan: document.getElementById('noRujukan').value,
-                perkara: document.getElementById('perkara').value,
-                tarikh: document.getElementById('tarikh').value,
-                status: document.getElementById('status').value
-            };
-            
-            if (type === 'masuk') {
-                formData.pengirim = document.getElementById('pihak').value;
-                const suratMasuk = JSON.parse(localStorage.getItem('suratMasuk')) || [];
-                suratMasuk.push(formData);
-                localStorage.setItem('suratMasuk', JSON.stringify(suratMasuk));
-            } else {
-                formData.penerima = document.getElementById('pihak').value;
-                const suratKeluar = JSON.parse(localStorage.getItem('suratKeluar')) || [];
-                suratKeluar.push(formData);
-                localStorage.setItem('suratKeluar', JSON.stringify(suratKeluar));
-            }
-            
-            closeForm();
-            loadDashboardStats();
-            
-            if (type === 'masuk') {
-                loadSuratMasukTable();
-            } else {
-                loadSuratKeluarTable();
-            }
-            
-            alert('Surat berjaya disimpan!');
-        }
-        
-        // Close form
-        function closeForm() {
-            const formDiv = document.querySelector('div[style*="position: fixed; top: 0;"]');
-            if (formDiv) {
-                formDiv.remove();
-            }
-        }
-        
-        // Show filter options
-        function showFilterOptions(type) {
-            alert(`Fungsi tapisan untuk surat ${type} akan datang tidak lama lagi`);
-        }
-        
-        // Edit surat
-        function editSurat(id, type) {
-            alert(`Fungsi edit untuk surat ${type} akan datang tidak lama lagi`);
-        }
-        
-        // Update page title based on active tab
-        function updatePageTitle(tabId) {
-            const titles = {
-                'dashboard': 'Dashboard Utama',
-                'surat-masuk': 'Surat Masuk',
-                'surat-keluar': 'Surat Keluar',
-                'ramalan-cukai': 'Ramalan Cukai Taksiran',
-                'laporan': 'Laporan Sistem',
-                'pengguna': 'Pengurusan Pengguna',
-                'tetapan': 'Tetapan Sistem'
-            };
-            
-            const subtitles = {
-                'dashboard': 'Selamat datang ke Sistem Pengurusan Surat',
-                'surat-masuk': 'Senarai dan pengurusan surat masuk',
-                'surat-keluar': 'Senarai dan pengurusan surat keluar',
-                'ramalan-cukai': 'Ramalan kadar cukai taksiran 2026-2050',
-                'laporan': 'Laporan dan statistik sistem',
-                'pengguna': 'Pengurusan pengguna dan akses',
-                'tetapan': 'Tetapan dan konfigurasi sistem'
-            };
-            
-            document.getElementById('pageTitle').textContent = titles[tabId] || 'Dashboard';
-            document.getElementById('pageSubtitle').textContent = subtitles[tabId] || '';
-        }
+        // Initialize button color
+        updateLoginButtonColor();
     </script>
 </body>
-</html>
+</html> 
